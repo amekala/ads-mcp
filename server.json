@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-29/server.schema.json",
+  "name": "com.adspirer/ads",
+  "title": "Ads MCP",
+  "description": "Remote MCP for campaign planning, research, and cross-platform ad creation (Google Ads Search & PMax, TikTok). OAuth 2.1; paid tiers enforced server-side.",
+  "version": "1.0.0",
+  "websiteUrl": "https://www.adspirer.com/",
+  "contact": "abhi@adspirer.com",
+  "remotes": [
+    {
+      "type": "sse",
+      "url": "https://adspirer-mcp-596892545013.us-central1.run.app/"
+    }
+  ],
+  "capabilities": {
+    "tools": {
+      "long_running": true,
+      "progress_notifications": true
+    },
+    "prompts": false,
+    "resources": false
+  },
+  "authentication": {
+    "type": "oauth2",
+    "flow": "authorization_code",
+    "pkce_required": true,
+    "protected_resource_metadata": "https://adspirer-mcp-596892545013.us-central1.run.app/.well-known/oauth-protected-resource"
+  }
+}

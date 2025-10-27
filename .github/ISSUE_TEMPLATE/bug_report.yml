@@ -1,0 +1,20 @@
+name: Bug report
+description: Report a problem using Ads MCP
+labels: [bug]
+body:
+  - type: input
+    id: environment
+    attributes:
+      label: Client and version (ChatGPT/Claude/other)
+  - type: input
+    id: timestamp
+    attributes:
+      label: Approx. timestamp (UTC)
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+  - type: textarea
+    id: logs
+    attributes:
+      label: Any client-visible error text
