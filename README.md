@@ -4,7 +4,8 @@ Remote Model Context Protocol (MCP) server for campaign planning, research, and 
 
 ## Quick Links
 
-- **MCP Remote URL (SSE):** `https://adspirer-mcp-596892545013.us-central1.run.app/`
+- **MCP Remote URL (SSE):** `https://mcp.adspirer.com/`
+- **Fallback URL:** `https://adspirer-mcp-596892545013.us-central1.run.app/`
 - **Registry ID:** `com.adspirer/ads`
 - **Authentication:** OAuth 2.1 via Adspirer (paid tiers and rate limits enforced server-side)
 - **Website:** https://www.adspirer.com/
@@ -32,7 +33,7 @@ Remote Model Context Protocol (MCP) server for campaign planning, research, and 
 ### ChatGPT
 1. Open **Settings → Connectors → Create**
 2. Name: **Ads MCP**
-3. URL: `https://adspirer-mcp-596892545013.us-central1.run.app/`
+3. URL: `https://mcp.adspirer.com/`
 4. Follow OAuth 2.1 sign-in; you will see **Adspirer** as the application
 5. Link your ad accounts on first use
 6. Use tools by asking naturally (e.g., "create a PMAX campaign for...")
@@ -40,7 +41,7 @@ Remote Model Context Protocol (MCP) server for campaign planning, research, and 
 ### Claude
 1. Open **Settings → Connectors → Add custom**
 2. Name: **Ads MCP**
-3. URL: `https://adspirer-mcp-596892545013.us-central1.run.app/`
+3. URL: `https://mcp.adspirer.com/`
 4. Complete OAuth 2.1 sign-in
 5. Invoke tools as needed
 
@@ -85,7 +86,7 @@ Remote Model Context Protocol (MCP) server for campaign planning, research, and 
 ## Example: Verify Streaming
 
 ```bash
-curl -i -N https://adspirer-mcp-596892545013.us-central1.run.app/mcp/tools/call \
+curl -i -N https://mcp.adspirer.com/mcp/tools/call \
   -H 'Content-Type: application/json' \
   -d '{
     "jsonrpc":"2.0",

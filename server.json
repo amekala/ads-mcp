@@ -9,6 +9,10 @@
   "remotes": [
     {
       "type": "sse",
+      "url": "https://mcp.adspirer.com/"
+    },
+    {
+      "type": "sse",
       "url": "https://adspirer-mcp-596892545013.us-central1.run.app/"
     }
   ],
@@ -24,6 +28,6 @@
     "type": "oauth2",
     "flow": "authorization_code",
     "pkce_required": true,
-    "protected_resource_metadata": "https://adspirer-mcp-596892545013.us-central1.run.app/.well-known/oauth-protected-resource"
+    "protected_resource_metadata": "https://mcp.adspirer.com/.well-known/oauth-protected-resource"
   }
 }

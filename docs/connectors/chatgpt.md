@@ -2,7 +2,7 @@
 
 1. Open **Settings → Connectors → Create**.
 2. Name: **Ads MCP**.
-3. URL: `https://adspirer-mcp-596892545013.us-central1.run.app/`.
+3. URL: `https://mcp.adspirer.com/`.
 4. Complete OAuth 2.1 sign-in (Adspirer).
 5. Invoke tools by asking for campaign planning/creation; long runs will stream progress when supported.
 

@@ -1,6 +1,6 @@
 # Ads MCP — Quickstart
 
-**Remote URL (SSE):** `https://adspirer-mcp-596892545013.us-central1.run.app/`
+**Remote URL (SSE):** `https://mcp.adspirer.com/`
 **Registry ID:** `com.adspirer/ads`
 **Auth:** OAuth 2.1 via Adspirer (paid tiers and rate limits enforced)
 
@@ -8,20 +8,20 @@
 
 1. Settings → Connectors → Create
 2. Name: **Ads MCP**
-3. URL: `https://adspirer-mcp-596892545013.us-central1.run.app/`
+3. URL: `https://mcp.adspirer.com/`
 4. Complete OAuth sign-in (Adspirer) and connect ad accounts
 
 ## Connect from Claude
 
 1. Settings → Connectors → Add custom
 2. Name: **Ads MCP**
-3. URL: `https://adspirer-mcp-596892545013.us-central1.run.app/`
+3. URL: `https://mcp.adspirer.com/`
 4. Complete OAuth sign-in
 
 ## Example: Verify Streaming Support
 
 ```bash
-curl -i -N https://adspirer-mcp-596892545013.us-central1.run.app/mcp/tools/call \
+curl -i -N https://mcp.adspirer.com/mcp/tools/call \
   -H 'Content-Type: application/json' \
   -d '{
     "jsonrpc":"2.0",
