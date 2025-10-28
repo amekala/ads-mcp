@@ -1,21 +1,16 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
-  "name": "io.github.amekala/ads",
+  "name": "com.adspirer/ads",
   "description": "Remote MCP for cross-platform ad creation (Google Ads, TikTok). OAuth 2.1 with progress streaming.",
   "repository": {
     "url": "https://github.com/amekala/ads-mcp",
     "source": "github"
   },
   "version": "1.0.0",
-  "packages": [
+  "remotes": [
     {
-      "registryType": "remote",
-      "identifier": "io.github.amekala/ads",
-      "version": "1.0.0",
-      "transport": {
-        "type": "sse",
-        "url": "https://mcp.adspirer.com/"
-      },
+      "type": "sse",
+      "url": "https://mcp.adspirer.com/",
       "authentication": {
         "type": "oauth2",
         "flow": "authorization_code",
