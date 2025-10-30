@@ -10,7 +10,7 @@
   "remotes": [
     {
       "type": "sse",
-      "url": "https://mcp.adspirer.com/",
+      "url": "https://mcp.adspirer.com/sse",
       "authentication": {
         "type": "oauth2",
         "flow": "authorization_code",
