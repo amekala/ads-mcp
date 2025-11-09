@@ -67,6 +67,12 @@
   - OAuth 2.1 access tokens validated per request
   - Least-privilege scopes applied per operation
 
+  ### Tool Safety Annotations
+  - All tools include MCP safety metadata (`_readOnlyHint`, `_destructiveHint`, `_title`)
+  - Read-only tools clearly marked (performance analysis, keyword research)
+  - Campaign creation tools marked as non-destructive (create new, don't delete existing)
+  - Helps AI assistants understand tool safety characteristics
+
   ### Limits & Reliability
   - Server-side rate limits vary by paid tier
   - Time and size limits enforced per operation
@@ -81,6 +87,8 @@
   - [Claude Connector Setup](docs/connectors/claude.md)
   - [Troubleshooting](docs/troubleshooting.md)
   - [Changelog](docs/changelog.md)
+  - [Privacy Policy](PRIVACY.md)
+  - [Terms of Service](TERMS.md)
 
   ## Technical Details
 
@@ -121,6 +129,6 @@
 
   See SECURITY.md for vulnerability reporting and security policies.
 
-  License
+  ## License
 
-  Proprietary - See website for terms of service
+  Proprietary - See [Terms of Service](TERMS.md) for usage terms
