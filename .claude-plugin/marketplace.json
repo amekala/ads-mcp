@@ -1,0 +1,14 @@
+{
+  "name": "adspirer-marketplace",
+  "owner": {
+    "name": "Adspirer"
+  },
+  "plugins": [
+    {
+      "name": "adspirer-plugin",
+      "source": "./plugins/claude/adspirer",
+      "description": "Cross-platform ad campaign management. Create, analyze, and optimize campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 91 tools.",
+      "version": "1.0.0"
+    }
+  ]
+}

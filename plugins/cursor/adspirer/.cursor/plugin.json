@@ -1,0 +1,13 @@
+{
+  "name": "adspirer",
+  "version": "1.0.0",
+  "description": "Cross-platform ad campaign management. Create, analyze, and optimize campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.",
+  "author": {
+    "name": "Adspirer",
+    "email": "abhi@adspirer.com",
+    "url": "https://www.adspirer.com"
+  },
+  "keywords": ["advertising", "google-ads", "meta-ads", "linkedin-ads", "tiktok-ads", "mcp", "campaigns"],
+  "logo": "https://www.adspirer.com/icons/adspirer-app-icon.svg",
+  "primaryColor": "#7C3AED"
+}
