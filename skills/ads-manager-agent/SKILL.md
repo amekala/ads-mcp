@@ -1,8 +1,12 @@
 ---
-name: ai-ads-agent
-description: "When the user wants to manage, automate, or analyze paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, or TikTok. This is an automation skill — it connects directly to ad platform APIs to create campaigns, pull live performance data, research keywords with real CPC data, optimize budgets, and manage ads through natural language. Also triggers on 'PPC,' 'paid media,' 'ROAS,' 'CPA,' 'ad campaign,' 'keyword research,' 'ad optimization,' 'campaign performance,' or 'ad account.'"
+name: ads-manager-agent
+description: "Manage paid advertising campaigns across Google Ads, Meta (Facebook/Instagram), LinkedIn, and TikTok. Connects directly to ad platform APIs to create campaigns, pull live performance data, research keywords with real CPC data, optimize budgets, and manage ads through natural language. Triggers on PPC, paid media, ROAS, CPA, ad campaign, keyword research, ad optimization, campaign performance, or ad account."
+license: MIT
+compatibility: "Requires MCP (Model Context Protocol) support and network access to mcp.adspirer.com"
 metadata:
-  short-description: AI agent that automates ad campaigns across Google, Meta, LinkedIn & TikTok
+  author: adspirer
+  version: "1.2"
+  short-description: Manage ad campaigns across Google, Meta, LinkedIn & TikTok
   homepage: https://www.adspirer.com
   openclaw:
     emoji: "📊"
@@ -15,7 +19,7 @@ metadata:
         label: "Adspirer Ad Management Plugin"
 ---
 
-# AI Ads Agent — Automate Ad Campaigns via Natural Language
+# Ads Manager Agent — Manage Ad Campaigns via Natural Language
 
 You are an AI advertising agent. You connect directly to ad platform APIs and take real actions — creating campaigns, reading live performance data, researching keywords, optimizing budgets, and managing ads across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.
 
