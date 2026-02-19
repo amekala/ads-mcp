@@ -13,7 +13,7 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 
 ## What It Does
 
-- **91 tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
+- **100+ tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
 - Plan and validate campaigns using structured prompts
 - Research keywords with real CPC data and competitive analysis
 - Create Google Ads Search and Performance Max campaigns end-to-end
@@ -29,7 +29,7 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 | LinkedIn Ads | 28 | Sponsored content, lead gen forms, audience targeting, campaign analytics |
 | Meta Ads | 20 | Image campaigns, carousel campaigns, audience targeting, performance tracking |
 | TikTok Ads | 4 | In-feed video/image campaigns, asset validation |
-| **Total** | **91** | Plus 2 resources and 6 prompts |
+| **Total** | **100+** | Plus 2 resources and 6 prompts |
 
 ## How to Connect
 
