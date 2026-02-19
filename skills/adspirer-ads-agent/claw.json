@@ -1,7 +1,7 @@
 {
-  "name": "ads-manager-agent",
-  "version": "1.0.0",
-  "displayName": "Ads Manager Agent",
+  "name": "adspirer-ads-agent",
+  "version": "1.1.0",
+  "displayName": "Adspirer Ads Agent",
   "summary": "Manage ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 100+ tools for campaign creation, performance analysis, keyword research, and budget optimization.",
   "description": "AI agent that manages ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Creates campaigns, reads live performance data, researches keywords, and optimizes budgets through natural language.",
   "author": {

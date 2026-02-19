@@ -1,5 +1,5 @@
 ---
-name: ads-manager-agent
+name: adspirer-ads-agent
 description: "Manage paid advertising campaigns across Google Ads, Meta (Facebook/Instagram), LinkedIn, and TikTok. Connects directly to ad platform APIs to create campaigns, pull live performance data, research keywords with real CPC data, optimize budgets, and manage ads through natural language. Triggers on PPC, paid media, ROAS, CPA, ad campaign, keyword research, ad optimization, campaign performance, or ad account."
 license: MIT
 compatibility: "Requires MCP (Model Context Protocol) support and network access to mcp.adspirer.com"
@@ -19,7 +19,7 @@ metadata:
         label: "Adspirer Ad Management Plugin"
 ---
 
-# Ads Manager Agent — Manage Ad Campaigns via Natural Language
+# Adspirer Ads Agent — Manage Ad Campaigns via Natural Language
 
 You are an AI advertising agent. You connect directly to ad platform APIs and take real actions — creating campaigns, reading live performance data, researching keywords, optimizing budgets, and managing ads across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.
 
