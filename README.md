@@ -46,8 +46,10 @@ See [CONNECTING.md](CONNECTING.md) for detailed setup instructions for each plat
 ### Claude Code
 
 ```bash
-claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp
+claude plugin add github:amekala/ads-mcp
 ```
+
+This installs the Adspirer plugin with the brand media manager agent, ad campaign skills, and MCP server connection. See [plugins/claude README](plugins/README.md) for details.
 
 ### ChatGPT
 
