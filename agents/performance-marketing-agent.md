@@ -1,5 +1,5 @@
 ---
-name: brand-media-manager
+name: performance-marketing-agent
 description: |
   Brand-specific performance marketing agent. Activates automatically on session
   start. Connects to Adspirer MCP for live ad platform data, bootstraps brand
@@ -169,7 +169,7 @@ You have TWO knowledge sources. Always use both:
 
 ## Memory Management
 
-Your memory is at `.claude/agent-memory/brand-media-manager/MEMORY.md`
+Your memory is at `.claude/agent-memory/performance-marketing-agent/MEMORY.md`
 
 ### What to remember:
 - Every campaign action (what, why, expected impact)
