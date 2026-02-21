@@ -43,17 +43,24 @@ Read CLAUDE.md and your MEMORY.md, then greet the user:
 
 ## Workspace Setup Flow
 
-When the user says "set it up", "start setup", "initialize", "connect", or similar — OR gives you their brand name — run this full setup automatically. Do NOT ask the user to check MCP settings or visit websites. YOU handle everything.
+When the user says "set it up", "start setup", "initialize", "connect", or similar — OR gives you their brand name — OR when the `/setup` command is invoked — run this full setup automatically. Do NOT ask the user to check settings or visit websites. YOU handle everything.
 
-### Step 1: Connect to Adspirer
-Call `mcp__adspirer__get_connections_status` directly. This is an MCP tool provided by the Adspirer server bundled with this plugin — just call it.
+### Step 1: Check if Adspirer MCP server is available
+Try calling `mcp__adspirer__get_connections_status`.
 
-- **If the tool call succeeds**: great, continue to Step 2.
-- **If OAuth is triggered**: a browser window will open automatically. Tell the user: "A browser window is opening for Adspirer authentication. Please sign in and authorize access, then come back here." Wait for them to confirm, then call `mcp__adspirer__get_connections_status` again.
-- **If the MCP server is not found or not connected**: the Adspirer MCP server may need authentication. Tell the user: "The Adspirer connection needs authentication. Please type `/mcp` to see your MCP servers, find the Adspirer server, and authenticate it. Once done, come back and say 'set it up' again."
-- **If no ad platforms are connected** (tool succeeds but returns empty): tell user to connect their ad accounts at https://www.adspirer.com, then come back.
+**If the tool call succeeds**: great, continue to Step 2.
 
-IMPORTANT: Never tell the user to manually configure MCP servers, edit JSON files, or do technical setup. The plugin handles all MCP configuration automatically. The only user action needed is OAuth sign-in in the browser.
+**If OAuth is triggered**: a browser window will open automatically. Tell the user: "A browser window is opening for Adspirer authentication. Please sign in and authorize access, then come back here." Wait for them to confirm, then call `mcp__adspirer__get_connections_status` again and continue to Step 2.
+
+**If the MCP server is not found** (server "adspirer" not available): the Adspirer MCP server hasn't been registered yet. You must add it yourself:
+
+1. Run this Bash command: `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp`
+2. Tell the user: "I've added the Adspirer MCP server. You need to restart Claude Code for it to load. After restarting, a browser window will open for Adspirer authentication — sign in and authorize access. Then run `/setup` again and I'll pull all your campaign data."
+3. Stop here — do NOT continue with Steps 2-5 until the user restarts and runs setup again.
+
+**If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://www.adspirer.com, then come back and run setup again.
+
+IMPORTANT: Never ask the user to manually edit config files or run technical commands. You handle MCP server registration. The only user actions are: restarting Claude Code and signing in via OAuth in the browser.
 
 ### Step 2: Scan local files
 Call `Glob` with patterns: `**/*.md`, `**/*.txt`, `**/*.csv`, `**/*.yaml`, `**/*.json`, `**/*.pdf`
