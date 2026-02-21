@@ -5,10 +5,10 @@
   },
   "plugins": [
     {
-      "name": "adspirer-plugin",
-      "source": "./plugins/claude/adspirer",
-      "description": "Cross-platform ad campaign management. Create, analyze, and optimize campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 91 tools.",
-      "version": "1.0.0"
+      "name": "adspirer-brand-agent",
+      "source": ".",
+      "description": "Brand-specific paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 100+ tools with brand awareness and persistent memory.",
+      "version": "2.0.0"
     }
   ]
 }
