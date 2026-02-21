@@ -5,9 +5,9 @@
   },
   "plugins": [
     {
-      "name": "adspirer-brand-agent",
+      "name": "adspirer-performance-marketing-agent",
       "source": ".",
-      "description": "Brand-specific paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 100+ tools with brand awareness and persistent memory.",
+      "description": "Brand-specific performance marketing agent across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 100+ tools with brand awareness and persistent memory.",
       "version": "2.0.0"
     }
   ]
