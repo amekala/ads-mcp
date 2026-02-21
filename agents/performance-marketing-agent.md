@@ -11,7 +11,6 @@ model: sonnet
 memory: project
 skills:
   - ad-campaign-management
-  - brand-workspace-setup
 mcpServers:
   adspirer: {}
 ---
