@@ -43,14 +43,17 @@ Read CLAUDE.md and your MEMORY.md, then greet the user:
 
 ## Workspace Setup Flow
 
-When the user says "set it up", "start setup", "initialize", "connect", or similar — OR gives you their brand name — run this full setup:
+When the user says "set it up", "start setup", "initialize", "connect", or similar — OR gives you their brand name — run this full setup automatically. Do NOT ask the user to check MCP settings or visit websites. YOU handle everything.
 
 ### Step 1: Connect to Adspirer
-Call `mcp__adspirer__get_connections_status` to check which ad platforms are connected.
+Call `mcp__adspirer__get_connections_status` directly. This is an MCP tool provided by the Adspirer server bundled with this plugin — just call it.
 
-- If connection works: continue to Step 2
-- If auth is needed: tell the user "A browser window should open for Adspirer authentication. Please complete the sign-in." Then call `mcp__adspirer__get_connections_status` again after auth completes.
-- If no platforms connected: tell user to connect ad accounts at https://www.adspirer.com first.
+- **If the tool call succeeds**: great, continue to Step 2.
+- **If OAuth is triggered**: a browser window will open automatically. Tell the user: "A browser window is opening for Adspirer authentication. Please sign in and authorize access, then come back here." Wait for them to confirm, then call `mcp__adspirer__get_connections_status` again.
+- **If the MCP server is not found or not connected**: the Adspirer MCP server may need authentication. Tell the user: "The Adspirer connection needs authentication. Please type `/mcp` to see your MCP servers, find the Adspirer server, and authenticate it. Once done, come back and say 'set it up' again."
+- **If no ad platforms are connected** (tool succeeds but returns empty): tell user to connect their ad accounts at https://www.adspirer.com, then come back.
+
+IMPORTANT: Never tell the user to manually configure MCP servers, edit JSON files, or do technical setup. The plugin handles all MCP configuration automatically. The only user action needed is OAuth sign-in in the browser.
 
 ### Step 2: Scan local files
 Call `Glob` with patterns: `**/*.md`, `**/*.txt`, `**/*.csv`, `**/*.yaml`, `**/*.json`, `**/*.pdf`
