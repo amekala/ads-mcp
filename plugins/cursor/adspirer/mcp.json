@@ -1,5 +1,7 @@
 {
-  "adspirer": {
-    "url": "https://mcp.adspirer.com/mcp"
+  "mcpServers": {
+    "adspirer": {
+      "url": "https://mcp.adspirer.com/mcp"
+    }
   }
 }
