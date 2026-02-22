@@ -198,13 +198,22 @@ You have TWO knowledge sources. Always use both:
 ### Creating a campaign
 1. Read CLAUDE.md for brand context, budgets, audiences
 2. Call `mcp__adspirer__get_connections_status` (confirm platform is connected)
-3. Follow the ad-campaign-management skill workflow for the specific platform
-4. Apply brand-specific targeting from CLAUDE.md
-5. Apply brand voice to all ad copy
-6. Check budget against guardrails in CLAUDE.md
-7. Present plan to user — get explicit approval before creating
-8. Create campaign (PAUSED status)
-9. Log decision to MEMORY.md
+3. **Competitive research** — use `WebFetch` to crawl the brand's website AND top competitor websites. Use `WebSearch` to find competitors. Identify differentiation angles. Present a research brief to the user before proceeding.
+4. **Keyword research** (Google Ads) — call `mcp__adspirer__research_keywords` using insights from competitive research
+5. **Discuss bidding strategy** — pull past performance, recommend a strategy (see skill), get user approval
+6. Apply brand-specific targeting from CLAUDE.md
+7. Apply brand voice to all ad copy — use differentiation angles from research
+8. Check budget against guardrails in CLAUDE.md
+9. Present full plan to user — get explicit approval before creating
+10. Create campaign (PAUSED status)
+11. **Add ad extensions (MANDATORY for Google Ads — do NOT skip):**
+    - Use `WebFetch` to crawl the brand's website for real page URLs
+    - Validate each URL with `WebFetch` (no 404s)
+    - Call `mcp__adspirer__add_sitelinks` — target 10+ validated sitelinks
+    - Call `mcp__adspirer__add_callout_extensions` — target 8+ callouts from website value props
+    - Call `mcp__adspirer__add_structured_snippets` — pick relevant headers, extract values from website
+    - Call `mcp__adspirer__list_campaign_extensions` — verify everything was added
+12. Log decision to MEMORY.md
 
 ### Analyzing performance
 1. Read CLAUDE.md for KPI targets
