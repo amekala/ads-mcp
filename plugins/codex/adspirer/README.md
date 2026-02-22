@@ -27,23 +27,13 @@ bash <(curl -s https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/co
 ```
 
 This automatically:
-- Downloads all Adspirer skills to `~/.agents/skills/`
+- Downloads all 5 Adspirer skills to `~/.agents/skills/`
 - Installs the agent configuration to `~/.codex/agents/`
 - Installs safety rules to `~/.codex/rules/`
-- Registers the Adspirer MCP server
+- Configures the Adspirer MCP server in `~/.codex/config.toml`
+- Enables multi-agent and registers the agent role
 
-After the script finishes, add this to your `~/.codex/config.toml` (create the file if it doesn't exist):
-
-```toml
-[features]
-multi_agent = true
-
-[agents.performance-marketing-agent]
-description = "Brand-specific performance marketing agent. Use for ad campaigns, performance, keywords, ad copy, budgets."
-config_file = "agents/performance-marketing-agent.toml"
-```
-
-Then restart Codex.
+Then restart Codex (close and reopen).
 
 ---
 
