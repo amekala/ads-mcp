@@ -41,6 +41,9 @@ Always start here before any ad operation:
 | Compare platforms | Cross-Platform | Call each platform's performance tool, present side-by-side |
 | Check ad fatigue | Creative Management | `detect_meta_creative_fatigue`, `analyze_linkedin_creative_performance` |
 | Understand audiences | Audience Analysis | `get_meta_audience_insights`, `get_linkedin_audience_insights` |
+| Add ad extensions | Ad Extensions | `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions` |
+| Change bidding strategy | Bidding Strategy | `update_bid_strategy`, `get_campaign_structure` |
+| Add/manage keywords | Keyword Management | `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
 | Set up alerts | Monitoring | `create_monitor`, `list_monitors` |
 | Schedule reports | Reporting | `schedule_brief`, `generate_report_now` |
 
@@ -98,18 +101,51 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 - Params: `business_description` or `seed_keywords`, optional `website_url`, `target_location`
 - Group results by intent (high/medium/low), show search volume, CPC ranges, competition
 
+## Bidding Strategy
+
+**Before creating ANY Google Ads campaign, discuss bidding strategy with the user.**
+
+1. Pull past performance: `get_campaign_performance` (lookback_days: 90)
+2. Review existing strategies: `get_campaign_structure` to see what bidding strategies current campaigns use
+3. Recommend a strategy based on data:
+
+| Scenario | Recommended Strategy | Reasoning |
+|----------|---------------------|-----------|
+| New advertiser (no conversion data) | Maximize Clicks | Build traffic data first. Switch to Maximize Conversions after 30+ conversions. |
+| Has conversion data (30+ conversions/month) | Maximize Conversions or Target CPA | Enough data for Smart Bidding to optimize. |
+| Known target CPA | Target CPA | Set CPA at or slightly above historical average. |
+| E-commerce with ROAS goals | Target ROAS | Set ROAS target based on margins and historical performance. |
+| Brand campaign | Manual CPC or Maximize Clicks | Control spend on branded terms. Low CPCs expected. |
+| High-value B2B leads | Target CPA | Long sales cycles need CPA control. Start 20% above current CPA, tighten over time. |
+
+4. Present recommendation with reasoning to the user
+5. Get explicit approval before setting the strategy
+6. To change strategy on existing campaigns: `update_bid_strategy`
+
+**Important:** Never silently pick a bidding strategy. Always explain the trade-offs and let the user decide.
+
 ## Campaign Creation
 
 **Google Ads Search (exact order):**
 1. `research_keywords` — mandatory, never skip
-2. `discover_existing_assets` — check for existing ad assets
-3. `validate_and_prepare_assets` — validate before creation
-4. `create_search_campaign` — create the campaign
+2. Discuss bidding strategy with user (see Bidding Strategy section above)
+3. `discover_existing_assets` — check for existing ad assets
+4. `validate_and_prepare_assets` — validate before creation
+5. `create_search_campaign` — create the campaign (PAUSED status)
+6. Add ad extensions (see Ad Extensions section below):
+   - Crawl user's website with `WebFetch` to find real page URLs
+   - `add_sitelinks` — add 10+ validated sitelinks
+   - `add_callout_extensions` — add 4+ callout extensions
+   - `add_structured_snippets` — add relevant structured snippets
+7. `list_campaign_extensions` — verify all extensions were added
 
 **Google Ads Performance Max:**
-1. `discover_existing_assets` — check existing assets
-2. `validate_and_prepare_assets` — validate creative assets
-3. `create_pmax_campaign` — create the campaign
+1. Discuss bidding strategy with user (see Bidding Strategy section above)
+2. `discover_existing_assets` — check existing assets
+3. `validate_and_prepare_assets` — validate creative assets
+4. `create_pmax_campaign` — create the campaign
+5. Add ad extensions (same as Search — sitelinks, callouts, snippets)
+6. `list_campaign_extensions` — verify all extensions were added
 
 **Meta Ads:**
 1. `get_connections_status` — verify Meta account connected
@@ -121,6 +157,81 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 2. `discover_linkedin_assets` — check existing assets
 3. `validate_and_prepare_linkedin_assets` — validate assets
 4. `create_linkedin_image_campaign` — create the campaign
+
+## Ad Extensions (Google Ads)
+
+Ad extensions improve Quality Score, increase ad real estate, and boost CTR. **Always add extensions after creating a Google Ads campaign.**
+
+### Before Adding Extensions
+
+Call `list_campaign_extensions` to check what already exists on the campaign. Never duplicate existing extensions.
+
+### Sitelinks (`add_sitelinks`)
+
+Sitelinks are the most impactful extension. Target **10+ sitelinks** (more is better — Google rotates the best performers).
+
+**Workflow:**
+1. Use `WebFetch` to crawl the user's website homepage — extract all navigation links and key pages
+2. Build a candidate list of pages to include:
+   - Homepage, Pricing/Plans, About Us, Contact, Key product/service pages, Blog, Case Studies/Testimonials, FAQ/Help, Free Trial/Demo, Careers
+3. **Validate each URL** — use `WebFetch` on each candidate URL to confirm it loads (no 404s, no redirects to error pages)
+4. For each valid sitelink, prepare:
+   - **Link text**: max 25 characters, descriptive (e.g., "View Pricing Plans")
+   - **Description line 1**: max 35 characters (e.g., "Plans starting at $29/month")
+   - **Description line 2**: max 35 characters (e.g., "Free 14-day trial included")
+   - **Final URL**: the validated page URL
+5. If fewer than 8 valid pages found → ask the user for additional URLs or pages to include
+6. Present the full sitelink list to the user for review before adding
+7. Call `add_sitelinks` with the approved list
+
+### Callout Extensions (`add_callout_extensions`)
+
+Callouts highlight value propositions. Target **8+ callouts** (minimum 4).
+
+**Workflow:**
+1. Extract value propositions from:
+   - Website content (crawled via `WebFetch`)
+   - Brand docs (CLAUDE.md if it exists)
+   - Existing ad copy in the account
+2. Each callout: max **25 characters**
+3. Examples: "Free Shipping", "24/7 Support", "No Setup Fee", "Cancel Anytime", "Money-Back Guarantee", "Same-Day Delivery", "Award-Winning", "Trusted by 10K+"
+4. Present to user for approval, then call `add_callout_extensions`
+
+### Structured Snippets (`add_structured_snippets`)
+
+Snippets show predefined categories of offerings. Pick headers relevant to the business.
+
+**Available headers:** Brands, Courses, Destinations, Featured Hotels, Insurance Coverage, Models, Neighborhoods, Service Catalog, Shows, Styles, Types
+
+**Workflow:**
+1. Review the user's website and business type to pick relevant headers
+2. Extract 3-10 values per header from website content
+3. Example: SaaS company → Header "Types" with values "Analytics, Reporting, Dashboards, API Access"
+4. Example: E-commerce → Header "Brands" with values "Nike, Adidas, Puma, New Balance"
+5. Present to user, then call `add_structured_snippets`
+
+### Price Extensions
+
+If the user's website has a pricing page:
+1. Use `WebFetch` to crawl the pricing page
+2. Extract plan names, prices, and descriptions
+3. Present to user for confirmation before adding
+4. Useful for SaaS, services with tiered pricing, or e-commerce with featured products
+
+### Call Extensions
+
+If the business has a phone number:
+1. Ask the user for their business phone number
+2. Discuss call tracking preferences (use Google forwarding number or direct?)
+3. Set call hours if business has limited availability
+
+### Extension Verification
+
+After adding all extensions, always call `list_campaign_extensions` to verify:
+- All sitelinks were added and have correct URLs
+- Callouts are present
+- Structured snippets are showing
+- Report back to the user what was added
 
 ## Budget Optimization (Google Ads)
 
@@ -256,7 +367,7 @@ These tools create REAL campaigns that spend REAL money.
 
 | Platform | Key Tools |
 |----------|-----------|
-| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets` |
+| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
 | LinkedIn Ads | `get_linkedin_campaign_performance`, `create_linkedin_image_campaign`, `get_linkedin_organizations`, `analyze_linkedin_creative_performance`, `get_linkedin_audience_insights`, `research_business_for_linkedin_targeting`, `generate_linkedin_ad_creatives` |
 | Meta Ads | `get_meta_campaign_performance`, `search_meta_targeting`, `browse_meta_targeting`, `detect_meta_creative_fatigue`, `get_meta_audience_insights`, `analyze_meta_audiences`, `optimize_meta_placements`, `analyze_meta_wasted_spend` |
 | TikTok Ads | `create_tiktok_campaign`, `create_tiktok_video_campaign`, `discover_tiktok_assets`, `validate_and_prepare_tiktok_assets` |
