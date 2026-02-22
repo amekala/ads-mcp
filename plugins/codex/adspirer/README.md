@@ -14,13 +14,84 @@ This plugin turns Codex into a **brand-specific paid media analyst** that:
 ## Prerequisites
 
 - [OpenAI Codex CLI](https://github.com/openai/codex) installed and working
-- An Adspirer account at [adspirer.com](https://www.adspirer.com) with at least one ad platform connected (Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads)
+- An Adspirer account at [adspirer.com](https://www.adspirer.com) with at least one ad platform connected
 
 ---
 
-## First-Time Setup (5 minutes)
+## Quick Install (One Command)
 
-### Step 1: Clone or download the plugin files
+Open your terminal and run:
+
+```bash
+bash <(curl -s https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)
+```
+
+This automatically:
+- Downloads all Adspirer skills to `~/.agents/skills/`
+- Installs the agent configuration to `~/.codex/agents/`
+- Installs safety rules to `~/.codex/rules/`
+- Registers the Adspirer MCP server
+
+After the script finishes, add this to your `~/.codex/config.toml` (create the file if it doesn't exist):
+
+```toml
+[features]
+multi_agent = true
+
+[agents.performance-marketing-agent]
+description = "Brand-specific performance marketing agent. Use for ad campaigns, performance, keywords, ad copy, budgets."
+config_file = "agents/performance-marketing-agent.toml"
+```
+
+Then restart Codex.
+
+---
+
+## Getting Started
+
+### 1. Go to your brand folder and open Codex
+
+```bash
+cd ~/Clients/YourBrand
+codex
+```
+
+Your brand folder can have docs (PDFs, media plans, guidelines) or be completely empty.
+
+### 2. Say "set up my brand workspace"
+
+On first use, a browser window opens for Adspirer authentication. Sign in, authorize access, and come back to Codex.
+
+The agent will:
+1. Connect to your ad accounts
+2. Scan the folder for brand docs
+3. Pull live campaign data from all connected platforms
+4. Create `AGENTS.md` with your brand context, performance snapshot, and KPI targets
+5. Tell you what it found and ask what you'd like to work on
+
+### 3. Start managing campaigns
+
+```
+How are my Google Ads campaigns doing?
+Find wasted spend across all platforms
+Write new headlines for my Google Search campaigns
+Create a LinkedIn campaign targeting IT Directors
+What keywords should I bid on?
+Compare my Google and Meta ad performance
+```
+
+That's it. You're up and running.
+
+---
+
+## Manual Install (Alternative)
+
+If you prefer to install manually instead of using the one-command script:
+
+<details>
+<summary>Click to expand manual steps</summary>
+
+### Step 1: Clone the repo
 
 ```bash
 git clone https://github.com/amekala/ads-mcp.git
@@ -29,13 +100,8 @@ cd ads-mcp/plugins/codex/adspirer
 
 ### Step 2: Install skills
 
-Copy the skills to your home directory so Codex can find them globally:
-
 ```bash
-# Create the skills directory if it doesn't exist
 mkdir -p ~/.agents/skills
-
-# Copy all Adspirer skills
 cp -r skills/adspirer-ads ~/.agents/skills/
 cp -r skills/adspirer-setup ~/.agents/skills/
 cp -r skills/adspirer-performance-review ~/.agents/skills/
@@ -43,92 +109,40 @@ cp -r skills/adspirer-write-ad-copy ~/.agents/skills/
 cp -r skills/adspirer-wasted-spend ~/.agents/skills/
 ```
 
-### Step 3: Add the Adspirer MCP server
+### Step 3: Add the MCP server
 
 ```bash
 codex mcp add adspirer --url https://mcp.adspirer.com/mcp
 ```
 
-This registers the Adspirer MCP server with Codex.
-
-### Step 4: (Optional) Install agent configuration
-
-If you want the full agent role with multi-agent support:
+### Step 4: Install agent config and rules
 
 ```bash
-# Copy agent config
-mkdir -p ~/.codex/agents
+mkdir -p ~/.codex/agents ~/.codex/rules
 cp agents/performance-marketing-agent.toml ~/.codex/agents/
-
-# Copy safety rules
-mkdir -p ~/.codex/rules
 cp rules/campaign-safety.rules ~/.codex/rules/
 ```
 
-Then add the agent role to your `~/.codex/config.toml` (create the file if it doesn't exist):
+### Step 5: Update config.toml
+
+Add to `~/.codex/config.toml`:
 
 ```toml
 [features]
 multi_agent = true
 
 [agents.performance-marketing-agent]
-description = "Brand-specific performance marketing agent. Use when the user asks about ad campaigns, campaign performance, budget optimization, keyword research, ad copy, audience targeting, or anything related to Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads."
+description = "Brand-specific performance marketing agent. Use for ad campaigns, performance, keywords, ad copy, budgets."
 config_file = "agents/performance-marketing-agent.toml"
 ```
 
-> **Note:** If you already have a `config.toml`, merge these sections with your existing configuration. The `[mcp_servers.adspirer]` section is already handled by `codex mcp add` in Step 3.
+### Step 6: Restart Codex
 
-### Step 5: Restart Codex
-
-```bash
-# Close and reopen Codex for changes to take effect
-codex
-```
-
-### Step 6: Authenticate with Adspirer
-
-On first use, Codex will open a browser window for Adspirer OAuth authentication:
-
-1. Sign in with your Adspirer account
-2. Authorize Codex to access your ad accounts
-3. Return to Codex — you're authenticated
-
-You can verify the connection by checking `/mcp` in Codex or asking:
-```
-Check which ad platforms are connected
-```
+</details>
 
 ---
 
-## First Use: Brand Workspace Setup
-
-Navigate to your brand's folder and start Codex:
-
-```bash
-cd ~/Clients/Acme    # your brand folder (can have docs, or be empty)
-codex
-```
-
-Then say:
-
-```
-Set up my brand workspace
-```
-
-or use the skill directly:
-
-```
-$adspirer-setup
-```
-
-The agent will:
-1. Connect to your Adspirer ad accounts
-2. Scan the folder for any brand docs (PDFs, media plans, guidelines, etc.)
-3. Pull live campaign data from all connected platforms
-4. Generate an `AGENTS.md` file with your brand context, performance snapshot, and KPI targets
-5. Present a summary and ask what you'd like to work on
-
-### What goes in your brand folder?
+## What Goes in Your Brand Folder?
 
 Drop any brand-relevant files — the agent reads them all:
 
@@ -141,7 +155,7 @@ Drop any brand-relevant files — the agent reads them all:
 └── audience-research.csv      # Target audience data
 ```
 
-More docs = better brand context = better ad copy and recommendations.
+More docs = better brand context = better ad copy and recommendations. No docs? That's fine too — the agent builds context from your live ad platform data.
 
 ---
 
@@ -157,48 +171,7 @@ More docs = better brand context = better ad copy and recommendations.
 
 You don't need to remember skill names — just describe what you want and Codex will match the right skill automatically.
 
-## Example Prompts
-
-```
-How are my Google Ads campaigns doing?
-Find wasted spend across all platforms
-Write new headlines for my Google Search campaigns
-Create a LinkedIn campaign targeting IT Directors
-What keywords should I bid on for my plumbing business?
-Set up weekly performance alerts
-Compare my Google and Meta ad performance
-```
-
 ---
-
-## File Structure
-
-```
-plugins/codex/adspirer/
-├── .codex/
-│   └── config.toml                          # Codex config (MCP + agent role)
-├── agents/
-│   ├── openai.yaml                          # Plugin UI config
-│   └── performance-marketing-agent.toml     # Agent instructions + config
-├── skills/
-│   ├── adspirer-ads/                        # Core skill (100+ tools, all workflows)
-│   │   ├── SKILL.md
-│   │   └── agents/openai.yaml
-│   ├── adspirer-setup/                      # Workspace bootstrap
-│   │   └── SKILL.md
-│   ├── adspirer-performance-review/         # Quick: performance scorecard
-│   │   └── SKILL.md
-│   ├── adspirer-write-ad-copy/              # Quick: brand-voice ad copy
-│   │   └── SKILL.md
-│   └── adspirer-wasted-spend/               # Quick: find wasted spend
-│       └── SKILL.md
-├── rules/
-│   └── campaign-safety.rules               # Safety rules (prevents direct API calls)
-├── assets/
-│   ├── adspirer-small.svg
-│   └── adspirer.png
-└── README.md                               # This file
-```
 
 ## Architecture
 
@@ -217,21 +190,12 @@ Codex (CLI / IDE)
 │   └── Quick skills — performance-review, write-ad-copy, wasted-spend
 │
 └── Adspirer MCP Server (hands)
-    ├── Google Ads tools
-    ├── Meta Ads tools
-    ├── LinkedIn Ads tools
-    ├── TikTok Ads tools
+    ├── Google Ads (39+ tools)
+    ├── LinkedIn Ads (28+ tools)
+    ├── Meta Ads (20+ tools)
+    ├── TikTok Ads (4+ tools)
     └── Account + monitoring tools
 ```
-
-## Supported Platforms
-
-| Platform | Tools | Capabilities |
-|----------|-------|-------------|
-| Google Ads | 39+ | Search campaigns, PMax, keywords, bidding, ad extensions, budget optimization |
-| LinkedIn Ads | 28+ | Image campaigns, audience insights, creative performance, B2B targeting |
-| Meta Ads | 20+ | Campaign management, audience analysis, creative fatigue detection, placements |
-| TikTok Ads | 4+ | Video campaigns, asset management |
 
 ## Safety
 
@@ -244,16 +208,15 @@ Codex (CLI / IDE)
 
 | Problem | Solution |
 |---------|----------|
-| MCP server not found | Run `codex mcp add adspirer --url https://mcp.adspirer.com/mcp` and restart Codex |
+| MCP server not found | Run `codex mcp add adspirer --url https://mcp.adspirer.com/mcp` and restart |
 | Authentication failed | Run `codex mcp login adspirer` to re-authenticate |
 | No ad platforms connected | Connect platforms at [adspirer.com](https://www.adspirer.com) |
-| Skills not showing | Verify skills are in `~/.agents/skills/` — run `ls ~/.agents/skills/` |
-| No data returned | Check if the platform has active campaigns. Try a longer lookback period (60/90 days) |
-| Rate limit hit | Check your Adspirer tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited) |
+| Skills not showing | Verify: `ls ~/.agents/skills/` — should show `adspirer-*` directories |
+| No data returned | Check for active campaigns. Try longer lookback (60/90 days) |
+| Rate limit hit | Check Adspirer tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited) |
 
 ## Links
 
 - [Adspirer](https://www.adspirer.com) — Connect your ad accounts
-- [Adspirer MCP Documentation](https://docs.adspirer.com)
 - [OpenAI Codex](https://github.com/openai/codex) — The AI coding agent
 - [Report Issues](https://github.com/amekala/ads-mcp/issues)
