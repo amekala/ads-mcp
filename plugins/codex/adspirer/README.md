@@ -35,45 +35,57 @@ This automatically:
 
 Then restart Codex (close and reopen).
 
-**Note:** If a browser window opens during install for Adspirer login, complete the sign-in immediately and return to your terminal.
+**Note:** The installer does not require authentication. You'll authenticate in the Getting Started steps below.
 
 ---
 
 ## Getting Started
 
-### 1. Go to your brand folder and open Codex
+### 1. Verify the MCP server is registered
+
+Before opening Codex, confirm the server is present:
+
+```bash
+codex mcp list
+```
+
+Look for `adspirer` in the output. It's normal for auth to show **Unsupported** at this point — that resolves after login.
+
+If `adspirer` is missing entirely, run:
+
+```bash
+codex mcp add adspirer --url https://mcp.adspirer.com/mcp
+```
+
+### 2. Authenticate with Adspirer
+
+```bash
+codex mcp login adspirer
+```
+
+A browser window will open. Sign in with your Adspirer account and authorize access. Return to your terminal when complete.
+
+Verify auth succeeded:
+
+```bash
+codex mcp list
+```
+
+`adspirer` should now show as **enabled**.
+
+### 3. Open your brand folder in Codex
 
 ```bash
 cd ~/Clients/YourBrand
 codex
 ```
 
-Your brand folder can have docs (PDFs, media plans, guidelines) or be completely empty.
+Your brand folder can have docs (`.md`, `.txt`, `.csv`, `.yaml`, `.json`, `.pdf`) or be completely empty.
 
-### 2. Verify the MCP server is registered
-
-```bash
-codex mcp list
-```
-
-You should see:
-
-```
-adspirer  https://mcp.adspirer.com/mcp  enabled
-```
-
-If the status shows **Unsupported** or **not authenticated**, run:
-
-```bash
-codex mcp login adspirer
-```
-
-Complete the browser sign-in, then check `codex mcp list` again to confirm `enabled`.
-
-### 3. Say "set up my brand workspace"
+### 4. Say "set up my brand workspace"
 
 The agent will:
-1. Connect to your ad accounts (may open a browser for OAuth on first use)
+1. Connect to your ad accounts
 2. Scan the folder for brand docs
 3. Pull live campaign data from all connected platforms
 4. Create `AGENTS.md` with your brand context, performance snapshot, and KPI targets
@@ -81,7 +93,7 @@ The agent will:
 
 If it doesn't trigger automatically, run: `$adspirer-setup`
 
-### 4. Start managing campaigns
+### 5. Start managing campaigns
 
 ```
 How are my Google Ads campaigns doing?

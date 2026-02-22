@@ -54,21 +54,25 @@ else
 fi
 
 if ! grep -q '\[features\]' "$CONFIG_FILE" 2>/dev/null; then
-    echo "  Adding [features]..."
+    echo "  Adding [features] with multi_agent = true..."
     cat >> "$CONFIG_FILE" << 'TOML'
 
 [features]
 multi_agent = true
 TOML
 else
-    # Ensure multi_agent is set even if [features] exists
-    if ! grep -q 'multi_agent' "$CONFIG_FILE" 2>/dev/null; then
-        # Insert multi_agent = true after [features] line
-        sed -i.bak '/\[features\]/a\
+    # [features] exists — ensure multi_agent = true is set correctly
+    if grep -q 'multi_agent\s*=\s*false' "$CONFIG_FILE" 2>/dev/null; then
+        # Flip false → true
+        sed -i.bak 's/multi_agent\s*=\s*false/multi_agent = true/' "$CONFIG_FILE" && rm -f "${CONFIG_FILE}.bak"
+        echo "  Updated multi_agent = false → true in [features]"
+    elif ! sed -n '/^\[features\]/,/^\[/p' "$CONFIG_FILE" | grep -q 'multi_agent'; then
+        # [features] exists but multi_agent key is missing — insert it
+        sed -i.bak '/^\[features\]/a\
 multi_agent = true' "$CONFIG_FILE" && rm -f "${CONFIG_FILE}.bak"
         echo "  Added multi_agent = true to existing [features]"
     else
-        echo "  [features] already present — skipping"
+        echo "  [features] multi_agent = true already set — skipping"
     fi
 fi
 
@@ -92,17 +96,19 @@ echo "  Skills:  ~/.agents/skills/adspirer-*  (5 skills)"
 echo "  Agent:   ~/.codex/agents/performance-marketing-agent.toml"
 echo "  Config:  ~/.codex/config.toml (MCP server + agent role)"
 echo ""
-echo "IMPORTANT — OAuth authentication:"
-echo "  On first use, a browser window will open for Adspirer login."
-echo "  Complete the sign-in in your browser, then return to Codex."
-echo "  If it opens during install, complete it immediately."
-echo ""
 echo "Next steps:"
 echo "  1. Restart Codex (close and reopen)"
-echo "  2. Verify MCP is registered:"
+echo "  2. Verify MCP server is present:"
 echo "     codex mcp list"
-echo "     (should show: adspirer ... enabled)"
-echo "  3. Open your brand folder in Codex"
-echo "  4. Say: 'Set up my brand workspace'"
+echo "     (adspirer should appear — auth may show Unsupported, that's normal)"
+echo "  3. Authenticate with Adspirer:"
+echo "     codex mcp login adspirer"
+echo "     (complete the browser sign-in, then return here)"
+echo "  4. Verify auth succeeded:"
+echo "     codex mcp list"
+echo "     (adspirer should now show: enabled)"
+echo "  5. Open your brand folder:"
+echo "     cd ~/Clients/YourBrand && codex"
+echo "  6. Say: 'Set up my brand workspace'"
 echo "     If it doesn't trigger, run: \$adspirer-setup"
 echo ""
