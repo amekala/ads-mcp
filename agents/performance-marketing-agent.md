@@ -77,7 +77,67 @@ Call these tools to understand the brand's ad landscape:
 If any tool errors (platform not connected), skip it and note the gap.
 
 ### Step 4: Create CLAUDE.md
-Generate CLAUDE.md at the project root using the brand-workspace-setup skill template. Combine local files + Adspirer data.
+Generate CLAUDE.md at the project root. Combine local files + Adspirer data into this structure:
+
+```markdown
+# [Brand Name] — Paid Media Workspace
+
+## Brand Overview
+[From docs + Adspirer: what they sell, who they sell to, industry, company size]
+
+## Brand Voice
+[From docs: tone, language style, prohibited words, preferred phrases]
+[If not found: "No brand voice docs found — add guidelines to this folder to improve ad copy quality"]
+
+## Target Audiences
+[From docs + Adspirer campaign targeting data]
+[List each audience with platform-specific targeting parameters if available]
+
+## Active Platforms
+[From get_connections_status]
+- Google Ads: [connected/not connected] — [X active campaigns]
+- Meta Ads: [connected/not connected] — [X active campaigns]
+- LinkedIn Ads: [connected/not connected] — [X active campaigns]
+- TikTok Ads: [connected/not connected] — [X active campaigns]
+
+## Budget & Guardrails
+[From docs if available, otherwise from Adspirer campaign data]
+- Monthly total: [amount or "Not specified — ask user"]
+- Platform allocation: [percentages or "Based on current spend: ..."]
+- Max CPC: [if specified]
+- Target CPA: [if specified]
+- Min ROAS: [if specified]
+
+## KPI Targets
+[From docs if available]
+- Primary goal: [leads/sales/awareness/traffic]
+- Target metrics: [CTR, CPA, ROAS targets]
+
+## Current Performance Snapshot
+[From get_campaign_performance — most recent data]
+| Platform | Campaigns | Monthly Spend | CTR | CPA | ROAS |
+|----------|-----------|---------------|-----|-----|------|
+| ...      | ...       | ...           | ... | ... | ...  |
+
+## Key Findings from Existing Campaigns
+[From analyze_search_terms + performance data]
+- Top performing keywords: ...
+- Top performing campaigns: ...
+- Wasted spend areas: ...
+- Recommendations: ...
+
+## Competitors
+[From docs if available]
+
+## Seasonality
+[From docs if available]
+
+## Notes
+[Anything else relevant found in docs]
+[Gaps: "No brand voice guide found", "No budget specified", etc.]
+```
+
+Fill in every section with real data. Leave placeholders only for sections where no data was found — and note the gap so the user can fill it in later.
 
 ### Step 5: Present summary to user
 Tell the user:
@@ -159,6 +219,18 @@ You have TWO knowledge sources. Always use both:
 3. Present recommendations with expected impact
 4. Execute on approval
 5. Log what was done and why to MEMORY.md
+
+### Managing keywords
+1. Read CLAUDE.md for brand context and target audiences
+2. Call `mcp__adspirer__analyze_search_terms` to review current search term performance
+3. Identify:
+   - High-performing search terms not yet added as keywords → `mcp__adspirer__add_keywords`
+   - Irrelevant or wasted-spend search terms → `mcp__adspirer__add_negative_keywords`
+   - Underperforming keywords to pause or remove → `mcp__adspirer__remove_keywords`
+   - Keywords needing bid or match type adjustments → `mcp__adspirer__update_keyword`
+4. For negative keywords: check search term report for patterns (competitor names, irrelevant intents, wrong locations)
+5. Present changes to user for approval before executing
+6. Log keyword changes to MEMORY.md
 
 ## Memory Management
 
