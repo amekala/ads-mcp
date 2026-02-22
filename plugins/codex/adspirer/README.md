@@ -14,6 +14,7 @@ This plugin turns Codex into a **brand-specific paid media analyst** that:
 ## Prerequisites
 
 - [OpenAI Codex CLI](https://github.com/openai/codex) installed and working
+- [git](https://git-scm.com/) installed (used by the installer)
 - An Adspirer account at [adspirer.com](https://www.adspirer.com) with at least one ad platform connected
 
 ---
@@ -55,14 +56,24 @@ Your brand folder can have docs (PDFs, media plans, guidelines) or be completely
 codex mcp list
 ```
 
-You should see `adspirer` listed as `enabled`. If it shows `Unsupported`, run `codex mcp login adspirer` to complete authentication.
+You should see:
+
+```
+adspirer  https://mcp.adspirer.com/mcp  enabled
+```
+
+If the status shows **Unsupported** or **not authenticated**, run:
+
+```bash
+codex mcp login adspirer
+```
+
+Complete the browser sign-in, then check `codex mcp list` again to confirm `enabled`.
 
 ### 3. Say "set up my brand workspace"
 
-On first use, a browser window opens for Adspirer authentication. Sign in, authorize access, and come back to Codex.
-
 The agent will:
-1. Connect to your ad accounts
+1. Connect to your ad accounts (may open a browser for OAuth on first use)
 2. Scan the folder for brand docs
 3. Pull live campaign data from all connected platforms
 4. Create `AGENTS.md` with your brand context, performance snapshot, and KPI targets
@@ -148,12 +159,15 @@ Drop any brand-relevant files — the agent reads them all:
 
 ```
 ~/Clients/Acme/
-├── brand-guidelines.pdf       # Brand voice, logo usage, tone
-├── Q1-media-plan.xlsx         # Budget, targets, timeline
-├── campaign-notes.docx        # Past campaign strategy notes
+├── brand-guidelines.md        # Brand voice, tone, prohibited words
+├── Q1-media-plan.csv          # Budget, targets, timeline
+├── campaign-notes.txt         # Past campaign strategy notes
 ├── competitor-analysis.pdf    # Competitive landscape
-└── audience-research.csv      # Target audience data
+├── audience-research.csv      # Target audience data
+└── config.yaml                # Any structured brand config
 ```
+
+Supported file types: `.md`, `.txt`, `.csv`, `.yaml`, `.json`, `.pdf`
 
 More docs = better brand context = better ad copy and recommendations. No docs? That's fine too — the agent builds context from your live ad platform data.
 

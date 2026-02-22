@@ -33,43 +33,55 @@ cp "$PLUGIN_DIR/agents/performance-marketing-agent.toml" ~/.codex/agents/
 echo "[4/4] Configuring Codex (MCP server, agent role, features)..."
 CONFIG_FILE="$HOME/.codex/config.toml"
 
-if [ -f "$CONFIG_FILE" ]; then
-    if grep -q "mcp_servers.adspirer" "$CONFIG_FILE" 2>/dev/null; then
-        echo "  Adspirer already in config.toml — skipping config update"
-    else
-        echo "  Appending Adspirer config to existing config.toml..."
-        cat >> "$CONFIG_FILE" << 'TOML'
-
-# --- Adspirer Performance Marketing Agent ---
-
-[mcp_servers.adspirer]
-url = "https://mcp.adspirer.com/mcp"
-tool_timeout_sec = 120
-
-[features]
-multi_agent = true
-
-[agents.performance-marketing-agent]
-description = "Brand-specific performance marketing agent. Use for ad campaigns, performance, keywords, ad copy, budgets."
-config_file = "agents/performance-marketing-agent.toml"
-TOML
-    fi
-else
+if [ ! -f "$CONFIG_FILE" ]; then
     echo "  Creating ~/.codex/config.toml..."
     cat > "$CONFIG_FILE" << 'TOML'
 # Adspirer Performance Marketing Agent configuration
+TOML
+fi
+
+# Idempotent: only add each section if not already present
+if ! grep -q "mcp_servers.adspirer" "$CONFIG_FILE" 2>/dev/null; then
+    echo "  Adding [mcp_servers.adspirer]..."
+    cat >> "$CONFIG_FILE" << 'TOML'
 
 [mcp_servers.adspirer]
 url = "https://mcp.adspirer.com/mcp"
 tool_timeout_sec = 120
+TOML
+else
+    echo "  [mcp_servers.adspirer] already present — skipping"
+fi
+
+if ! grep -q '\[features\]' "$CONFIG_FILE" 2>/dev/null; then
+    echo "  Adding [features]..."
+    cat >> "$CONFIG_FILE" << 'TOML'
 
 [features]
 multi_agent = true
+TOML
+else
+    # Ensure multi_agent is set even if [features] exists
+    if ! grep -q 'multi_agent' "$CONFIG_FILE" 2>/dev/null; then
+        # Insert multi_agent = true after [features] line
+        sed -i.bak '/\[features\]/a\
+multi_agent = true' "$CONFIG_FILE" && rm -f "${CONFIG_FILE}.bak"
+        echo "  Added multi_agent = true to existing [features]"
+    else
+        echo "  [features] already present — skipping"
+    fi
+fi
+
+if ! grep -q 'agents.performance-marketing-agent' "$CONFIG_FILE" 2>/dev/null; then
+    echo "  Adding [agents.performance-marketing-agent]..."
+    cat >> "$CONFIG_FILE" << 'TOML'
 
 [agents.performance-marketing-agent]
 description = "Brand-specific performance marketing agent. Use for ad campaigns, performance, keywords, ad copy, budgets."
 config_file = "agents/performance-marketing-agent.toml"
 TOML
+else
+    echo "  [agents.performance-marketing-agent] already present — skipping"
 fi
 
 echo ""
