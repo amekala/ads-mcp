@@ -23,17 +23,18 @@ This plugin turns Codex into a **brand-specific paid media analyst** that:
 Open your terminal and run:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)
 ```
 
 This automatically:
 - Downloads all 5 Adspirer skills to `~/.agents/skills/`
 - Installs the agent configuration to `~/.codex/agents/`
-- Installs safety rules to `~/.codex/rules/`
 - Configures the Adspirer MCP server in `~/.codex/config.toml`
 - Enables multi-agent and registers the agent role
 
 Then restart Codex (close and reopen).
+
+**Note:** If a browser window opens during install for Adspirer login, complete the sign-in immediately and return to your terminal.
 
 ---
 
@@ -48,7 +49,15 @@ codex
 
 Your brand folder can have docs (PDFs, media plans, guidelines) or be completely empty.
 
-### 2. Say "set up my brand workspace"
+### 2. Verify the MCP server is registered
+
+```bash
+codex mcp list
+```
+
+You should see `adspirer` listed as `enabled`. If it shows `Unsupported`, run `codex mcp login adspirer` to complete authentication.
+
+### 3. Say "set up my brand workspace"
 
 On first use, a browser window opens for Adspirer authentication. Sign in, authorize access, and come back to Codex.
 
@@ -59,7 +68,9 @@ The agent will:
 4. Create `AGENTS.md` with your brand context, performance snapshot, and KPI targets
 5. Tell you what it found and ask what you'd like to work on
 
-### 3. Start managing campaigns
+If it doesn't trigger automatically, run: `$adspirer-setup`
+
+### 4. Start managing campaigns
 
 ```
 How are my Google Ads campaigns doing?
@@ -105,12 +116,11 @@ cp -r skills/adspirer-wasted-spend ~/.agents/skills/
 codex mcp add adspirer --url https://mcp.adspirer.com/mcp
 ```
 
-### Step 4: Install agent config and rules
+### Step 4: Install agent config
 
 ```bash
-mkdir -p ~/.codex/agents ~/.codex/rules
+mkdir -p ~/.codex/agents
 cp agents/performance-marketing-agent.toml ~/.codex/agents/
-cp rules/campaign-safety.rules ~/.codex/rules/
 ```
 
 ### Step 5: Update config.toml
@@ -199,7 +209,9 @@ Codex (CLI / IDE)
 | Problem | Solution |
 |---------|----------|
 | MCP server not found | Run `codex mcp add adspirer --url https://mcp.adspirer.com/mcp` and restart |
+| MCP shows "Unsupported" | Run `codex mcp login adspirer` to complete OAuth authentication |
 | Authentication failed | Run `codex mcp login adspirer` to re-authenticate |
+| Install appears to hang | A browser window may have opened for OAuth — complete sign-in and return to terminal |
 | No ad platforms connected | Connect platforms at [adspirer.com](https://www.adspirer.com) |
 | Skills not showing | Verify: `ls ~/.agents/skills/` — should show `adspirer-*` directories |
 | No data returned | Check for active campaigns. Try longer lookback (60/90 days) |

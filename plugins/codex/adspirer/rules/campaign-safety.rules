@@ -4,31 +4,23 @@
 prefix_rule(
     pattern = ["curl", "https://ads.google.com"],
     decision = "forbidden",
-    justification = "Ad platform API calls must go through Adspirer MCP, not direct curl",
-    match = ["curl https://ads.google.com/api/campaigns"],
-    not_match = ["curl https://example.com"],
+    justification = "Google Ads API calls must go through Adspirer MCP, not direct curl",
 )
 
 prefix_rule(
     pattern = ["curl", "https://graph.facebook.com"],
     decision = "forbidden",
-    justification = "Meta API calls must go through Adspirer MCP, not direct curl",
-    match = ["curl https://graph.facebook.com/v19.0/act_123/campaigns"],
-    not_match = ["curl https://example.com"],
+    justification = "Meta Ads API calls must go through Adspirer MCP, not direct curl",
 )
 
 prefix_rule(
     pattern = ["curl", "https://api.linkedin.com"],
     decision = "forbidden",
-    justification = "LinkedIn API calls must go through Adspirer MCP, not direct curl",
-    match = ["curl https://api.linkedin.com/v2/adCampaignsV2"],
-    not_match = ["curl https://example.com"],
+    justification = "LinkedIn Ads API calls must go through Adspirer MCP, not direct curl",
 )
 
 prefix_rule(
     pattern = ["curl", "https://business-api.tiktok.com"],
     decision = "forbidden",
-    justification = "TikTok API calls must go through Adspirer MCP, not direct curl",
-    match = ["curl https://business-api.tiktok.com/open_api/v1.3/campaign"],
-    not_match = ["curl https://example.com"],
+    justification = "TikTok Ads API calls must go through Adspirer MCP, not direct curl",
 )

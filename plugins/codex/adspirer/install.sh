@@ -1,6 +1,6 @@
 #!/bin/bash
 # Adspirer Performance Marketing Agent — One-Command Installer for Codex
-# Usage: bash <(curl -s https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)
+# Usage: bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)
 
 set -e
 
@@ -11,6 +11,7 @@ echo ""
 # Step 1: Clone repo to temp directory
 echo "[1/4] Downloading Adspirer plugin..."
 TMPDIR=$(mktemp -d)
+trap "rm -rf $TMPDIR" EXIT
 git clone --quiet --depth 1 https://github.com/amekala/ads-mcp.git "$TMPDIR/ads-mcp"
 PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/codex/adspirer"
 
@@ -23,22 +24,18 @@ cp -r "$PLUGIN_DIR/skills/adspirer-performance-review" ~/.agents/skills/
 cp -r "$PLUGIN_DIR/skills/adspirer-write-ad-copy" ~/.agents/skills/
 cp -r "$PLUGIN_DIR/skills/adspirer-wasted-spend" ~/.agents/skills/
 
-# Step 3: Install agent config + safety rules
-echo "[3/4] Installing agent configuration and safety rules..."
+# Step 3: Install agent config
+echo "[3/4] Installing agent configuration..."
 mkdir -p ~/.codex/agents
-mkdir -p ~/.codex/rules
 cp "$PLUGIN_DIR/agents/performance-marketing-agent.toml" ~/.codex/agents/
-cp "$PLUGIN_DIR/rules/campaign-safety.rules" ~/.codex/rules/
 
 # Step 4: Write config.toml (MCP server + agent role + features)
 echo "[4/4] Configuring Codex (MCP server, agent role, features)..."
 CONFIG_FILE="$HOME/.codex/config.toml"
 
-# Check if config.toml already exists
 if [ -f "$CONFIG_FILE" ]; then
-    # Check if adspirer is already configured
     if grep -q "mcp_servers.adspirer" "$CONFIG_FILE" 2>/dev/null; then
-        echo "  Adspirer MCP server already in config.toml — skipping"
+        echo "  Adspirer already in config.toml — skipping config update"
     else
         echo "  Appending Adspirer config to existing config.toml..."
         cat >> "$CONFIG_FILE" << 'TOML'
@@ -75,23 +72,25 @@ config_file = "agents/performance-marketing-agent.toml"
 TOML
 fi
 
-# Cleanup
-rm -rf "$TMPDIR"
-
 echo ""
 echo "=== Installation complete! ==="
 echo ""
 echo "Installed:"
 echo "  Skills:  ~/.agents/skills/adspirer-*  (5 skills)"
 echo "  Agent:   ~/.codex/agents/performance-marketing-agent.toml"
-echo "  Rules:   ~/.codex/rules/campaign-safety.rules"
 echo "  Config:  ~/.codex/config.toml (MCP server + agent role)"
+echo ""
+echo "IMPORTANT — OAuth authentication:"
+echo "  On first use, a browser window will open for Adspirer login."
+echo "  Complete the sign-in in your browser, then return to Codex."
+echo "  If it opens during install, complete it immediately."
 echo ""
 echo "Next steps:"
 echo "  1. Restart Codex (close and reopen)"
-echo "  2. Open your brand folder in Codex"
-echo "  3. Say: 'Set up my brand workspace'"
-echo ""
-echo "  First time? A browser window will open for Adspirer authentication."
-echo "  Sign in at adspirer.com to connect your ad accounts."
+echo "  2. Verify MCP is registered:"
+echo "     codex mcp list"
+echo "     (should show: adspirer ... enabled)"
+echo "  3. Open your brand folder in Codex"
+echo "  4. Say: 'Set up my brand workspace'"
+echo "     If it doesn't trigger, run: \$adspirer-setup"
 echo ""
