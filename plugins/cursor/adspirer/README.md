@@ -21,7 +21,7 @@ This plugin turns Cursor into a **brand-specific paid media analyst** that:
 
 ## Quick Install (One Command)
 
-Open your terminal and run:
+**Run this from your system terminal** (Terminal.app, iTerm, Windows Terminal, etc.), **not** Cursor's built-in terminal. Cursor's terminal is sandboxed and can't write to `~/.cursor/`, which causes permission errors.
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)
@@ -217,6 +217,7 @@ Cursor IDE (Agent Mode)
 
 | Problem | Solution |
 |---------|----------|
+| Install fails with permission/hooks error | Run the install from your **system terminal**, not Cursor's built-in terminal (it's sandboxed) |
 | MCP server not showing | Open Cursor Settings > MCP > Add server with URL `https://mcp.adspirer.com/mcp` |
 | MCP connection error | Click the server in Settings > MCP to re-authenticate via browser |
 | Authentication failed | Remove and re-add the MCP server in Cursor Settings |

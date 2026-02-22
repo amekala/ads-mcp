@@ -8,12 +8,24 @@ echo ""
 echo "=== Adspirer Performance Marketing Agent for Cursor ==="
 echo ""
 
-# Step 1: Clone repo to temp directory
+# Step 1: Download plugin files to temp directory
 echo "[1/4] Downloading Adspirer plugin..."
-TMPDIR=$(mktemp -d)
-trap "rm -rf $TMPDIR" EXIT
-git clone --quiet --depth 1 https://github.com/amekala/ads-mcp.git "$TMPDIR/ads-mcp"
-PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/cursor/adspirer"
+# Use $HOME/tmp to avoid sandboxed /tmp dirs (e.g. Cursor's terminal)
+TMPDIR="${HOME}/.adspirer-install-tmp"
+rm -rf "$TMPDIR"
+mkdir -p "$TMPDIR"
+trap "rm -rf '$TMPDIR'" EXIT
+
+# Try zip download first (no .git directory, works in sandboxed terminals)
+if curl -fsSL -o "$TMPDIR/plugin.zip" "https://github.com/amekala/ads-mcp/archive/refs/heads/main.zip" 2>/dev/null; then
+    unzip -q "$TMPDIR/plugin.zip" -d "$TMPDIR"
+    PLUGIN_DIR="$TMPDIR/ads-mcp-main/plugins/cursor/adspirer"
+else
+    # Fallback: shallow git clone without hooks
+    echo "  Zip download failed, trying git clone..."
+    git clone --quiet --depth 1 --config core.hooksPath=/dev/null https://github.com/amekala/ads-mcp.git "$TMPDIR/ads-mcp"
+    PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/cursor/adspirer"
+fi
 
 # Step 2: Install subagent
 echo "[2/4] Installing subagent to ~/.cursor/agents/..."
