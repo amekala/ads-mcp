@@ -35,7 +35,9 @@ Always start here before any ad operation:
 | View campaign metrics | Performance Analysis | `get_campaign_performance`, `get_meta_campaign_performance`, `get_linkedin_campaign_performance` |
 | Cross-platform overview | Cross-Platform Dashboard | See Cross-Platform section below |
 | Find keywords | Keyword Research | `research_keywords` |
-| Create a campaign | Campaign Creation | See platform-specific flows below |
+| Research before new campaign | Campaign Research | `WebSearch`, `WebFetch` + Adspirer tools (see Campaign Research section) |
+| Research competitors | Competitive Intelligence | `WebSearch`, `WebFetch`, `analyze_search_terms`, `research_keywords` |
+| Create a campaign | Campaign Creation | Campaign Research first, then platform-specific flows below |
 | Reduce wasted spend | Budget Optimization | `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms` |
 | Switch accounts | Account Management | `switch_primary_account` |
 | Compare platforms | Cross-Platform | Call each platform's performance tool, present side-by-side |
@@ -93,6 +95,54 @@ When the user asks for overall performance, a weekly review, or cross-platform c
    - Budget pacing (on track, under, over)
 6. Recommend top 3 actions across all platforms
 
+## Campaign Research (run before creating ANY new campaign)
+
+Before creating a campaign on any platform, research the brand's market position and competitive landscape. This combines web research (native tools) with ad platform data (Adspirer MCP) to inform every campaign decision — targeting, messaging, differentiation, and bidding.
+
+### Step 1: Understand the brand's own website
+Use `WebFetch` to crawl the brand's website. Extract:
+- What they sell (products, services, pricing tiers)
+- Key value propositions and differentiators
+- Target audience language (how they describe their customers)
+- Pricing (plans, tiers, free trial availability)
+- Trust signals (customer logos, testimonials, case studies, awards)
+- CTAs used on the site (what actions they push visitors toward)
+
+### Step 2: Research the competitive landscape
+Use `WebSearch` to search for:
+- `"[brand's product category] competitors"` — find who they compete with
+- `"[competitor name] vs [brand name]"` — find comparison content
+- `"[competitor name] pricing"` — understand competitor price points
+- `"best [product category] [current year]"` — find review/comparison sites
+
+Then use `WebFetch` to crawl the top 3-5 competitor websites. Extract:
+- Their positioning and messaging (how they describe themselves)
+- Their pricing (cheaper? more expensive? different model?)
+- Their unique claims (what do they say they do better?)
+- Their target audience (who are they speaking to?)
+
+### Step 3: Identify differentiation
+Combine brand website + competitor research to answer:
+- What does this brand do that competitors don't? (unique features, approach, pricing)
+- What language resonates in this market? (common pain points, desired outcomes)
+- Where are the gaps? (underserved audiences, unaddressed pain points)
+- What should ad copy emphasize to stand out?
+
+### Step 4: Pull existing ad intelligence from Adspirer
+- `get_campaign_performance` — what's already running and how it performs
+- `analyze_search_terms` — what real users search for (Google Ads)
+- `get_campaign_structure` — current ad copy and targeting
+- `get_benchmark_context` — industry benchmarks for this vertical
+
+### Step 5: Create a research brief
+Present findings to the user before proceeding with campaign creation:
+- Market overview (key competitors, price ranges, positioning)
+- Recommended differentiation angles (what to emphasize in ads)
+- Suggested audiences based on competitive gaps
+- Messaging direction (informed by competitor weaknesses and brand strengths)
+
+Get user input on the direction before proceeding to keyword research and campaign creation.
+
 ## Keyword Research (Google Ads)
 
 Always run before creating Search campaigns. Never use generic SEO keywords.
@@ -100,6 +150,7 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 - Tool: `research_keywords`
 - Params: `business_description` or `seed_keywords`, optional `website_url`, `target_location`
 - Group results by intent (high/medium/low), show search volume, CPC ranges, competition
+- Use insights from Campaign Research to inform seed keywords — include competitor brand terms, differentiation keywords, and pain-point language discovered during research
 
 ## Bidding Strategy
 
@@ -126,37 +177,49 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 ## Campaign Creation
 
+**For ALL new campaigns**: Run Campaign Research first (see section above) unless the user has already provided competitive context or this is a follow-up campaign for an existing brand workspace with research already done.
+
 **Google Ads Search (exact order):**
-1. `research_keywords` — mandatory, never skip
-2. Discuss bidding strategy with user (see Bidding Strategy section above)
-3. `discover_existing_assets` — check for existing ad assets
-4. `validate_and_prepare_assets` — validate before creation
-5. `create_search_campaign` — create the campaign (PAUSED status)
-6. Add ad extensions (see Ad Extensions section below):
+1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+2. `research_keywords` — mandatory, informed by competitive research
+3. Discuss bidding strategy with user (see Bidding Strategy section above)
+4. `discover_existing_assets` — check for existing ad assets
+5. `validate_and_prepare_assets` — validate before creation (use differentiation angles from research in ad copy)
+6. `create_search_campaign` — create the campaign (PAUSED status)
+7. Add ad extensions (see Ad Extensions section below):
    - Crawl user's website with `WebFetch` to find real page URLs
    - `add_sitelinks` — add 10+ validated sitelinks
-   - `add_callout_extensions` — add 4+ callout extensions
+   - `add_callout_extensions` — add 4+ callouts (use value props from research)
    - `add_structured_snippets` — add relevant structured snippets
-7. `list_campaign_extensions` — verify all extensions were added
+8. `list_campaign_extensions` — verify all extensions were added
 
 **Google Ads Performance Max:**
-1. Discuss bidding strategy with user (see Bidding Strategy section above)
-2. `discover_existing_assets` — check existing assets
-3. `validate_and_prepare_assets` — validate creative assets
-4. `create_pmax_campaign` — create the campaign
-5. Add ad extensions (same as Search — sitelinks, callouts, snippets)
-6. `list_campaign_extensions` — verify all extensions were added
+1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+2. Discuss bidding strategy with user (see Bidding Strategy section above)
+3. `discover_existing_assets` — check existing assets
+4. `validate_and_prepare_assets` — validate creative assets (use differentiation angles from research)
+5. `create_pmax_campaign` — create the campaign
+6. Add ad extensions (same as Search — sitelinks, callouts, snippets)
+7. `list_campaign_extensions` — verify all extensions were added
 
 **Meta Ads:**
-1. `get_connections_status` — verify Meta account connected
-2. `search_meta_targeting` or `browse_meta_targeting` — find audiences
-3. Create campaign — created in PAUSED status
+1. Campaign Research — crawl brand + competitor websites, understand audience positioning
+2. `get_connections_status` — verify Meta account connected
+3. `search_meta_targeting` or `browse_meta_targeting` — find audiences (informed by competitive gaps)
+4. Create campaign — created in PAUSED status
 
 **LinkedIn Ads:**
-1. `get_linkedin_organizations` — get linked company pages
-2. `discover_linkedin_assets` — check existing assets
-3. `validate_and_prepare_linkedin_assets` — validate assets
-4. `create_linkedin_image_campaign` — create the campaign
+1. Campaign Research — crawl brand + competitor websites, understand B2B positioning
+2. `get_linkedin_organizations` — get linked company pages
+3. `discover_linkedin_assets` — check existing assets
+4. `validate_and_prepare_linkedin_assets` — validate assets
+5. `create_linkedin_image_campaign` — create the campaign
+
+**TikTok Ads:**
+1. Campaign Research — crawl brand website, research competitor video ad strategies via `WebSearch`
+2. `discover_tiktok_assets` — check existing assets
+3. `validate_and_prepare_tiktok_assets` — validate video assets
+4. `create_tiktok_campaign` or `create_tiktok_video_campaign` — create the campaign
 
 ## Ad Extensions (Google Ads)
 
@@ -329,19 +392,36 @@ When user wants performance reports:
 
 When analyzing competitors or adjusting competitive strategy:
 
-1. Read brand docs for known competitors (if CLAUDE.md exists, check Competitors section)
-2. For Google Ads:
-   - Review search term data via `analyze_search_terms` for competitor brand terms
-   - Check if competitors bid on our brand terms
-   - Call `research_keywords` for competitor brand + product terms
-3. Assess:
-   - Are competitors bidding on our brand terms? (defensive strategy needed)
-   - Which competitor keywords have high volume + reasonable CPC?
-   - Where do we overlap vs differentiate?
-4. Recommend:
-   - Brand defense campaigns (exact match on own brand terms)
-   - Competitor conquest campaigns (with brand voice from docs)
-   - Negative keywords to avoid irrelevant competitor traffic
+### Step 1: Identify competitors
+- Read CLAUDE.md for known competitors (check Competitors section)
+- Use `WebSearch` to search `"[brand product category] competitors [current year]"` and `"[brand name] alternatives"`
+- Use `WebSearch` to find review/comparison sites: `"best [product category] [current year]"`
+
+### Step 2: Research competitor positioning
+For each key competitor (top 3-5):
+- Use `WebFetch` to crawl their website homepage — extract messaging, value props, positioning
+- Use `WebFetch` to crawl their pricing page — extract plans, pricing model, free tier
+- Use `WebSearch` to search `"[competitor] ads"` or `"[competitor] Google Ads"` — find their ad copy if visible
+- Use `WebFetch` to crawl competitor landing pages found in search results — analyze their conversion approach
+
+### Step 3: Analyze ad platform data
+- `analyze_search_terms` — find competitor brand terms appearing in our search queries
+- `research_keywords` — get search volume and CPC for competitor brand + product terms
+- `get_campaign_structure` — check if we already bid on competitor terms
+
+### Step 4: Assess competitive position
+- Are competitors bidding on our brand terms? (defensive strategy needed)
+- Which competitor keywords have high volume + reasonable CPC?
+- Where do we differentiate? (pricing, features, audience, positioning)
+- What messaging do competitors use that we should counter or avoid?
+- Are there underserved niches competitors ignore?
+
+### Step 5: Recommend actions
+- **Brand defense campaigns**: exact match on own brand terms (if competitors are bidding on them)
+- **Competitor conquest campaigns**: bid on competitor brand terms with ad copy emphasizing our differentiators
+- **Differentiation messaging**: specific claims based on competitive gaps (e.g., "50% cheaper than [competitor]", "No setup fee unlike [competitor]")
+- **Negative keywords**: exclude competitor terms where intent doesn't match (e.g., "[competitor] login" — existing customers, not prospects)
+- Update CLAUDE.md Competitors section with findings
 
 ## Safety Rules
 
@@ -373,6 +453,7 @@ These tools create REAL campaigns that spend REAL money.
 | TikTok Ads | `create_tiktok_campaign`, `create_tiktok_video_campaign`, `discover_tiktok_assets`, `validate_and_prepare_tiktok_assets` |
 | Account | `get_connections_status`, `switch_primary_account`, `get_business_profile`, `get_usage_status` |
 | Monitoring | `create_monitor`, `list_monitors`, `schedule_brief`, `generate_report_now`, `list_scheduled_tasks` |
+| Research (native) | `WebSearch` (search the web for competitors, market data, trends), `WebFetch` (crawl websites for pricing, messaging, sitelink URLs, value props) |
 
 ## Output Formatting
 
