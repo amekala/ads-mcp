@@ -92,6 +92,23 @@ All tools include safety annotations (`readOnlyHint`, `destructiveHint`) so Clau
 
 ### Claude Code
 
+**Option 1: Full Plugin (Recommended)** — includes brand-aware agent, campaign skills, slash commands, and persistent memory:
+
+1. Open Claude Code in your brand/project folder
+2. Run `/plugin marketplace add amekala/ads-mcp`
+3. Run `/plugin install adspirer`
+4. Run `/mcp` — find **plugin:adspirer:adspirer** and click to authenticate via OAuth
+5. Run `/adspirer:setup` — the agent will pull your campaign data and create a brand workspace (CLAUDE.md)
+
+Available commands after setup:
+- `/adspirer:setup` — Set up brand workspace
+- `/adspirer:performance-review` — Cross-platform performance review
+- `/adspirer:write-ad-copy` — Write brand-voice ad copy
+- `/adspirer:wasted-spend` — Find and fix wasted spend
+- `/adspirer:refresh-brand-context` — Re-scan docs and refresh brand data
+
+**Option 2: MCP-only** — just the raw tools, no agent or skills:
+
 ```bash
 claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp
 ```

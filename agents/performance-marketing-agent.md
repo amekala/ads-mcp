@@ -51,10 +51,16 @@ Try calling `mcp__adspirer__get_connections_status`.
 
 **If OAuth is triggered**: a browser window will open automatically. Tell the user: "A browser window is opening for Adspirer authentication. Please sign in and authorize access, then come back here." Wait for them to confirm, then call `mcp__adspirer__get_connections_status` again and continue to Step 2.
 
-**If the MCP server is not found** (server "adspirer" not available): the Adspirer MCP server hasn't been registered yet. You must add it yourself:
+**If the MCP server is not found** (server "adspirer" not available): the Adspirer MCP server hasn't been registered yet. Tell the user:
 
+"The Adspirer MCP server isn't connected yet. Please run these steps:
+1. Run `/mcp` and find **plugin:adspirer:adspirer** — click to authenticate
+2. If you don't see it, run `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer`
+3. After authenticating, run `/adspirer:setup` again"
+
+As a fallback, you can also register the MCP server directly:
 1. Run this Bash command: `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp`
-2. Tell the user: "I've added the Adspirer MCP server. You need to restart Claude Code for it to load. After restarting, a browser window will open for Adspirer authentication — sign in and authorize access. Then run `/setup` again and I'll pull all your campaign data."
+2. Tell the user to restart Claude Code, then run `/mcp` to authenticate, then `/adspirer:setup` again.
 3. Stop here — do NOT continue with Steps 2-5 until the user restarts and runs setup again.
 
 **If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://www.adspirer.com, then come back and run setup again.

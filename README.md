@@ -45,11 +45,21 @@ See [CONNECTING.md](CONNECTING.md) for detailed setup instructions for each plat
 
 ### Claude Code
 
-```bash
-claude plugin add github:amekala/ads-mcp
-```
+Install the full Adspirer plugin (agent + skills + commands + MCP server):
 
-This installs the Adspirer plugin with the brand media manager agent, ad campaign skills, and MCP server connection. See [plugins/claude README](plugins/README.md) for details.
+1. Open Claude Code
+2. Run `/plugin marketplace add amekala/ads-mcp`
+3. Run `/plugin install adspirer`
+4. Run `/mcp` — find **plugin:adspirer:adspirer** and click to authenticate
+5. Run `/adspirer:setup` to pull your campaign data and create your brand workspace
+
+This gives you a brand-aware performance marketing agent with persistent memory, competitive research via web search, campaign creation with ad extensions, and slash commands for common workflows.
+
+**MCP-only (no plugin):** If you just want the raw MCP tools without the agent:
+
+```bash
+claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp
+```
 
 ### ChatGPT
 
