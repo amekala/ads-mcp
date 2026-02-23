@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.1.1] - 2026-02-22
+
+### Added — Shared Skills Architecture
+- **Shared skill templates** (`shared/skills/`) — single source of truth for all 5 skills across IDEs
+- **Template compiler** (`scripts/sync-skills.sh`) — generates IDE-specific skills with variable substitution (`{{CONTEXT_FILE}}`, `{{AUTH_TROUBLESHOOT}}`) and conditional blocks (`<!-- BEGIN:CODEX -->`, `<!-- BEGIN:HAS_MEMORY -->`, etc.)
+- **Validation suite** (`scripts/validate.sh`) — 39 automated checks for sync consistency, frontmatter, context file correctness, template marker leaks, and skill inventory
+- **OpenClaw plugin** (`plugins/openclaw/`) — standalone skill (claw.json + SKILL.md) for the OpenClaw platform, listed on [ClawHub](https://clawhub.ai/amekala/adspirer-ads-agent)
+- **Developer documentation**:
+  - `monorepo-restructure-plan.md` — full architecture doc (replaces outdated symlink plan)
+  - `docs/architecture.md` — template syntax, conditional blocks, sync workflow
+  - `docs/adding-platforms.md` — how to add new ad platforms (YouTube, Snapchat, etc.)
+  - `docs/adding-ides.md` — how to add new IDE support (Windsurf, Cline, etc.)
+
+### Changed
+- **README.md** — added OpenClaw install instructions, Supported Plugins table (4 platforms), expanded Developer Guide with quick-reference commands
+- **Install scripts** — added comments noting skills are generated from templates
+- **.gitignore** — added TTS generation artifacts (.tts-venv/, *.mp3, generate-tts.py)
+
+### Architecture
+- Skills authored once in `shared/skills/`, compiled to Cursor (BRAND.md), Codex (AGENTS.md), and Claude Code (CLAUDE.md) variants
+- OpenClaw uses standalone skill (not template-compiled) due to different document structure
+- Claude Code gets 1 generated skill (adspirer-ads → ad-campaign-management); other 4 workflows are slash commands
+
+### Revert instructions
+To revert this commit: `git revert c92c54e`. This will remove `shared/`, `scripts/`, `docs/architecture.md`, `docs/adding-*.md`, `plugins/openclaw/`, and `monorepo-restructure-plan.md`. Existing generated skills in `plugins/*/skills/` and `skills/` remain intact — they were not modified by this commit, only the source templates and tooling were added.
+
+---
+
 ## [1.0.0] - 2025-10-27
 
 ### Added
