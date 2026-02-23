@@ -15,7 +15,7 @@ trap "rm -rf $TMPDIR" EXIT
 git clone --quiet --depth 1 https://github.com/amekala/ads-mcp.git "$TMPDIR/ads-mcp"
 PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/codex/adspirer"
 
-# Step 2: Install skills
+# Step 2: Install skills (generated from shared/skills/ templates — do not edit directly)
 echo "[2/4] Installing skills to ~/.agents/skills/..."
 mkdir -p ~/.agents/skills
 cp -r "$PLUGIN_DIR/skills/adspirer-ads" ~/.agents/skills/

@@ -32,7 +32,7 @@ echo "[2/4] Installing subagent to ~/.cursor/agents/..."
 mkdir -p ~/.cursor/agents
 cp "$PLUGIN_DIR/.cursor/agents/performance-marketing-agent.md" ~/.cursor/agents/
 
-# Step 3: Install skills
+# Step 3: Install skills (generated from shared/skills/ templates — do not edit directly)
 echo "[3/4] Installing skills to ~/.cursor/skills/..."
 mkdir -p ~/.cursor/skills
 cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-ads" ~/.cursor/skills/

@@ -12,3 +12,8 @@ Thumbs.db
 # Temp
 *.tmp
 *.log
+
+# TTS generation
+.tts-venv/
+generate-tts.py
+*.mp3

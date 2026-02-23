@@ -91,6 +91,16 @@ Add to `~/.codex/config.toml`:
 url = "https://mcp.adspirer.com/mcp"
 ```
 
+### OpenClaw
+
+```bash
+openclaw plugins install openclaw-adspirer
+openclaw adspirer login
+openclaw adspirer connect
+```
+
+Or install from [ClawHub](https://clawhub.ai/amekala/adspirer-ads-agent).
+
 ## Example Prompts
 
 **Keyword Research:**
@@ -149,6 +159,39 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 - **Issues:** https://github.com/amekala/ads-mcp/issues
 - **Website:** https://www.adspirer.com
 - **Server Status:** https://mcp.adspirer.com/health
+
+## Supported Plugins
+
+This repo distributes plugins for 4 AI platforms from a single monorepo:
+
+| Platform | Directory | Skills | Install Method |
+|----------|-----------|--------|----------------|
+| **Claude Code** | Repo root | 1 generated + 5 slash commands | `/plugin marketplace add` |
+| **Cursor** | `plugins/cursor/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
+| **Codex** | `plugins/codex/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
+| **OpenClaw** | `plugins/openclaw/` | 1 standalone (self-contained) | `openclaw plugins install` |
+
+Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` as templates, then compiled into IDE-specific versions by `scripts/sync-skills.sh`. OpenClaw uses its own standalone skill. See [Architecture](monorepo-restructure-plan.md) for the full design.
+
+## Developer Guide
+
+If you're contributing to this repo or adding new ad platforms/IDE support:
+
+- [Architecture](monorepo-restructure-plan.md) — Shared skills model, template system, what's done and what's remaining
+- [Template Syntax & Sync Workflow](docs/architecture.md) — Variable substitution, conditional blocks, validation checks
+- [Adding Ad Platforms](docs/adding-platforms.md) — How to add a new ad platform (e.g., Snapchat, Pinterest, YouTube)
+- [Adding IDEs](docs/adding-ides.md) — How to add support for a new IDE (e.g., Windsurf, Cline)
+
+### Quick reference
+
+```bash
+./scripts/sync-skills.sh          # Generate IDE-specific skills from templates
+./scripts/sync-skills.sh --check  # Verify generated files match committed (CI mode)
+./scripts/validate.sh             # Run all 39 offline validation checks
+./scripts/validate.sh --live      # Also test MCP endpoint connectivity
+```
+
+Never edit files in `plugins/*/skills/` or `skills/` directly — they will be overwritten by the sync script. Edit templates in `shared/skills/` instead.
 
 ## License
 
