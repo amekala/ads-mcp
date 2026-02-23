@@ -93,6 +93,59 @@ The templates use explicit `WebFetch`/`WebSearch` tool names (Cursor/Claude Code
 | Commands | `commands/` | Claude Code only |
 | OpenClaw skill | `plugins/openclaw/` | Self-contained format (claw.json + SKILL.md), not template-compiled |
 
+## Adding a New Skill (Checklist)
+
+Example: adding `adspirer-youtube-ads`.
+
+### Automatic (no files to update)
+
+These auto-discover new skills via glob patterns — just add the template and they work:
+
+- `scripts/sync-skills.sh` — auto-discovers `shared/skills/adspirer-*/SKILL.md`
+- `scripts/validate.sh` — auto-discovers skills from `shared/skills/` for inventory and template checks
+- `plugins/cursor/adspirer/install.sh` — auto-discovers `adspirer-*` skill directories
+- `plugins/codex/adspirer/install.sh` — auto-discovers `adspirer-*` skill directories
+
+### Steps
+
+1. **Create the template:**
+   ```
+   shared/skills/adspirer-youtube-ads/SKILL.md
+   ```
+   Use `{{CONTEXT_FILE}}`, `{{AUTH_TROUBLESHOOT}}`, and conditional blocks as needed. Copy an existing small skill (e.g., `adspirer-wasted-spend`) as a starting point.
+
+2. **Generate IDE-specific versions:**
+   ```bash
+   ./scripts/sync-skills.sh
+   ```
+
+3. **Validate:**
+   ```bash
+   ./scripts/validate.sh
+   ```
+
+4. **Update documentation** (these are the only manual updates needed):
+
+   | File | What to update |
+   |------|---------------|
+   | `plugins/cursor/adspirer/README.md` | Add row to skills table |
+   | `plugins/codex/adspirer/README.md` | Add row to skills table |
+   | `docs/changelog.md` | Add entry for the new skill |
+
+5. **Optional updates** (if the skill needs special handling):
+
+   | File | When to update |
+   |------|---------------|
+   | `agents/performance-marketing-agent.md` | If the skill should be listed in Claude Code agent's `skills:` frontmatter |
+   | `plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md` | If the agent should reference the new skill's workflow |
+   | `plugins/codex/adspirer/agents/performance-marketing-agent.toml` | If the agent should reference the new skill's workflow |
+   | `commands/<skill-name>.md` | If Claude Code should have a slash command for this skill |
+   | `plugins/openclaw/SKILL.md` | If OpenClaw's standalone skill needs to reference new tools |
+
+6. **Commit** all generated files along with the template and doc updates.
+
+---
+
 ## Skill Inheritance via Progressive Disclosure
 
 Skills can include a `references/` subdirectory with supporting documents. When the LLM invokes a skill, it reads `SKILL.md` first (the orchestrator), then loads relevant reference files on-demand based on the user's request.
@@ -137,7 +190,7 @@ Reference files are copied as-is (no template processing needed) since platform-
 Checks performed:
 1. Sync consistency (templates match committed skills)
 2. Frontmatter validation (name + description fields)
-3. Skill inventory (all 5 skills in all 3 IDE targets)
+3. Skill inventory (all shared skills present in all IDE targets)
 4. Context file correctness (no cross-contamination)
 5. No leaked template markers
 6. Codex extras preserved (openai.yaml)

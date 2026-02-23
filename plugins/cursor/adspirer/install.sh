@@ -35,11 +35,12 @@ cp "$PLUGIN_DIR/.cursor/agents/performance-marketing-agent.md" ~/.cursor/agents/
 # Step 3: Install skills (generated from shared/skills/ templates — do not edit directly)
 echo "[3/4] Installing skills to ~/.cursor/skills/..."
 mkdir -p ~/.cursor/skills
-cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-ads" ~/.cursor/skills/
-cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-setup" ~/.cursor/skills/
-cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-performance-review" ~/.cursor/skills/
-cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-write-ad-copy" ~/.cursor/skills/
-cp -r "$PLUGIN_DIR/.cursor/skills/adspirer-wasted-spend" ~/.cursor/skills/
+SKILL_COUNT=0
+for skill_dir in "$PLUGIN_DIR/.cursor/skills/adspirer-"*; do
+    [ -d "$skill_dir" ] || continue
+    cp -r "$skill_dir" ~/.cursor/skills/
+    SKILL_COUNT=$((SKILL_COUNT + 1))
+done
 
 # Step 4: Configure MCP server in ~/.cursor/mcp.json
 echo "[4/4] Configuring Adspirer MCP server..."
@@ -85,7 +86,7 @@ echo "=== Installation complete! ==="
 echo ""
 echo "Installed:"
 echo "  Subagent: ~/.cursor/agents/performance-marketing-agent.md"
-echo "  Skills:   ~/.cursor/skills/adspirer-*  (5 skills)"
+echo "  Skills:   ~/.cursor/skills/adspirer-*  ($SKILL_COUNT skills)"
 echo "  MCP:      ~/.cursor/mcp.json (Adspirer server)"
 echo ""
 echo "Next steps:"

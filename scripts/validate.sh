@@ -90,10 +90,14 @@ done
 echo ""
 echo "--- Skill Inventory ---"
 
-CURSOR_SKILLS="adspirer-ads adspirer-setup adspirer-performance-review adspirer-write-ad-copy adspirer-wasted-spend"
-CODEX_SKILLS="adspirer-ads adspirer-setup adspirer-performance-review adspirer-write-ad-copy adspirer-wasted-spend"
+# Auto-discover skills from shared/skills/ (no hardcoded list)
+SHARED_SKILLS=""
+for skill_dir in shared/skills/adspirer-*/; do
+    [ -d "$skill_dir" ] || continue
+    SHARED_SKILLS="$SHARED_SKILLS $(basename "$skill_dir")"
+done
 
-for skill in $CURSOR_SKILLS; do
+for skill in $SHARED_SKILLS; do
     check "Cursor: $skill"
     if [ -f "plugins/cursor/adspirer/.cursor/skills/$skill/SKILL.md" ]; then
         pass
@@ -102,7 +106,7 @@ for skill in $CURSOR_SKILLS; do
     fi
 done
 
-for skill in $CODEX_SKILLS; do
+for skill in $SHARED_SKILLS; do
     check "Codex: $skill"
     if [ -f "plugins/codex/adspirer/skills/$skill/SKILL.md" ]; then
         pass
@@ -235,7 +239,9 @@ fi
 echo ""
 echo "--- Shared Templates ---"
 
-for skill in adspirer-ads adspirer-setup adspirer-performance-review adspirer-write-ad-copy adspirer-wasted-spend; do
+for skill_dir in shared/skills/adspirer-*/; do
+    [ -d "$skill_dir" ] || continue
+    skill="$(basename "$skill_dir")"
     check "Template: shared/skills/$skill/SKILL.md"
     if [ -f "shared/skills/$skill/SKILL.md" ]; then
         pass

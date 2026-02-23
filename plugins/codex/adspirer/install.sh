@@ -18,11 +18,12 @@ PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/codex/adspirer"
 # Step 2: Install skills (generated from shared/skills/ templates — do not edit directly)
 echo "[2/4] Installing skills to ~/.agents/skills/..."
 mkdir -p ~/.agents/skills
-cp -r "$PLUGIN_DIR/skills/adspirer-ads" ~/.agents/skills/
-cp -r "$PLUGIN_DIR/skills/adspirer-setup" ~/.agents/skills/
-cp -r "$PLUGIN_DIR/skills/adspirer-performance-review" ~/.agents/skills/
-cp -r "$PLUGIN_DIR/skills/adspirer-write-ad-copy" ~/.agents/skills/
-cp -r "$PLUGIN_DIR/skills/adspirer-wasted-spend" ~/.agents/skills/
+SKILL_COUNT=0
+for skill_dir in "$PLUGIN_DIR/skills/adspirer-"*; do
+    [ -d "$skill_dir" ] || continue
+    cp -r "$skill_dir" ~/.agents/skills/
+    SKILL_COUNT=$((SKILL_COUNT + 1))
+done
 
 # Step 3: Install agent config
 echo "[3/4] Installing agent configuration..."
@@ -92,7 +93,7 @@ echo ""
 echo "=== Installation complete! ==="
 echo ""
 echo "Installed:"
-echo "  Skills:  ~/.agents/skills/adspirer-*  (5 skills)"
+echo "  Skills:  ~/.agents/skills/adspirer-*  ($SKILL_COUNT skills)"
 echo "  Agent:   ~/.codex/agents/performance-marketing-agent.toml"
 echo "  Config:  ~/.codex/config.toml (MCP server + agent role)"
 echo ""
