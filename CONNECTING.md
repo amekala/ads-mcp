@@ -64,7 +64,7 @@ All tools include safety annotations (`readOnlyHint`, `destructiveHint`) so Clau
 **Note:** Only Primary Owners or Owners can enable connectors on Claude for Work plans. Once configured, users individually connect and authenticate.
 
 **Steps:**
-1. Navigate to **Settings > Connectors**
+1. Navigate to **Customize > Connectors**
 2. Toggle to **"Organization connectors"** at the top of the page
 3. Locate the **"Connectors"** section
 4. Click **"Add custom connector"** at the bottom of the section
@@ -77,7 +77,7 @@ All tools include safety annotations (`readOnlyHint`, `destructiveHint`) so Clau
 
 ### Pro and Max Plans
 
-1. Navigate to **Settings > Connectors**
+1. Navigate to **Customize > Connectors**
 2. Locate the **"Connectors"** section
 3. Click **"Add custom connector"** at the bottom of the section
 4. Enter the connector details:
