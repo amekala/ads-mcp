@@ -54,6 +54,7 @@ Install the full Adspirer plugin (agent + skills + commands + MCP server):
 5. Run `/adspirer:setup` to pull your campaign data and create your brand workspace
 
 This gives you a brand-aware performance marketing agent with persistent memory, competitive research via web search, campaign creation with ad extensions, and slash commands for common workflows.
+Enabling subagent usage does not change this installation flow.
 
 **MCP-only (no plugin):** If you just want the raw MCP tools without the agent:
 
@@ -171,7 +172,9 @@ This repo distributes plugins for 4 AI platforms from a single monorepo:
 | **Codex** | `plugins/codex/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
 | **OpenClaw** | `plugins/openclaw/` | 1 standalone (self-contained) | `openclaw plugins install` |
 
-Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` as templates, then compiled into IDE-specific versions by `scripts/sync-skills.sh`. OpenClaw uses its own standalone skill. See [Architecture](monorepo-restructure-plan.md) for the full design.
+Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` as templates, then compiled into IDE-specific versions by `scripts/sync-skills.sh`.
+The performance marketing agent prompt is also authored once in `shared/agents/performance-marketing-agent/PROMPT.md` and compiled into Claude Code, Cursor, and Codex agent files by the same sync script.
+OpenClaw uses its own standalone skill. See [Architecture](monorepo-restructure-plan.md) for the full design.
 
 ## Developer Guide
 
@@ -191,7 +194,7 @@ If you're contributing to this repo or adding new ad platforms/IDE support:
 ./scripts/validate.sh --live      # Also test MCP endpoint connectivity
 ```
 
-Never edit files in `plugins/*/skills/` or `skills/` directly — they will be overwritten by the sync script. Edit templates in `shared/skills/` instead.
+Never edit files in `plugins/*/skills/`, `skills/`, `agents/`, or `plugins/*/agents/` directly — they will be overwritten by the sync script. Edit templates in `shared/skills/` and shared prompts in `shared/agents/` instead.
 
 ## License
 

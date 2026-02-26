@@ -4,9 +4,9 @@
 
 Public monorepo for the Adspirer MCP server registration and multi-IDE plugin distribution. Ships plugins for Claude Code, Cursor, Codex, and OpenClaw — all from a single repo. The actual backend (tool implementations, Cloud SQL, ad platform integrations) lives in a private repo.
 
-## Architecture: Shared Skills with Template Compilation
+## Architecture: Shared Skills + Shared Agent Prompt
 
-Skills are authored once as templates in `shared/skills/`, then compiled into IDE-specific versions by `scripts/sync-skills.sh`. This is the core architecture — understand it before making changes.
+Skills are authored once as templates in `shared/skills/`, and the performance marketing agent prompt is authored once in `shared/agents/`, then compiled into IDE-specific versions by `scripts/sync-skills.sh`. This is the core architecture — understand it before making changes.
 
 ```
 shared/skills/              ← SOURCE OF TRUTH (edit here)
@@ -20,10 +20,15 @@ plugins/cursor/.../skills/  ← GENERATED (never edit directly)
 plugins/codex/.../skills/   ← GENERATED (never edit directly)
 skills/ad-campaign-management/ ← GENERATED (never edit directly)
 
+shared/agents/performance-marketing-agent/PROMPT.md ← SOURCE OF TRUTH (edit here)
+agents/performance-marketing-agent.md               ← GENERATED (never edit directly)
+plugins/cursor/.../agents/performance-marketing-agent.md ← GENERATED (never edit directly)
+plugins/codex/.../agents/performance-marketing-agent.toml ← GENERATED (never edit directly)
+
 plugins/openclaw/           ← STANDALONE (edit directly, not templated)
 ```
 
-**Critical rule:** Never edit files in `plugins/*/skills/` or `skills/` directly — they are generated and will be overwritten by `sync-skills.sh`.
+**Critical rule:** Never edit files in `plugins/*/skills/`, `skills/`, `agents/`, or `plugins/*/agents/` directly — they are generated and will be overwritten by `sync-skills.sh`.
 
 ## Template Syntax
 
@@ -61,6 +66,16 @@ Content for IDEs without memory (Codex)
 3. Run `./scripts/validate.sh`
 4. Commit all generated files along with the template
 
+### Editing the performance marketing agent (all IDEs)
+
+1. Edit `shared/agents/performance-marketing-agent/PROMPT.md`
+2. Run `./scripts/sync-skills.sh`
+3. Run `./scripts/validate.sh`
+4. Commit generated agent outputs:
+   - `agents/performance-marketing-agent.md`
+   - `plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md`
+   - `plugins/codex/adspirer/agents/performance-marketing-agent.toml`
+
 ### Adding a new skill (e.g., adspirer-youtube-ads)
 
 1. Create `shared/skills/adspirer-youtube-ads/SKILL.md` with template syntax
@@ -71,7 +86,7 @@ Content for IDEs without memory (Codex)
    - `plugins/codex/adspirer/README.md` — add row to skills table
    - `docs/changelog.md` — add entry
 5. Optional: add a Claude Code slash command in `commands/`
-6. Optional: update agent definitions if the agent should reference the new skill
+6. If agent behavior should change for the new skill, update `shared/agents/performance-marketing-agent/PROMPT.md`
 7. Commit everything
 
 **No script changes needed** — install scripts, sync, and validation all auto-discover from `shared/skills/`.
@@ -103,9 +118,10 @@ Always run both sync and validate before committing skill changes.
 | `shared/skills/*/SKILL.md` | Canonical skill templates | Yes — this is the source of truth |
 | `scripts/sync-skills.sh` | Template compiler | Only when adding a new IDE |
 | `scripts/validate.sh` | Validation suite | Only when adding new check types |
-| `agents/performance-marketing-agent.md` | Claude Code agent definition | Yes |
-| `plugins/cursor/adspirer/.cursor/agents/` | Cursor agent definition | Yes |
-| `plugins/codex/adspirer/agents/` | Codex agent definition | Yes |
+| `shared/agents/performance-marketing-agent/PROMPT.md` | Canonical cross-IDE agent prompt | Yes — source of truth |
+| `agents/performance-marketing-agent.md` | Generated Claude Code agent definition | No — overwritten by sync |
+| `plugins/cursor/adspirer/.cursor/agents/` | Generated Cursor agent definition | No — overwritten by sync |
+| `plugins/codex/adspirer/agents/` | Generated Codex agent definition | No — overwritten by sync |
 | `plugins/openclaw/SKILL.md` | OpenClaw standalone skill | Yes (not templated) |
 | `plugins/*/install.sh` | One-command installers | Yes (auto-discover skills) |
 | `server.json` | MCP registry metadata | Yes |
@@ -117,12 +133,13 @@ Always run both sync and validate before committing skill changes.
 ```
 ads-mcp/
 ├── shared/skills/                  # Skill templates (source of truth)
+├── shared/agents/                  # Agent prompt templates (source of truth)
 ├── scripts/                        # sync-skills.sh, validate.sh
 ├── plugins/
 │   ├── cursor/adspirer/            # Cursor plugin (agent, rules, generated skills, installer)
 │   ├── codex/adspirer/             # Codex plugin (agent, rules, generated skills, installer)
 │   └── openclaw/                   # OpenClaw skill (standalone claw.json + SKILL.md)
-├── agents/                         # Claude Code agent definition
+├── agents/                         # Generated Claude Code agent definition
 ├── skills/                         # Claude Code generated skill
 ├── commands/                       # Claude Code slash commands
 ├── .claude-plugin/                 # Claude Code plugin metadata
@@ -138,7 +155,7 @@ ads-mcp/
 ## Guardrails
 
 - Do not deploy to Cloud Run or push to remote without explicit confirmation
-- Do not modify `plugins/*/skills/` or `skills/` directly — use templates
+- Do not modify `plugins/*/skills/`, `skills/`, `agents/`, or `plugins/*/agents/` directly — use `shared/skills/` and `shared/agents/`
 - Run `validate.sh` before every commit that touches skills
 - All campaigns created by skills must use PAUSED status
 - Never commit secrets (.env, credentials, tokens)

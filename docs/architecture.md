@@ -2,7 +2,7 @@
 
 ## Overview
 
-Skills are authored once in `shared/skills/` as templates, then generated into IDE-specific copies by `scripts/sync-skills.sh`. This ensures a single source of truth across all IDE plugins (Cursor, Codex, Claude Code). OpenClaw uses a standalone skill (`plugins/openclaw/`) that is not template-compiled.
+Skills are authored once in `shared/skills/` as templates, and the performance marketing agent prompt is authored once in `shared/agents/`. Both are generated into IDE-specific copies by `scripts/sync-skills.sh`. This ensures a single source of truth across Cursor, Codex, and Claude Code. OpenClaw uses a standalone skill (`plugins/openclaw/`) that is not template-compiled.
 
 ## Directory Structure
 
@@ -19,6 +19,11 @@ ads-mcp/
 ├── plugins/cursor/.../skills/              ← GENERATED (don't edit directly)
 ├── plugins/codex/.../skills/               ← GENERATED (don't edit directly)
 ├── skills/ad-campaign-management/          ← GENERATED (don't edit directly)
+├── shared/agents/                          ← EDIT HERE (agent prompt source of truth)
+│   └── performance-marketing-agent/PROMPT.md
+├── agents/performance-marketing-agent.md   ← GENERATED (don't edit directly)
+├── plugins/cursor/.../agents/...           ← GENERATED (don't edit directly)
+├── plugins/codex/.../agents/...            ← GENERATED (don't edit directly)
 │
 ├── plugins/openclaw/                       ← STANDALONE (edit directly)
 │   ├── claw.json                          ← Registry manifest
@@ -28,9 +33,9 @@ ads-mcp/
 │   ├── sync-skills.sh                     ← Generates IDE-specific skills
 │   └── validate.sh                        ← Validates consistency (39 checks)
 │
-├── agents/                                 ← IDE-SPECIFIC (edit directly)
-├── plugins/cursor/.../agents/              ← IDE-SPECIFIC (edit directly)
-├── plugins/codex/.../agents/               ← IDE-SPECIFIC (edit directly)
+├── agents/                                 ← GENERATED from shared/agents/
+├── plugins/cursor/.../agents/              ← GENERATED from shared/agents/
+├── plugins/codex/.../agents/               ← GENERATED from shared/agents/
 ├── plugins/cursor/.../rules/               ← IDE-SPECIFIC (edit directly)
 ├── plugins/codex/.../rules/                ← IDE-SPECIFIC (edit directly)
 ```
@@ -85,7 +90,8 @@ The templates use explicit `WebFetch`/`WebSearch` tool names (Cursor/Claude Code
 
 | Component | Location | Why it's separate |
 |---|---|---|
-| Agent definitions | `agents/`, `plugins/*/agents/` | Different formats: `.md` (Cursor/Claude) vs `.toml` (Codex) |
+| Agent prompt source | `shared/agents/performance-marketing-agent/PROMPT.md` | Single source of truth for agent behavior |
+| Generated agent outputs | `agents/`, `plugins/*/agents/` | Auto-generated per IDE format (`.md` for Cursor/Claude, `.toml` for Codex) |
 | Rules | `plugins/cursor/.../rules/*.mdc`, `plugins/codex/.../rules/*.rules` | Different syntax per IDE |
 | Config manifests | `.cursor/plugin.json`, `.codex/config.toml` | Different config formats |
 | Install scripts | `plugins/*/install.sh` | Different install targets per IDE |
@@ -136,9 +142,7 @@ These auto-discover new skills via glob patterns — just add the template and t
 
    | File | When to update |
    |------|---------------|
-   | `agents/performance-marketing-agent.md` | If the skill should be listed in Claude Code agent's `skills:` frontmatter |
-   | `plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md` | If the agent should reference the new skill's workflow |
-   | `plugins/codex/adspirer/agents/performance-marketing-agent.toml` | If the agent should reference the new skill's workflow |
+   | `shared/agents/performance-marketing-agent/PROMPT.md` | If agent behavior/workflow should change across IDEs |
    | `commands/<skill-name>.md` | If Claude Code should have a slash command for this skill |
    | `plugins/openclaw/SKILL.md` | If OpenClaw's standalone skill needs to reference new tools |
 

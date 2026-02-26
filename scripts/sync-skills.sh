@@ -3,11 +3,17 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 SHARED="$REPO_ROOT/shared/skills"
+SHARED_AGENTS="$REPO_ROOT/shared/agents"
 
 # Target directories
 CURSOR_SKILLS="$REPO_ROOT/plugins/cursor/adspirer/.cursor/skills"
 CODEX_SKILLS="$REPO_ROOT/plugins/codex/adspirer/skills"
 CLAUDE_SKILLS="$REPO_ROOT/skills"
+
+# Target agent files (generated from shared agent prompts)
+CURSOR_AGENT="$REPO_ROOT/plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md"
+CODEX_AGENT="$REPO_ROOT/plugins/codex/adspirer/agents/performance-marketing-agent.toml"
+CLAUDE_AGENT="$REPO_ROOT/agents/performance-marketing-agent.md"
 
 # ---------------------------------------------------------------------------
 # Per-IDE configuration
@@ -86,6 +92,101 @@ process_template() {
   fi
 
   echo "$content"
+}
+
+process_agent_prompt() {
+  local src="$1"
+  local context_file="$2"
+  local codex_mode="${3:-no}"  # yes or no
+
+  local content
+  content="$(cat "$src")"
+  content="$(echo "$content" | sed "s/{{CONTEXT_FILE}}/$context_file/g")"
+
+  if [ "$codex_mode" = "yes" ]; then
+    # Codex MCP tools are exposed without the mcp__adspirer__ prefix.
+    content="$(echo "$content" | sed 's/mcp__adspirer__//g')"
+  fi
+
+  echo "$content"
+}
+
+generate_agents() {
+  local out_root="${1:-}"  # If empty, write to actual target dirs
+  local src="$SHARED_AGENTS/performance-marketing-agent/PROMPT.md"
+  [ -f "$src" ] || return 0
+
+  local cursor_dest codex_dest claude_dest
+  if [ -n "${out_root:-}" ]; then
+    cursor_dest="$out_root/cursor-agent.md"
+    codex_dest="$out_root/codex-agent.toml"
+    claude_dest="$out_root/claude-agent.md"
+  else
+    cursor_dest="$CURSOR_AGENT"
+    codex_dest="$CODEX_AGENT"
+    claude_dest="$CLAUDE_AGENT"
+  fi
+
+  mkdir -p "$(dirname "$cursor_dest")" "$(dirname "$codex_dest")" "$(dirname "$claude_dest")"
+
+  # Claude Code agent
+  {
+    cat <<'EOF'
+---
+name: performance-marketing-agent
+description: |
+  Brand-specific performance marketing agent. Connects to Adspirer MCP for live
+  ad platform data, bootstraps brand workspaces, and manages campaigns across
+  Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads with brand awareness and
+  persistent memory.
+tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, WebSearch, Task
+model: sonnet
+memory: project
+skills:
+  - ad-campaign-management
+mcpServers:
+  adspirer: {}
+---
+
+EOF
+    process_agent_prompt "$src" "CLAUDE.md" "no"
+  } > "$claude_dest"
+
+  # Cursor agent
+  {
+    cat <<'EOF'
+---
+name: performance-marketing-agent
+description: |
+  Brand-specific performance marketing agent. Use proactively when the user asks about
+  ad campaigns, campaign performance, budget optimization, keyword research, ad copy,
+  audience targeting, or anything related to Google Ads, Meta Ads, LinkedIn Ads, or
+  TikTok Ads. Also use when the user wants to create campaigns, write ad copy, or
+  analyze advertising data for their brand.
+model: inherit
+---
+
+EOF
+    process_agent_prompt "$src" "BRAND.md" "no"
+  } > "$cursor_dest"
+
+  # Codex agent (TOML wrapper with shared prompt body)
+  {
+    cat <<'EOF'
+# Performance Marketing Agent -- Role Configuration
+# Copy this file to ~/.codex/agents/performance-marketing-agent.toml
+
+model = "o3"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+EOF
+    process_agent_prompt "$src" "AGENTS.md" "yes"
+    cat <<'EOF'
+"""
+EOF
+  } > "$codex_dest"
 }
 
 # ---------------------------------------------------------------------------
@@ -174,6 +275,9 @@ generate_all() {
 
     echo "$result" > "$dest_dir/SKILL.md"
   fi
+
+  # -- Agents (Claude/Cursor/Codex) --
+  generate_agents "$out_root"
 }
 
 # ---------------------------------------------------------------------------
@@ -220,6 +324,31 @@ case "$MODE" in
       echo "MISSING: $expected"; rc=1
     fi
 
+    # Compare agents
+    expected="$CURSOR_AGENT"
+    actual="$TMPDIR/cursor-agent.md"
+    if [ -f "$expected" ]; then
+      diff -q "$expected" "$actual" >/dev/null 2>&1 || { echo "DIFF: $expected"; rc=1; }
+    else
+      echo "MISSING: $expected"; rc=1
+    fi
+
+    expected="$CODEX_AGENT"
+    actual="$TMPDIR/codex-agent.toml"
+    if [ -f "$expected" ]; then
+      diff -q "$expected" "$actual" >/dev/null 2>&1 || { echo "DIFF: $expected"; rc=1; }
+    else
+      echo "MISSING: $expected"; rc=1
+    fi
+
+    expected="$CLAUDE_AGENT"
+    actual="$TMPDIR/claude-agent.md"
+    if [ -f "$expected" ]; then
+      diff -q "$expected" "$actual" >/dev/null 2>&1 || { echo "DIFF: $expected"; rc=1; }
+    else
+      echo "MISSING: $expected"; rc=1
+    fi
+
     if [ "$rc" -eq 0 ]; then
       echo "All generated files match committed files."
     fi
@@ -252,6 +381,25 @@ case "$MODE" in
     # Diff Claude
     expected="$CLAUDE_SKILLS/ad-campaign-management/SKILL.md"
     actual="$TMPDIR/claude/ad-campaign-management/SKILL.md"
+    if [ -f "$expected" ]; then
+      diff --color=always -u "$expected" "$actual" || true
+    fi
+
+    # Diff agents
+    expected="$CURSOR_AGENT"
+    actual="$TMPDIR/cursor-agent.md"
+    if [ -f "$expected" ]; then
+      diff --color=always -u "$expected" "$actual" || true
+    fi
+
+    expected="$CODEX_AGENT"
+    actual="$TMPDIR/codex-agent.toml"
+    if [ -f "$expected" ]; then
+      diff --color=always -u "$expected" "$actual" || true
+    fi
+
+    expected="$CLAUDE_AGENT"
+    actual="$TMPDIR/claude-agent.md"
     if [ -f "$expected" ]; then
       diff --color=always -u "$expected" "$actual" || true
     fi
