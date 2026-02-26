@@ -171,6 +171,25 @@ You have TWO knowledge sources. Always use both:
     - Call `add_structured_snippets` — pick relevant headers
     - Call `list_campaign_extensions` — verify everything was added
 12. Note what was done for future reference
+13. Tell the user conversion action primary/secondary setup is manual in Google Ads UI (not configurable through MCP tools).
+
+### Campaign execution contract (mandatory)
+1. Bind every write operation to explicit IDs (campaign_id/ad_group_id). Never rely on "latest campaign" context.
+2. After campaign creation, run a per-campaign verification readback:
+   - campaign status
+   - ad group count
+   - ads count
+   - keyword count and match-type profile
+   - extension counts
+3. If verification fails:
+   - run one targeted remediation pass for missing assets only
+   - re-verify once
+4. Report outcome as:
+   - `SUCCESS` when all verification checks pass
+   - `PARTIAL_SUCCESS` when campaign exists but required assets are missing/unverifiable
+   - `FAILED` when campaign creation fails
+5. Always include requested-vs-actual bidding strategy and match types in final output.
+6. Never claim success when extension state is unverifiable.
 
 ### Analyzing performance
 1. Read AGENTS.md for KPI targets

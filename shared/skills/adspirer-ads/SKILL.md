@@ -192,6 +192,12 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
    - `add_callout_extensions` — add 4+ callouts (use value props from research)
    - `add_structured_snippets` — add relevant structured snippets
 8. `list_campaign_extensions` — verify all extensions were added
+9. Run post-create verification on this campaign using `get_campaign_structure`:
+   - confirm ad groups exist
+   - confirm keywords exist with expected match-type profile
+   - confirm at least one RSA exists
+10. If any required asset is missing, run one targeted remediation pass for the missing asset class only, then re-verify.
+11. Do not report success until this campaign passes Launch Definition of Done.
 
 **Google Ads Performance Max:**
 1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
@@ -295,6 +301,70 @@ After adding all extensions, always call `list_campaign_extensions` to verify:
 - Callouts are present
 - Structured snippets are showing
 - Report back to the user what was added
+
+If `list_campaign_extensions` fails:
+1. Retry once with a corrected payload or narrower scope.
+2. Cross-check extension state with `get_campaign_structure`.
+3. If extension state is still unverifiable, report `PARTIAL_SUCCESS` and explicitly list what could not be confirmed.
+
+## Launch Definition of Done (Required before reporting success)
+
+For each created campaign, all checks below must pass:
+
+1. Campaign exists and status is `PAUSED` (unless user explicitly approved activation).
+2. Expected ad group count exists.
+3. Expected keywords exist, with the planned match-type profile (EXACT/PHRASE/BROAD as specified).
+4. At least one RSA exists with expected headline/description counts.
+5. Required extensions exist (sitelinks, callouts, structured snippets for Google Ads campaigns).
+6. Requested-vs-actual bidding strategy matches, or any drift is explicitly called out.
+
+### Status protocol (mandatory)
+
+- `SUCCESS`: all Launch Definition of Done checks pass for all targeted campaigns.
+- `PARTIAL_SUCCESS`: campaign shell exists, but one or more required assets are missing/unverifiable after one targeted remediation pass.
+- `FAILED`: campaign creation itself failed.
+
+Never report `SUCCESS` when any verification check failed or could not be confirmed.
+
+### Per-campaign action ledger (mandatory)
+
+For every campaign you create or edit, log and return:
+- campaign name + campaign_id
+- ad_group_id values touched
+- keyword add/update counts
+- RSA counts (headlines/descriptions)
+- extension counts (sitelinks/callouts/snippets)
+- verification result per campaign (`PASS`/`FAIL`)
+
+## Ad Quality Guardrails (Google Ads)
+
+### Keyword-to-headline coverage
+
+For each ad group, include unique high-intent target keywords in RSA headlines. At minimum:
+- cover top 3-5 keyword themes from the ad group's keyword list
+- avoid generic headline sets that omit core search intent terms
+- when competitive terms are targeted, keep competitor names in keywords only if required by strategy and avoid naming competitors in ad copy unless user explicitly approves
+
+### Asset length validation checklist (before submission)
+
+- RSA headline: <= 30 characters
+- RSA description: <= 90 characters
+- Path fields: <= 15 characters each
+- Sitelink text: <= 25 characters
+- Sitelink description lines: <= 35 characters each
+- Callout text: <= 25 characters
+- Structured snippet values: follow platform limits and keep concise
+
+Validate lengths before `create_*` or `add_*` calls. If limits are exceeded, rewrite and re-validate before submitting.
+
+## Conversion Tracking Limitation
+
+Adspirer MCP currently does not configure Google Ads conversion action settings (primary vs secondary) directly.
+
+When campaign goals depend on conversion action priority:
+1. create campaigns in PAUSED status
+2. tell the user exact Google Ads UI path to configure conversion actions manually
+3. report campaign creation as complete only after clarifying this manual step
 
 ## Budget Optimization (Google Ads)
 

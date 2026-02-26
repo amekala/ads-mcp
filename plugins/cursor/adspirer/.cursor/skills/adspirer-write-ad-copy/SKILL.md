@@ -12,3 +12,9 @@ Write ad copy informed by brand voice and real performance data:
 5. Filter all suggestions through brand voice rules from BRAND.md
 6. Present 5+ headline/description options with reasoning
 7. Get user approval before applying changes
+8. Include a validation table in the response with:
+   - headline/description text
+   - character count
+   - pass/fail vs platform limits
+   - target keyword theme mapped to each headline
+9. Ensure top ad group keyword themes are represented in the headline set before finalizing.

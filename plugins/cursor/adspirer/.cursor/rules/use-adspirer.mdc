@@ -26,4 +26,17 @@ When working with advertising or ad campaign tasks using the Adspirer MCP tools,
 
 8. **Ad extensions are mandatory for Google Ads campaigns.** After creating any Google Search or PMax campaign, always add sitelinks, callout extensions, and structured snippets.
 
+9. **Verification before success is mandatory.** Do not report success until each targeted campaign is read back and confirmed to have:
+   - expected ad groups
+   - ads present
+   - keywords present
+   - extensions present or explicitly marked as unverifiable
+
+10. **Use strict completion statuses.**
+   - `SUCCESS`: all required assets verified
+   - `PARTIAL_SUCCESS`: campaign exists but assets are missing/unverifiable after one targeted remediation pass
+   - `FAILED`: campaign creation failed
+
+11. **Never claim success on unverifiable extension state.** If extension verification tools fail, retry once and then report `PARTIAL_SUCCESS` with explicit gaps.
+
 See the `adspirer-ads` skill for the full tool reference and detailed workflows.

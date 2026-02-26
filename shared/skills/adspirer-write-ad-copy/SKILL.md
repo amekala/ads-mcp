@@ -18,6 +18,12 @@ Write ad copy informed by brand voice and real performance data:
 5. Filter all suggestions through brand voice rules from {{CONTEXT_FILE}}
 6. Present 5+ headline/description options with reasoning
 7. Get user approval before applying changes
+8. Include a validation table in the response with:
+   - headline/description text
+   - character count
+   - pass/fail vs platform limits
+   - target keyword theme mapped to each headline
+9. Ensure top ad group keyword themes are represented in the headline set before finalizing.
 <!-- END:CURSOR_CLAUDE -->
 <!-- BEGIN:CODEX -->
 Write ad copy for $ARGUMENTS.
@@ -28,4 +34,5 @@ Write ad copy for $ARGUMENTS.
 4. Call `suggest_ad_content` for AI-generated suggestions based on real data
 5. Generate 5+ headline/description options that follow brand guidelines and are informed by real performance data
 6. Present options for user approval
+7. Include a validation table with character counts and keyword-theme coverage for the proposed headlines/descriptions.
 <!-- END:CODEX -->

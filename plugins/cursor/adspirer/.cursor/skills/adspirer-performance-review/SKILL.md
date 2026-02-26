@@ -12,3 +12,10 @@ Run a full cross-platform performance review:
 5. Present a unified scorecard comparing actuals vs targets
 6. Highlight top performers, underperformers, and wasted spend
 7. Recommend top 3 actions across all platforms
+8. If the user asks for launch QA or campaign integrity, run a Campaign Integrity Audit:
+   - campaign status
+   - ad group count
+   - ads count
+   - keyword count and match-type mix
+   - extension counts
+   - bidding strategy requested vs actual

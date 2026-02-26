@@ -10,3 +10,4 @@ Run a full cross-platform performance review for $ARGUMENTS (default: last 30 da
 3. Compare actuals vs KPI targets from AGENTS.md
 4. Present a unified scorecard table with all platforms
 5. Highlight top problems and recommend top 3 actions
+6. If requested, include Campaign Integrity Audit fields (status, ad groups, ads, keywords, extensions, bidding drift).

@@ -14,3 +14,6 @@ Run a wasted spend analysis across all connected platforms:
 4. Present total wasted spend, top waste sources per platform, and potential monthly savings
 5. Recommend specific fixes (negative keywords, audience exclusions, budget shifts)
 6. Get user approval before making changes
+7. Before optimization recommendations, verify campaign build integrity for target campaigns:
+   - if ads count = 0 or keyword count = 0, flag as Build Integrity Issue
+   - do not proceed with optimization recommendations until missing assets are fixed or explicitly excluded

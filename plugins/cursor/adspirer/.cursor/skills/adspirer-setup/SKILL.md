@@ -112,6 +112,9 @@ Generate `BRAND.md` at the project root. Combine local files + Adspirer data:
 ## Notes
 [Anything else relevant found in docs]
 [Gaps: "No brand voice guide found", "No budget specified", etc.]
+[Known constraints:
+- Conversion action primary/secondary setup is configured manually in Google Ads UI (not via Adspirer MCP)
+- Campaign creation should be considered complete only after post-create verification of ads, keywords, and extensions]
 ```
 
 Fill in every section with real data. Leave placeholders only for sections where no data was found — and note the gap.
