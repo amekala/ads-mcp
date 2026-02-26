@@ -176,6 +176,41 @@ Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` 
 The performance marketing agent prompt is also authored once in `shared/agents/performance-marketing-agent/PROMPT.md` and compiled into Claude Code, Cursor, and Codex agent files by the same sync script.
 OpenClaw uses its own standalone skill. See [Architecture](monorepo-restructure-plan.md) for the full design.
 
+### Shared Update Wireframe
+
+```text
+Edit once (source of truth)
+  ├─ shared/skills/adspirer-*/SKILL.md
+  └─ shared/agents/performance-marketing-agent/PROMPT.md
+                |
+                v
+        ./scripts/sync-skills.sh
+                |
+                +--> Claude Code outputs
+                |     ├─ skills/ad-campaign-management/SKILL.md
+                |     └─ agents/performance-marketing-agent.md
+                |
+                +--> Cursor outputs
+                |     ├─ plugins/cursor/adspirer/.cursor/skills/adspirer-*/SKILL.md
+                |     └─ plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md
+                |
+                +--> Codex outputs
+                |     ├─ plugins/codex/adspirer/skills/adspirer-*/SKILL.md
+                |     └─ plugins/codex/adspirer/agents/performance-marketing-agent.toml
+                |
+                └--> OpenClaw (standalone, not generated)
+                      └─ plugins/openclaw/SKILL.md
+```
+
+### Client Roots and Install Targets
+
+| AI Client | Repo Source Root | Generated/Runtime Root in Repo | User Installation Path/Method |
+|----------|------------------|--------------------------------|-------------------------------|
+| **Claude Code** | Repo root + `shared/skills/` + `shared/agents/` | `skills/`, `agents/`, `commands/`, `.claude-plugin/` | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer` |
+| **Cursor** | `plugins/cursor/adspirer/` + shared sources | `plugins/cursor/adspirer/.cursor/skills/`, `plugins/cursor/adspirer/.cursor/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)` |
+| **Codex** | `plugins/codex/adspirer/` + shared sources | `plugins/codex/adspirer/skills/`, `plugins/codex/adspirer/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)` |
+| **OpenClaw** | `plugins/openclaw/` | `plugins/openclaw/` (standalone, no sync generation) | `openclaw plugins install openclaw-adspirer` |
+
 ## Developer Guide
 
 If you're contributing to this repo or adding new ad platforms/IDE support:
