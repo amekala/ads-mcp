@@ -112,6 +112,9 @@ Campaigns are created directly in ad platforms through API calls. All campaigns 
 3. `suggest_ad_content` — generate ad headlines and descriptions
 4. `validate_and_prepare_assets` — validate everything before creation
 5. `create_search_campaign` — create the campaign (PAUSED)
+6. `add_sitelinks` + `add_callout_extensions` + `add_structured_snippets` — add ad extensions
+7. `list_campaign_extensions` — verify extension state
+8. `get_campaign_structure` — verify ads and keywords exist before reporting success
 
 **Google Ads Performance Max (PMax):**
 PMax campaigns use Google's AI to run ads across Search, Display, YouTube, Gmail, and Discover simultaneously. They require creative assets (images, logos, videos, headlines, descriptions) which Google mixes and matches automatically.
@@ -196,6 +199,42 @@ Set up automated monitoring and reporting.
 - `switch_primary_account` — change which ad account is active for a platform
 - `get_usage_status` — check tool call quota and subscription tier
 - `get_business_profile` / `infer_business_profile` / `save_business_profile` — manage business context
+
+## Launch Definition of Done (Required before reporting success)
+
+For each campaign created or materially changed, all checks below must pass:
+
+1. Campaign exists and has the intended status (`PAUSED` by default).
+2. Expected ad group count exists.
+3. Expected keywords exist with planned match-type profile.
+4. At least one ad is present with expected asset counts.
+5. Required extensions are present for Google Ads campaigns (sitelinks, callouts, structured snippets).
+6. Requested-vs-actual bidding strategy is verified and any drift is explicitly reported.
+
+### Status protocol
+
+- `SUCCESS`: all required checks pass.
+- `PARTIAL_SUCCESS`: campaign exists but required assets are missing/unverifiable after one targeted remediation pass.
+- `FAILED`: campaign creation or update failed.
+
+Never report `SUCCESS` when any required verification check fails or is unverifiable.
+
+### Verification fallback for extension endpoints
+
+If `list_campaign_extensions` fails:
+1. Retry once.
+2. Cross-check with `get_campaign_structure`.
+3. If still unverifiable, return `PARTIAL_SUCCESS` and list explicit gaps.
+
+### Ad quality guardrails
+
+- Include unique high-intent keyword themes in headlines for each ad group.
+- Validate text lengths before submit (headline, description, paths, sitelinks, callouts, snippets).
+- Rewrite and re-validate if any field exceeds limits.
+
+### Conversion tracking limitation
+
+Primary/secondary conversion action configuration is manual in Google Ads UI and is not currently configurable through Adspirer MCP tools. Always call this out when launch goals depend on conversion prioritization.
 
 ---
 

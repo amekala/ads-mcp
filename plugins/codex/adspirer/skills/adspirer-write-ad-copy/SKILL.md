@@ -11,3 +11,4 @@ Write ad copy for $ARGUMENTS.
 4. Call `suggest_ad_content` for AI-generated suggestions based on real data
 5. Generate 5+ headline/description options that follow brand guidelines and are informed by real performance data
 6. Present options for user approval
+7. Include a validation table with character counts and keyword-theme coverage for the proposed headlines/descriptions.

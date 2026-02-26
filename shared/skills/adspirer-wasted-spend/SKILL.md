@@ -20,6 +20,9 @@ Run a wasted spend analysis across all connected platforms:
 4. Present total wasted spend, top waste sources per platform, and potential monthly savings
 5. Recommend specific fixes (negative keywords, audience exclusions, budget shifts)
 6. Get user approval before making changes
+7. Before optimization recommendations, verify campaign build integrity for target campaigns:
+   - if ads count = 0 or keyword count = 0, flag as Build Integrity Issue
+   - do not proceed with optimization recommendations until missing assets are fixed or explicitly excluded
 <!-- END:CURSOR_CLAUDE -->
 <!-- BEGIN:CODEX -->
 Run a wasted spend analysis across $ARGUMENTS (default: all connected platforms).
@@ -29,4 +32,5 @@ Run a wasted spend analysis across $ARGUMENTS (default: all connected platforms)
 3. Call `analyze_linkedin_wasted_spend` for LinkedIn Ads waste
 4. Call `analyze_search_terms` to find irrelevant search terms
 5. Identify top sources of waste, calculate potential savings, and recommend specific fixes with expected impact
+6. If campaigns have zero ads or zero keywords, report a build-integrity blocker before optimization advice.
 <!-- END:CODEX -->

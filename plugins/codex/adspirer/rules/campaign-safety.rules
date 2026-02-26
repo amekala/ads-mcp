@@ -1,5 +1,10 @@
 # Campaign Safety Rules
 # Prevent direct API calls to ad platforms — all operations must go through Adspirer MCP
+# Operational guardrails for campaign reliability:
+# - Never report success until ads, keywords, and extensions are verified.
+# - Use statuses: SUCCESS / PARTIAL_SUCCESS / FAILED.
+# - If extension verification fails, retry once and then report PARTIAL_SUCCESS with explicit gaps.
+# - Conversion action primary/secondary setup is manual in Google Ads UI (not configurable via MCP tools).
 
 prefix_rule(
     pattern = ["curl", "https://ads.google.com"],

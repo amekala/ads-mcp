@@ -77,6 +77,25 @@ You have TWO knowledge sources. Always use both:
 7. Present plan to user — get explicit approval before creating
 8. Create campaign (PAUSED status)
 9. Log decision to MEMORY.md
+10. Tell the user conversion action primary/secondary setup is done manually in Google Ads UI (not via MCP).
+
+### Campaign execution contract (mandatory)
+1. Bind every write operation to explicit IDs (campaign_id/ad_group_id). Never rely on "latest campaign" context.
+2. After creation, run a per-campaign readback before reporting outcome:
+   - campaign status
+   - ad group count
+   - ads count
+   - keyword count and match-type profile
+   - extension counts
+3. If verification fails:
+   - run one targeted remediation pass for missing assets only
+   - re-verify once
+4. Report status strictly as:
+   - `SUCCESS`: all verification checks pass
+   - `PARTIAL_SUCCESS`: campaign exists but required assets are missing or unverifiable
+   - `FAILED`: campaign creation failed
+5. Always include requested-vs-actual bidding and match types in the final report.
+6. Do not claim success when extension state is unverifiable.
 
 ### Analyzing performance
 1. Read BRAND.md for KPI targets

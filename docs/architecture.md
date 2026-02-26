@@ -197,3 +197,24 @@ Checks performed:
 7. OpenClaw files present (claw.json + SKILL.md with valid metadata)
 8. Shared templates exist
 9. MCP endpoint reachable (with `--live`)
+
+## Reliability Contract For Campaign Creation
+
+To prevent false-positive "campaign created" outcomes, skills and agents follow a strict completion contract:
+
+1. **Verification before success**: creation is only `SUCCESS` after per-campaign readback confirms required assets.
+2. **Status semantics**:
+   - `SUCCESS`: all required checks pass
+   - `PARTIAL_SUCCESS`: campaign exists but required assets are missing/unverifiable
+   - `FAILED`: campaign creation failed
+3. **One targeted remediation pass**: if verification fails, fix only missing asset classes once, then re-verify.
+4. **Extension fallback**: if `list_campaign_extensions` fails, retry once and cross-check with campaign structure before concluding.
+5. **Ad quality guardrails**: include unique keyword themes in headlines and validate all text lengths before submission.
+6. **Known limitation**: conversion action primary/secondary configuration is manual in Google Ads UI and not currently configurable via Adspirer MCP tools.
+
+This contract is implemented across:
+- shared templates (`shared/skills/*`)
+- generated client skills (Cursor/Codex/Claude Code)
+- agent instructions (`agents/`, `plugins/*/agents/`)
+- Cursor/Codex rules
+- OpenClaw standalone skill

@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.1.2] - 2026-02-26
+
+### Changed — Campaign Creation Reliability Hardening
+- Added launch **Definition of Done** checks in shared skills to prevent false-success reporting when campaigns are missing ads, keywords, or extensions.
+- Added strict completion statuses: `SUCCESS`, `PARTIAL_SUCCESS`, `FAILED`.
+- Added extension verification fallback logic when `list_campaign_extensions` fails (retry once + cross-check before final status).
+- Added per-campaign verification/readback requirements in agent instructions across Cursor, Codex, and Claude Code variants.
+- Added ad quality guardrails requiring keyword-theme coverage in headlines and length validation before submission.
+- Added explicit platform limitation guidance: conversion action primary/secondary setup is manual in Google Ads UI (not configurable through Adspirer MCP tools).
+- Aligned OpenClaw standalone skill with the same reliability and reporting contract.
+
+### Propagation
+- Updated source templates in `shared/skills/`.
+- Regenerated Cursor/Codex/Claude skill outputs via `scripts/sync-skills.sh`.
+- Verified sync and integrity with `scripts/validate.sh` (all checks passing).
+
 ## [1.1.1] - 2026-02-22
 
 ### Added — Shared Skills Architecture
