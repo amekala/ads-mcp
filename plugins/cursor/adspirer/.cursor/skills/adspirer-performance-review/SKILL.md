@@ -6,6 +6,8 @@ description: Run a cross-platform performance review for this brand. Use when th
 Run a full cross-platform performance review:
 
 1. Read `BRAND.md` for KPI targets (if it exists)
+1.5. Read STRATEGY.md (if it exists). Note where campaigns align or conflict with active
+     directives. Flag "Strategy Drift" items in the scorecard.
 2. Call `get_connections_status` to identify active platforms
 3. For each connected platform, pull last 30 days of performance data
 4. For each platform, pull wasted spend analysis

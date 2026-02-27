@@ -89,7 +89,8 @@ The agent will:
 2. Scan the folder for brand docs
 3. Pull live campaign data from all connected platforms
 4. Create `AGENTS.md` with your brand context, performance snapshot, and KPI targets
-5. Tell you what it found and ask what you'd like to work on
+5. Create `STRATEGY.md` for persisting strategic decisions across sessions
+6. Tell you what it found and ask what you'd like to work on
 
 If it doesn't trigger automatically, run: `$adspirer-setup`
 
@@ -205,7 +206,8 @@ You don't need to remember skill names — just describe what you want and Codex
 Codex (CLI / IDE)
 │
 ├── Performance Marketing Agent (brain)
-│   ├── Reads: AGENTS.md (brand context), local docs
+│   ├── Reads: AGENTS.md (brand context), STRATEGY.md (directives), local docs
+│   ├── Writes: STRATEGY.md (confirmed directives)
 │   ├── Uses: Adspirer MCP (100+ tools)
 │   └── Workflows: campaign creation, performance analysis,
 │       keyword research, optimization, ad copy, competitive intel
@@ -228,6 +230,7 @@ Codex (CLI / IDE)
 - All new campaigns are created in **PAUSED** status
 - The agent **always asks for confirmation** before creating campaigns or changing budgets
 - Shell-level safety rules prevent direct API calls to ad platforms (must go through Adspirer MCP)
+- Strategy directives from STRATEGY.md guide campaign creation, keyword research, and ad copy
 - Budget guardrails from AGENTS.md are respected
 
 ## Troubleshooting

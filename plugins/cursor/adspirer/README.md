@@ -68,7 +68,8 @@ The agent will:
 2. Scan the folder for brand docs
 3. Pull live campaign data from all connected platforms
 4. Create `BRAND.md` with your brand context, performance snapshot, and KPI targets
-5. Tell you what it found and ask what you'd like to work on
+5. Create `STRATEGY.md` for persisting strategic decisions across sessions
+6. Tell you what it found and ask what you'd like to work on
 
 If it doesn't trigger automatically, type: `/adspirer-setup`
 
@@ -183,8 +184,8 @@ You don't need to remember skill names — just describe what you want and Curso
 Cursor IDE (Agent Mode)
 │
 ├── Performance Marketing Agent (subagent)
-│   ├── Reads: BRAND.md (brand context), local docs
-│   ├── Writes: MEMORY.md (decisions, learnings)
+│   ├── Reads: BRAND.md (brand context), STRATEGY.md (directives), local docs
+│   ├── Writes: MEMORY.md (decisions), STRATEGY.md (confirmed directives)
 │   ├── Uses: Adspirer MCP (100+ tools)
 │   └── Workflows: campaign creation, performance analysis,
 │       keyword research, optimization, ad copy, competitive intel
@@ -211,6 +212,7 @@ Cursor IDE (Agent Mode)
 - All new campaigns are created in **PAUSED** status
 - The agent **always asks for confirmation** before creating campaigns or changing budgets
 - Rules enforce workflow ordering and prevent skipping safety steps
+- Strategy directives from STRATEGY.md guide campaign creation, keyword research, and ad copy
 - Budget guardrails from BRAND.md are respected
 
 ## Troubleshooting

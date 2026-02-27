@@ -6,6 +6,8 @@ description: Find and fix wasted ad spend across all connected platforms. Use wh
 Run a wasted spend analysis across all connected platforms:
 
 1. Call `get_connections_status` to identify active platforms
+1.5. Read STRATEGY.md (if it exists). Flag campaigns violating active directives as
+     priority waste sources.
 2. For each connected platform, call the appropriate waste analysis tool:
    - Google: `analyze_wasted_spend` + `analyze_search_terms`
    - LinkedIn: `analyze_linkedin_wasted_spend`

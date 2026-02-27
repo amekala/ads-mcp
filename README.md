@@ -13,6 +13,7 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 
 ## What It Does
 
+- **Strategy-aware execution** — strategic decisions persist to `STRATEGY.md` and guide all future campaign creation, keyword research, and ad copy across sessions and subagents
 - **100+ tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
 - Plan and validate campaigns using structured prompts
 - Research keywords with real CPC data and competitive analysis
@@ -225,7 +226,7 @@ If you're contributing to this repo or adding new ad platforms/IDE support:
 ```bash
 ./scripts/sync-skills.sh          # Generate IDE-specific skills from templates
 ./scripts/sync-skills.sh --check  # Verify generated files match committed (CI mode)
-./scripts/validate.sh             # Run all 39 offline validation checks
+./scripts/validate.sh             # Run all 48 offline validation checks
 ./scripts/validate.sh --live      # Also test MCP endpoint connectivity
 ```
 

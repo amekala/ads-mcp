@@ -99,6 +99,18 @@ When the user asks for overall performance, a weekly review, or cross-platform c
 
 Before creating a campaign on any platform, research the brand's market position and competitive landscape. This combines web research with ad platform data (Adspirer MCP) to inform every campaign decision — targeting, messaging, differentiation, and bidding.
 
+### Step 0: Load Strategy Directives
+Read STRATEGY.md — `## Active Directives` and skim `## Decision Log`. If directives exist, note them
+as context that will inform (not skip) the research steps that follow. Directives shape
+which competitors to focus on and what positioning angles to explore.
+
+Do NOT skip Campaign Research just because directives exist. Directives may be stale,
+incomplete, or based on exploratory conversations. Fresh research validates and enriches
+them. However, avoid fully redundant research — if a comprehensive analysis was done
+recently (check Decision Log dates), tell the user: "Strategy directives from [date]
+are available. I'll use them as a starting point and validate with fresh data. Want me
+to do a full re-analysis instead?"
+
 ### Step 1: Understand the brand's own website
 Crawl the brand's website. Extract:
 - What they sell (products, services, pricing tiers)
@@ -151,6 +163,13 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 - Params: `business_description` or `seed_keywords`, optional `website_url`, `target_location`
 - Group results by intent (high/medium/low), show search volume, CPC ranges, competition
 - Use insights from Campaign Research to inform seed keywords — include competitor brand terms, differentiation keywords, and pain-point language discovered during research
+- **Strategy directive filter (MANDATORY):** After `research_keywords` returns results,
+  cross-reference against STRATEGY.md > Google Ads directives:
+  - Deprioritize keywords matching AVOID directives. Note these to the user.
+  - Highlight keywords matching PREFER directives.
+  - Apply CONSTRAINT directives (match type rules, budget caps).
+  - Flag conflicts: "Keyword '[term]' returned by research but conflicts with active
+    directive: '[text]'. Deprioritizing it."
 
 ## Bidding Strategy
 
@@ -181,6 +200,8 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 **Google Ads Search (exact order):**
 1. Campaign Research — crawl brand + competitor websites, present research brief
+1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for keyword selection,
+     bidding, targeting, and ad copy throughout this creation flow.
 2. `research_keywords` — mandatory, informed by competitive research
 3. Discuss bidding strategy with user (see Bidding Strategy section above)
 4. `discover_existing_assets` — check for existing ad assets
@@ -201,6 +222,8 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 **Google Ads Performance Max:**
 1. Campaign Research — crawl brand + competitor websites, present research brief
+1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for bidding,
+     targeting, and creative direction throughout this creation flow.
 2. Discuss bidding strategy with user (see Bidding Strategy section above)
 3. `discover_existing_assets` — check existing assets
 4. `validate_and_prepare_assets` — validate creative assets (use differentiation angles from research)
@@ -210,12 +233,16 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 **Meta Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand audience positioning
+1.5. **Apply strategy directives** — load STRATEGY.md > Meta Ads and Cross-Platform sections.
+     Use as context for audience targeting and creative direction.
 2. `get_connections_status` — verify Meta account connected
 3. `search_meta_targeting` or `browse_meta_targeting` — find audiences (informed by competitive gaps)
 4. Create campaign — created in PAUSED status
 
 **LinkedIn Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand B2B positioning
+1.5. **Apply strategy directives** — load STRATEGY.md > LinkedIn Ads and Cross-Platform sections.
+     Use as context for targeting, messaging, and budget allocation.
 2. `get_linkedin_organizations` — get linked company pages
 3. `discover_linkedin_assets` — check existing assets
 4. `validate_and_prepare_linkedin_assets` — validate assets
@@ -223,6 +250,8 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 **TikTok Ads:**
 1. Campaign Research — crawl brand website, research competitor video ad strategies
+1.5. **Apply strategy directives** — load STRATEGY.md > TikTok Ads and Cross-Platform sections.
+     Use as context for creative direction and audience targeting.
 2. `discover_tiktok_assets` — check existing assets
 3. `validate_and_prepare_tiktok_assets` — validate video assets
 4. `create_tiktok_campaign` or `create_tiktok_video_campaign` — create the campaign

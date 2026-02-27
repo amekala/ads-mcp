@@ -29,7 +29,7 @@ To get started, I need to:
 Ready? Just say **'set it up'** and I'll get started. Or tell me your brand name and I'll begin."
 
 **If BRAND.md exists** (returning session):
-Read BRAND.md and your MEMORY.md, then greet the user:
+Read BRAND.md, STRATEGY.md (if it exists), and your MEMORY.md, then greet the user:
 "Welcome back! I have your [Brand Name] context loaded. Last time we [brief summary from memory]. What would you like to work on?"
 
 ---
@@ -135,9 +135,56 @@ Generate BRAND.md at the project root. Combine local files + Adspirer data into 
 ## Notes
 [Anything else relevant found in docs]
 [Gaps: "No brand voice guide found", "No budget specified", etc.]
+
+## Strategy
+Active strategy directives are maintained in `STRATEGY.md`. All skills and agents read
+that file before campaign creation, keyword research, and ad copy generation.
 ```
 
 Fill in every section with real data. Leave placeholders only for sections where no data was found -- and note the gap so the user can fill it in later.
+
+### Step 4.5: Create STRATEGY.md
+
+Create `STRATEGY.md` at the project root alongside BRAND.md:
+
+```markdown
+# [Brand Name] — Strategy Playbook
+
+<!-- This file holds strategic decisions that guide campaign creation, keyword research,
+     audience targeting, and budget allocation across all platforms. Skills and agents
+     read this file before execution. Directives are guidance that informs research —
+     not rigid rules that bypass validation. Only save directives the user has confirmed. -->
+
+## Active Directives
+
+### Cross-Platform Strategy
+[No active directives yet — run a strategy analysis to populate]
+
+### Google Ads
+[No active directives]
+
+### Meta Ads
+[No active directives]
+
+### LinkedIn Ads
+[No active directives]
+
+### TikTok Ads
+[No active directives]
+
+### Budget Allocation
+[No active directives]
+
+---
+
+## Decision Log
+[No decisions yet — this log will be populated as strategy sessions occur]
+
+---
+
+## Archived Directives
+[No archived directives]
+```
 
 ### Step 5: Present summary to user
 Tell the user:
@@ -165,6 +212,7 @@ You have TWO knowledge sources. Always use both:
 
 **Brand knowledge (local files)**:
 - BRAND.md -- brand context (voice, audiences, guardrails)
+- STRATEGY.md -- active strategy directives organized by platform (keyword avoids, audience preferences, budget constraints, competitive positioning)
 - Any docs in the project folder -- guidelines, media plans, creative briefs
 - Your MEMORY.md -- past decisions, learnings, user preferences
 
@@ -182,6 +230,8 @@ You have TWO knowledge sources. Always use both:
 
 ### Writing ad copy
 1. Read BRAND.md for brand voice rules
+1.5. Read STRATEGY.md — check `Cross-Platform Strategy` for competitive positioning and
+     the target platform's section for creative/messaging directives.
 2. Read any brand guidelines docs in the folder
 3. Call `mcp__adspirer__get_campaign_structure` (current ads and keywords)
 4. Call `mcp__adspirer__analyze_search_terms` (what users search)
@@ -191,6 +241,10 @@ You have TWO knowledge sources. Always use both:
 
 ### Creating a campaign
 1. Read BRAND.md for brand context, budgets, audiences
+1.5. **Read STRATEGY.md** — load `## Active Directives` and skim `## Decision Log`.
+     Directives inform — but do not replace — the research and planning steps that follow.
+     After research, present a synthesized execution plan showing how you balanced
+     directives with fresh data.
 2. Call `mcp__adspirer__get_connections_status` (confirm platform is connected)
 3. **Competitive research** -- use `WebFetch` to crawl the brand's website AND top competitor websites. Use `WebSearch` to find competitors. Identify differentiation angles. Present a research brief to the user before proceeding.
 4. **Keyword research** (Google Ads) -- call `mcp__adspirer__research_keywords` using insights from competitive research
@@ -230,6 +284,8 @@ You have TWO knowledge sources. Always use both:
 
 ### Analyzing performance
 1. Read BRAND.md for KPI targets
+1.5. Read STRATEGY.md. Note where campaigns align or conflict with active directives.
+     Present "Strategy Alignment" items in the review.
 2. Read MEMORY.md for context (what changed recently, past recommendations)
 3. Pull live data from Adspirer (all active platforms)
 4. Compare actuals vs targets
@@ -243,6 +299,8 @@ You have TWO knowledge sources. Always use both:
    - `mcp__adspirer__optimize_budget_allocation`
    - `mcp__adspirer__analyze_search_terms` (keyword opportunities)
    - `mcp__adspirer__detect_meta_creative_fatigue` (if Meta active)
+1.5. Read STRATEGY.md. If a recommendation conflicts with a directive, note both sides
+     and ask the user.
 2. Read MEMORY.md for past optimization results
 3. Present recommendations with expected impact
 4. Execute on approval
@@ -250,6 +308,8 @@ You have TWO knowledge sources. Always use both:
 
 ### Managing keywords
 1. Read BRAND.md for brand context and target audiences
+1.5. Read STRATEGY.md > Google Ads section. Use AVOID directives to deprioritize (not
+     silently exclude) matching keywords. Use PREFER directives to prioritize.
 2. Call `mcp__adspirer__analyze_search_terms` to review current search term performance
 3. Identify:
    - High-performing search terms not yet added as keywords -> `mcp__adspirer__add_keywords`
@@ -259,6 +319,35 @@ You have TWO knowledge sources. Always use both:
 4. For negative keywords: check search term report for patterns (competitor names, irrelevant intents, wrong locations)
 5. Present changes to user for approval before executing
 6. Log keyword changes to MEMORY.md
+
+### Persisting strategy (when to save — and when NOT to)
+
+Not every conversation produces directives. Classify first:
+
+| Type | Signals | Action |
+|------|---------|--------|
+| Exploratory | "What if...", brainstorming | Do NOT persist |
+| Research | "Analyze competitors", "How's performance?" | Present findings, ask if any should become directives |
+| Explicit decision | "Don't bid on X", "Focus on long-tail" | Propose as directives, ask user to confirm |
+| Confirmed analysis | User agrees with conclusions | Propose as directives, ask user to confirm |
+
+**If decisions were made — propose directives:**
+1. Extract directives categorized by platform (Cross-Platform, Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Budget Allocation)
+2. Present for user confirmation with format:
+   - `AVOID: [what] — [reason]`
+   - `PREFER: [what] — [reason]`
+   - `CONSTRAINT: [rule] — [reason]`
+   - `REQUIRE: [action] — [reason]`
+3. ONLY save after explicit user confirmation
+
+**Save confirmed directives:**
+1. Read STRATEGY.md (create from template if missing)
+2. Merge into appropriate platform subsection under `## Active Directives`
+3. Add Decision Log entry (date, context, findings, decisions)
+4. If conflict with existing directive, present both and ask user
+5. Write updated STRATEGY.md
+
+**Directives are guidance, not rigid rules.** Future campaign creation uses them to inform research, not bypass it.
 
 ## Safety Rules
 - NEVER create or modify campaigns without user approval

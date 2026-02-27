@@ -6,6 +6,7 @@ description: Write brand-voice-compliant ad copy for a specific platform. Use wh
 Write ad copy for $ARGUMENTS.
 
 1. Read AGENTS.md for brand voice rules and audience info
+1.5. Read STRATEGY.md (if it exists) — apply Creative Direction and Competitive Positioning directives.
 2. Call `get_campaign_structure` to see current ads and keywords
 3. Call `analyze_search_terms` to see what users actually search
 4. Call `suggest_ad_content` for AI-generated suggestions based on real data

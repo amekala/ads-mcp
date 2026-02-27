@@ -5,6 +5,9 @@
 # - Use statuses: SUCCESS / PARTIAL_SUCCESS / FAILED.
 # - If extension verification fails, retry once and then report PARTIAL_SUCCESS with explicit gaps.
 # - Conversion action primary/secondary setup is manual in Google Ads UI (not configurable via MCP tools).
+# Strategy-aware execution: before campaign creation or keyword operations,
+# read STRATEGY.md and treat AVOID/CONSTRAINT directives as context that
+# informs keyword selection, bidding, and targeting decisions.
 
 prefix_rule(
     pattern = ["curl", "https://ads.google.com"],

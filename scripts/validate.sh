@@ -251,7 +251,84 @@ for skill_dir in shared/skills/adspirer-*/; do
 done
 
 # --------------------------------------------------------------------------
-# Check 9 (optional): MCP endpoint connectivity
+# Check 9: Agent files
+# --------------------------------------------------------------------------
+echo ""
+echo "--- Agent Files ---"
+
+check "Shared agent template exists"
+if [ -f "shared/agents/performance-marketing-agent/PROMPT.md" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "Claude Code agent exists"
+if [ -f "agents/performance-marketing-agent.md" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "Cursor agent exists"
+if [ -f "plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "Codex agent exists"
+if [ -f "plugins/codex/adspirer/agents/performance-marketing-agent.toml" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "Claude Code agent only references CLAUDE.md"
+claude_agent_bad=$(grep -l 'BRAND\.md\|AGENTS\.md' agents/performance-marketing-agent.md 2>/dev/null || true)
+if [ -z "$claude_agent_bad" ]; then
+    pass
+else
+    fail "Found wrong context file in: $claude_agent_bad"
+fi
+
+check "Cursor agent only references BRAND.md"
+cursor_agent_bad=$(grep -l 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md 2>/dev/null || true)
+if [ -z "$cursor_agent_bad" ]; then
+    pass
+else
+    fail "Found wrong context file in: $cursor_agent_bad"
+fi
+
+check "Codex agent only references AGENTS.md"
+codex_agent_bad=$(grep -l 'BRAND\.md\|CLAUDE\.md' plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
+if [ -z "$codex_agent_bad" ]; then
+    pass
+else
+    fail "Found wrong context file in: $codex_agent_bad"
+fi
+
+check "No {{...}} markers in generated agents"
+agent_leak=$(grep -rl '{{' \
+    agents/performance-marketing-agent.md \
+    plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md \
+    plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
+if [ -z "$agent_leak" ]; then
+    pass
+else
+    fail "Found leaked markers in: $agent_leak"
+fi
+
+check "Codex agent has no mcp__adspirer__ prefix"
+codex_prefix=$(grep -l 'mcp__adspirer__' plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
+if [ -z "$codex_prefix" ]; then
+    pass
+else
+    fail "Found mcp__adspirer__ prefix in Codex agent (should be stripped)"
+fi
+
+# --------------------------------------------------------------------------
+# Check 10 (optional): MCP endpoint connectivity
 # --------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then
     echo ""

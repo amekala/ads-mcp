@@ -122,9 +122,56 @@ Generate `{{CONTEXT_FILE}}` at the project root. Combine local files + Adspirer 
 [Known constraints:
 - Conversion action primary/secondary setup is configured manually in Google Ads UI (not via Adspirer MCP)
 - Campaign creation should be considered complete only after post-create verification of ads, keywords, and extensions]
+
+## Strategy
+Active strategy directives are maintained in `STRATEGY.md`. All skills and agents read
+that file before campaign creation, keyword research, and ad copy generation.
 ```
 
 Fill in every section with real data. Leave placeholders only for sections where no data was found — and note the gap.
+
+### Step 4.5: Create STRATEGY.md
+
+Create `STRATEGY.md` at the project root alongside {{CONTEXT_FILE}}:
+
+```markdown
+# [Brand Name] — Strategy Playbook
+
+<!-- This file holds strategic decisions that guide campaign creation, keyword research,
+     audience targeting, and budget allocation across all platforms. Skills and agents
+     read this file before execution. Directives are guidance that informs research —
+     not rigid rules that bypass validation. Only save directives the user has confirmed. -->
+
+## Active Directives
+
+### Cross-Platform Strategy
+[No active directives yet — run a strategy analysis to populate]
+
+### Google Ads
+[No active directives]
+
+### Meta Ads
+[No active directives]
+
+### LinkedIn Ads
+[No active directives]
+
+### TikTok Ads
+[No active directives]
+
+### Budget Allocation
+[No active directives]
+
+---
+
+## Decision Log
+[No decisions yet — this log will be populated as strategy sessions occur]
+
+---
+
+## Archived Directives
+[No archived directives]
+```
 
 <!-- BEGIN:HAS_MEMORY -->
 ## Step 5: Create memory file

@@ -24,6 +24,8 @@ When working with advertising or ad campaign tasks using the Adspirer MCP tools,
 
 7. **Never exceed budget guardrails** from BRAND.md. If unsure about budget impact, ask the user first.
 
+7.5. **Check STRATEGY.md before campaign creation or keyword operations.** AVOID directives deprioritize matching keywords. CONSTRAINT directives are binding rules. If a workflow would violate a directive, flag the conflict and ask the user.
+
 8. **Ad extensions are mandatory for Google Ads campaigns.** After creating any Google Search or PMax campaign, always add sitelinks, callout extensions, and structured snippets.
 
 9. **Verification before success is mandatory.** Do not report success until each targeted campaign is read back and confirmed to have:

@@ -19,4 +19,6 @@ When working on advertising, campaign, or marketing tasks in this project:
 
 6. **Update BRAND.md** when significant changes happen (new platforms connected, new brand docs added, major strategy shifts). Update MEMORY.md after every campaign action with what was done and why.
 
-7. **Known platform constraints must be surfaced proactively.** For Google Ads workflows, remind users that conversion action primary/secondary configuration is manual in Google Ads UI (not currently configurable via Adspirer MCP tools).
+7. **Strategy directives are binding context.** If `STRATEGY.md` exists, all campaign creation, keyword management, and ad copy tasks MUST read it first. AVOID directives deprioritize matching keywords. CONSTRAINT directives are binding rules. After strategy work, propose new directives for user confirmation and persist confirmed ones to STRATEGY.md.
+
+8. **Known platform constraints must be surfaced proactively.** For Google Ads workflows, remind users that conversion action primary/secondary configuration is manual in Google Ads UI (not currently configurable via Adspirer MCP tools).
