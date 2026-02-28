@@ -244,7 +244,7 @@ Codex (CLI / IDE)
 | No ad platforms connected | Connect platforms at [adspirer.com](https://www.adspirer.com) |
 | Skills not showing | Verify: `ls ~/.agents/skills/` — should show `adspirer-*` directories |
 | No data returned | Check for active campaigns. Try longer lookback (60/90 days) |
-| Rate limit hit | Check Adspirer tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited) |
+| Rate limit hit | Check Adspirer tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
 
 ## Links
 

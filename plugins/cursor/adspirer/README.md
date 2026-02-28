@@ -228,7 +228,7 @@ Cursor IDE (Agent Mode)
 | Skills not showing | Verify: `ls ~/.cursor/skills/` — should show `adspirer-*` directories |
 | Subagent not triggering | Ensure you're in **Agent mode** (not Ask or Edit). Try `/adspirer-setup` directly. |
 | No data returned | Check for active campaigns. Try longer lookback (60/90 days) |
-| Rate limit hit | Check Adspirer tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited) |
+| Rate limit hit | Check Adspirer tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
 
 ## Links
 

@@ -565,4 +565,4 @@ These tools create REAL campaigns that spend REAL money.
 - **Auth errors:** Run `codex mcp login adspirer` to re-authenticate
 - **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
 - **Wrong account:** Use `switch_primary_account` to change active account
-- **Rate limits:** Adspirer enforces tool call quotas by tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited)
+- **Rate limits:** Adspirer enforces tool call quotas by tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo)
