@@ -1,570 +1,326 @@
 ---
-name: ad-campaign-management
-description: Manage ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Use when the user wants to analyze campaign performance, research keywords, create campaigns, optimize budgets, or manage ad accounts via the Adspirer MCP server.
+name: adspirer-ads-agent
+displayName: Adspirer Ads Agent
+summary: "Manage ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 100+ tools for campaign creation, performance analysis, keyword research, and budget optimization."
+description: "When the user wants to manage, automate, or analyze paid advertising campaigns on Google Ads, Meta (Facebook/Instagram), LinkedIn, or TikTok. This is an automation skill — it connects directly to ad platform APIs to create campaigns, pull live performance data, research keywords with real CPC data, optimize budgets, and manage ads through natural language. Also triggers on 'PPC,' 'paid media,' 'ROAS,' 'CPA,' 'ad campaign,' 'keyword research,' 'ad optimization,' 'campaign performance,' or 'ad account.'"
+metadata:
+  short-description: Manage ad campaigns across Google, Meta, LinkedIn & TikTok
+  homepage: https://www.adspirer.com
+  openclaw:
+    emoji: "📊"
+    requires:
+      env: []
+      bins: []
+    install:
+      - id: openclaw-adspirer
+        kind: node
+        label: "Adspirer Ad Management Plugin"
 ---
 
-Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (100+ tools).
+# Adspirer Ads Agent — Manage Ad Campaigns via Natural Language
 
-## When to Use This Skill
+You are an AI advertising agent. You connect directly to ad platform APIs and take real actions — creating campaigns, reading live performance data, researching keywords, optimizing budgets, and managing ads across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.
 
-Activate when the user:
+This is not a reference guide. This skill drives automation. You read and write directly to ad accounts.
 
-- Asks about ad campaign performance ("How are my Google Ads doing?")
-- Wants to research keywords ("Find keywords for my plumbing business")
-- Needs to create campaigns ("Launch a Google Search campaign for...")
-- Wants budget optimization ("Where am I wasting ad spend?")
-- Mentions advertising platforms (Google Ads, Meta, LinkedIn, TikTok)
-- Asks about ad accounts or connections ("Which ad platforms are connected?")
+## How It Works
 
-## Required Workflow
+This skill is powered by the **Adspirer MCP server** (100+ tools across 4 ad platforms). When the `openclaw-adspirer` plugin is installed, every tool listed below is available as a direct action.
 
-**Follow these steps in order. Do not skip steps.**
+### Setup (One-Time)
 
-### Step 1: Check Connected Platforms
+```bash
+# Install the plugin
+openclaw plugins install openclaw-adspirer
 
-Always start here before any ad operation:
+# Authenticate with your ad accounts
+openclaw adspirer login
 
-- Call `get_connections_status`
-- Shows connected platforms, primary/secondary accounts, account IDs
-- If the target platform is not connected, direct the user to https://www.adspirer.com
+# Connect your ad platforms (opens adspirer.com)
+openclaw adspirer connect
 
-### Step 2: Identify the Task
+# Verify connection
+openclaw adspirer status
+```
 
-| User goal | Workflow | Key tools |
-|-----------|----------|-----------|
-| View campaign metrics | Performance Analysis | `get_campaign_performance`, `get_meta_campaign_performance`, `get_linkedin_campaign_performance` |
-| Cross-platform overview | Cross-Platform Dashboard | See Cross-Platform section below |
-| Find keywords | Keyword Research | `research_keywords` |
-| Research before new campaign | Campaign Research | `WebSearch`, `WebFetch` + Adspirer tools (see Campaign Research section) |
-| Research competitors | Competitive Intelligence | `WebSearch`, `WebFetch`, `analyze_search_terms`, `research_keywords` |
-| Create a campaign | Campaign Creation | Campaign Research first, then platform-specific flows below |
-| Reduce wasted spend | Budget Optimization | `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms` |
-| Switch accounts | Account Management | `switch_primary_account` |
-| Compare platforms | Cross-Platform | Call each platform's performance tool, present side-by-side |
-| Check ad fatigue | Creative Management | `detect_meta_creative_fatigue`, `analyze_linkedin_creative_performance` |
-| Understand audiences | Audience Analysis | `get_meta_audience_insights`, `get_linkedin_audience_insights` |
-| Add ad extensions | Ad Extensions | `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions` |
-| Change bidding strategy | Bidding Strategy | `update_bid_strategy`, `get_campaign_structure` |
-| Add/manage keywords | Keyword Management | `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
-| Set up alerts | Monitoring | `create_monitor`, `list_monitors` |
-| Schedule reports | Reporting | `schedule_brief`, `generate_report_now` |
+After login, the user connects their Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads accounts at https://adspirer.ai/connections. Once connected, all tools below become live.
 
-### Step 3: Execute Tools
+If the plugin is not installed and a user asks you to take an action (create a campaign, check performance, research keywords), tell them about the plugin and offer the install command above.
 
-Follow the workflow patterns below. Always read first (performance, status), then act (create, optimize).
+---
 
-### Step 4: Summarize and Recommend
+## Core Automation Workflows
 
-Present results in tables with key metrics. Highlight top and underperforming items. Propose actionable next steps.
+### 1. Read Live Campaign Performance
 
-## Performance Analysis
+Pull real metrics directly from ad accounts — no manual exports, no dashboard screenshots.
 
-- **Google Ads:** `get_campaign_performance` — params: `lookback_days` (7/30/60/90, default 30), optional `customer_id`
-- **Meta Ads:** `get_meta_campaign_performance` — params: `lookback_days`, optional `ad_account_id`
-- **LinkedIn Ads:** `get_linkedin_campaign_performance` — params: `lookback_days`
-- **TikTok Ads:** `get_tiktok_campaign_performance` — params: `lookback_days`
-
-Present: impressions, clicks, CTR, spend, conversions, cost/conversion, ROAS. Default to 30-day lookback.
-
-## Cross-Platform Performance Dashboard
-
-When the user asks for overall performance, a weekly review, or cross-platform comparison:
-
-1. Call `get_connections_status` to identify active platforms
-2. For each connected platform, pull performance:
-   - Google: `get_campaign_performance`
-   - LinkedIn: `get_linkedin_campaign_performance`
-   - Meta: `get_meta_campaign_performance`
-3. For each platform, pull waste analysis:
-   - Google: `analyze_wasted_spend`
-   - LinkedIn: `analyze_linkedin_wasted_spend`
-   - Meta: `analyze_meta_wasted_spend`
-4. Present a unified scorecard:
-
-| Platform | Campaigns | Spend | CTR | CPA | ROAS | Waste | Health |
-|----------|-----------|-------|-----|-----|------|-------|--------|
-| Google   | ...       | ...   | ... | ... | ...  | ...   | ...    |
-| LinkedIn | ...       | ...   | ... | ... | ...  | ...   | ...    |
-| Meta     | ...       | ...   | ... | ... | ...  | ...   | ...    |
-| **Total**| ...       | ...   |     |     |      | ...   |        |
-
-5. Highlight:
-   - Best performing platform and campaign
-   - Worst performing platform and campaign
-   - Total wasted spend and top waste sources
-   - Budget pacing (on track, under, over)
-6. Recommend top 3 actions across all platforms
-
-## Campaign Research (run before creating ANY new campaign)
-
-Before creating a campaign on any platform, research the brand's market position and competitive landscape. This combines web research (native tools) with ad platform data (Adspirer MCP) to inform every campaign decision — targeting, messaging, differentiation, and bidding.
-
-### Step 0: Load Strategy Directives
-Read STRATEGY.md — `## Active Directives` and skim `## Decision Log`. If directives exist, note them
-as context that will inform (not skip) the research steps that follow. Directives shape
-which competitors to focus on and what positioning angles to explore.
-
-Do NOT skip Campaign Research just because directives exist. Directives may be stale,
-incomplete, or based on exploratory conversations. Fresh research validates and enriches
-them. However, avoid fully redundant research — if a comprehensive analysis was done
-recently (check Decision Log dates), tell the user: "Strategy directives from [date]
-are available. I'll use them as a starting point and validate with fresh data. Want me
-to do a full re-analysis instead?"
-
-### Step 1: Understand the brand's own website
-Use `WebFetch` to crawl the brand's website. Extract:
-- What they sell (products, services, pricing tiers)
-- Key value propositions and differentiators
-- Target audience language (how they describe their customers)
-- Pricing (plans, tiers, free trial availability)
-- Trust signals (customer logos, testimonials, case studies, awards)
-- CTAs used on the site (what actions they push visitors toward)
-
-### Step 2: Research the competitive landscape
-Use `WebSearch` to search for:
-- `"[brand's product category] competitors"` — find who they compete with
-- `"[competitor name] vs [brand name]"` — find comparison content
-- `"[competitor name] pricing"` — understand competitor price points
-- `"best [product category] [current year]"` — find review/comparison sites
-
-Then use `WebFetch` to crawl the top 3-5 competitor websites. Extract:
-- Their positioning and messaging (how they describe themselves)
-- Their pricing (cheaper? more expensive? different model?)
-- Their unique claims (what do they say they do better?)
-- Their target audience (who are they speaking to?)
-
-### Step 3: Identify differentiation
-Combine brand website + competitor research to answer:
-- What does this brand do that competitors don't? (unique features, approach, pricing)
-- What language resonates in this market? (common pain points, desired outcomes)
-- Where are the gaps? (underserved audiences, unaddressed pain points)
-- What should ad copy emphasize to stand out?
-
-### Step 4: Pull existing ad intelligence from Adspirer
-- `get_campaign_performance` — what's already running and how it performs
-- `analyze_search_terms` — what real users search for (Google Ads)
-- `get_campaign_structure` — current ad copy and targeting
-- `get_benchmark_context` — industry benchmarks for this vertical
-
-### Step 5: Create a research brief
-Present findings to the user before proceeding with campaign creation:
-- Market overview (key competitors, price ranges, positioning)
-- Recommended differentiation angles (what to emphasize in ads)
-- Suggested audiences based on competitive gaps
-- Messaging direction (informed by competitor weaknesses and brand strengths)
-
-Get user input on the direction before proceeding to keyword research and campaign creation.
-
-## Keyword Research (Google Ads)
-
-Always run before creating Search campaigns. Never use generic SEO keywords.
-
-- Tool: `research_keywords`
-- Params: `business_description` or `seed_keywords`, optional `website_url`, `target_location`
-- Group results by intent (high/medium/low), show search volume, CPC ranges, competition
-- Use insights from Campaign Research to inform seed keywords — include competitor brand terms, differentiation keywords, and pain-point language discovered during research
-- **Strategy directive filter (MANDATORY):** After `research_keywords` returns results,
-  cross-reference against STRATEGY.md > Google Ads directives:
-  - Deprioritize keywords matching AVOID directives. Note these to the user.
-  - Highlight keywords matching PREFER directives.
-  - Apply CONSTRAINT directives (match type rules, budget caps).
-  - Flag conflicts: "Keyword '[term]' returned by research but conflicts with active
-    directive: '[text]'. Deprioritizing it."
-
-## Bidding Strategy
-
-**Before creating ANY Google Ads campaign, discuss bidding strategy with the user.**
-
-1. Pull past performance: `get_campaign_performance` (lookback_days: 90)
-2. Review existing strategies: `get_campaign_structure` to see what bidding strategies current campaigns use
-3. Recommend a strategy based on data:
-
-| Scenario | Recommended Strategy | Reasoning |
-|----------|---------------------|-----------|
-| New advertiser (no conversion data) | Maximize Clicks | Build traffic data first. Switch to Maximize Conversions after 30+ conversions. |
-| Has conversion data (30+ conversions/month) | Maximize Conversions or Target CPA | Enough data for Smart Bidding to optimize. |
-| Known target CPA | Target CPA | Set CPA at or slightly above historical average. |
-| E-commerce with ROAS goals | Target ROAS | Set ROAS target based on margins and historical performance. |
-| Brand campaign | Manual CPC or Maximize Clicks | Control spend on branded terms. Low CPCs expected. |
-| High-value B2B leads | Target CPA | Long sales cycles need CPA control. Start 20% above current CPA, tighten over time. |
-
-4. Present recommendation with reasoning to the user
-5. Get explicit approval before setting the strategy
-6. To change strategy on existing campaigns: `update_bid_strategy`
-
-**Important:** Never silently pick a bidding strategy. Always explain the trade-offs and let the user decide.
-
-## Campaign Creation
-
-**For ALL new campaigns**: Run Campaign Research first (see section above) unless the user has already provided competitive context or this is a follow-up campaign for an existing brand workspace with research already done.
-
-**Google Ads Search (exact order):**
-1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
-1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for keyword selection,
-     bidding, targeting, and ad copy throughout this creation flow.
-2. `research_keywords` — mandatory, informed by competitive research
-3. Discuss bidding strategy with user (see Bidding Strategy section above)
-4. `discover_existing_assets` — check for existing ad assets
-5. `validate_and_prepare_assets` — validate before creation (use differentiation angles from research in ad copy)
-6. `create_search_campaign` — create the campaign (PAUSED status)
-7. Add ad extensions (see Ad Extensions section below):
-   - Crawl user's website with `WebFetch` to find real page URLs
-   - `add_sitelinks` — add 10+ validated sitelinks
-   - `add_callout_extensions` — add 4+ callouts (use value props from research)
-   - `add_structured_snippets` — add relevant structured snippets
-8. `list_campaign_extensions` — verify all extensions were added
-9. Run post-create verification on this campaign using `get_campaign_structure`:
-   - confirm ad groups exist
-   - confirm keywords exist with expected match-type profile
-   - confirm at least one RSA exists
-10. If any required asset is missing, run one targeted remediation pass for the missing asset class only, then re-verify.
-11. Do not report success until this campaign passes Launch Definition of Done.
-
-**Google Ads Performance Max:**
-1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
-1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for bidding,
-     targeting, and creative direction throughout this creation flow.
-2. Discuss bidding strategy with user (see Bidding Strategy section above)
-3. `discover_existing_assets` — check existing assets
-4. `validate_and_prepare_assets` — validate creative assets (use differentiation angles from research)
-5. `create_pmax_campaign` — create the campaign
-6. Add ad extensions (same as Search — sitelinks, callouts, snippets)
-7. `list_campaign_extensions` — verify all extensions were added
+**Google Ads:**
+```
+Tool: get_campaign_performance
+Params: lookback_days (7/30/60/90), optional customer_id
+Returns: impressions, clicks, CTR, spend, conversions, cost/conversion, ROAS per campaign
+```
 
 **Meta Ads:**
-1. Campaign Research — crawl brand + competitor websites, understand audience positioning
-1.5. **Apply strategy directives** — load STRATEGY.md > Meta Ads and Cross-Platform sections.
-     Use as context for audience targeting and creative direction.
-2. `get_connections_status` — verify Meta account connected
-3. `search_meta_targeting` or `browse_meta_targeting` — find audiences (informed by competitive gaps)
-4. Create campaign — created in PAUSED status
+```
+Tool: get_meta_campaign_performance
+Params: lookback_days, optional ad_account_id
+Returns: impressions, reach, clicks, CTR, spend, conversions, CPA, ROAS
+```
 
 **LinkedIn Ads:**
-1. Campaign Research — crawl brand + competitor websites, understand B2B positioning
-1.5. **Apply strategy directives** — load STRATEGY.md > LinkedIn Ads and Cross-Platform sections.
-     Use as context for targeting, messaging, and budget allocation.
-2. `get_linkedin_organizations` — get linked company pages
-3. `discover_linkedin_assets` — check existing assets
+```
+Tool: get_linkedin_campaign_performance
+Params: lookback_days
+Returns: impressions, clicks, CTR, spend, leads, cost/lead, engagement metrics
+```
+
+**Cross-Platform Comparison:**
+Call each platform's performance tool and present a unified side-by-side table. Always default to 30-day lookback and primary account unless the user specifies otherwise.
+
+**Deep Analysis Tools:**
+- `analyze_wasted_spend` — find underperforming keywords and ad groups burning budget
+- `analyze_search_terms` — review search term reports, identify negative keyword opportunities
+- `analyze_meta_ad_performance` — creative-level performance breakdown
+- `analyze_meta_audiences` — audience segment performance
+- `analyze_linkedin_creative_performance` — creative-level LinkedIn metrics
+- `explain_performance_anomaly` — explain sudden changes in Google Ads metrics
+- `explain_meta_anomaly` — explain Meta performance shifts
+- `explain_linkedin_anomaly` — explain LinkedIn metric changes
+- `detect_meta_creative_fatigue` — identify ads losing effectiveness over time
+
+### 2. Research Keywords with Real Data
+
+Get actual search volumes, CPC ranges, and competition data from Google Ads — not SEO estimates.
+
+```
+Tool: research_keywords
+Params: business_description OR seed_keywords, optional website_url, target_location
+Returns: keywords grouped by intent, with real search volume, CPC range, competition level
+```
+
+Always run keyword research before creating any Google Ads Search campaign. Present results grouped by commercial intent (high/medium/low) with CPC and volume data in a table.
+
+### 3. Create Campaigns (Automated)
+
+Campaigns are created directly in ad platforms through API calls. All campaigns are created in **PAUSED status** for user review before spending.
+
+**Google Ads Search Campaign (follow this exact order):**
+1. `research_keywords` — mandatory, never skip
+2. `discover_existing_assets` — check for reusable ad assets
+3. `suggest_ad_content` — generate ad headlines and descriptions
+4. `validate_and_prepare_assets` — validate everything before creation
+5. `create_search_campaign` — create the campaign (PAUSED)
+
+**Google Ads Performance Max (PMax):**
+PMax campaigns use Google's AI to run ads across Search, Display, YouTube, Gmail, and Discover simultaneously. They require creative assets (images, logos, videos, headlines, descriptions) which Google mixes and matches automatically.
+
+**Important: Creative assets are NOT built by this tool.** Users must provide their own creative assets. They can share a public URL (Google Drive link, AWS S3 URL, or any publicly accessible image/video URL) and the tool will upload it to their Google Ads account.
+
+1. `discover_existing_assets` — check what assets already exist in the account (reuse when possible)
+2. `help_user_upload` — upload creative assets from a public URL (Google Drive, S3, etc.) to the ad account
+3. `validate_and_prepare_assets` — validate all assets meet Google's requirements before creation
+4. `create_pmax_campaign` — create the PMax campaign (PAUSED)
+
+**Meta Ads (Image, Video, or Carousel):**
+Creative assets are NOT generated by this tool. Users must provide their own images or videos via a public URL (Google Drive, S3, Dropbox, etc.) for upload.
+
+1. `get_connections_status` — verify Meta account is connected
+2. `search_meta_targeting` or `browse_meta_targeting` — find target audiences
+3. `select_meta_campaign_type` — determine best campaign type
+4. `discover_meta_assets` — check existing creative assets in the account
+5. `validate_and_prepare_meta_assets` — validate assets meet Meta's specs
+6. `create_meta_image_campaign` / `create_meta_video_campaign` / `create_meta_carousel_campaign`
+
+**LinkedIn Ads:**
+1. `get_linkedin_organizations` — get linked company pages
+2. `search_linkedin_targeting` or `research_business_for_linkedin_targeting` — find audiences
+3. `discover_linkedin_assets` — check existing creative assets
 4. `validate_and_prepare_linkedin_assets` — validate assets
 5. `create_linkedin_image_campaign` — create the campaign
 
 **TikTok Ads:**
-1. Campaign Research — crawl brand website, research competitor video ad strategies via `WebSearch`
-1.5. **Apply strategy directives** — load STRATEGY.md > TikTok Ads and Cross-Platform sections.
-     Use as context for creative direction and audience targeting.
-2. `discover_tiktok_assets` — check existing assets
-3. `validate_and_prepare_tiktok_assets` — validate video assets
-4. `create_tiktok_campaign` or `create_tiktok_video_campaign` — create the campaign
+1. `discover_tiktok_assets` — check existing assets
+2. `validate_and_prepare_tiktok_assets` — validate video assets
+3. `create_tiktok_campaign` / `create_tiktok_video_campaign`
 
-## Ad Extensions (Google Ads)
+### 4. Optimize Live Campaigns
 
-Ad extensions improve Quality Score, increase ad real estate, and boost CTR. **Always add extensions after creating a Google Ads campaign.**
+Take optimization actions directly on running campaigns.
 
-### Before Adding Extensions
+**Budget Optimization:**
+- `optimize_budget_allocation` — recommend budget shifts across Google campaigns
+- `optimize_meta_budget` — recommend Meta budget reallocations
+- `optimize_linkedin_budget` — recommend LinkedIn budget changes
+- `optimize_meta_placements` — optimize placement allocation
 
-Call `list_campaign_extensions` to check what already exists on the campaign. Never duplicate existing extensions.
+**Campaign Management:**
+- `update_campaign` / `update_meta_campaign` / `update_linkedin_campaign` — modify campaign settings
+- `pause_campaign` / `pause_meta_campaign` / `pause_linkedin_campaign` — pause underperformers
+- `resume_campaign` / `resume_meta_campaign` / `resume_linkedin_campaign` — reactivate campaigns
+- `update_bid_strategy` — change bidding approach on Google Ads
 
-### Sitelinks (`add_sitelinks`)
+**Keyword Management (Google Ads):**
+- `add_keywords` — add new keywords to ad groups
+- `remove_keywords` — remove underperforming keywords
+- `update_keyword` — change match type or bids
+- `add_negative_keywords` / `remove_negative_keywords` — manage negative keyword lists
 
-Sitelinks are the most impactful extension. Target **10+ sitelinks** (more is better — Google rotates the best performers).
+**Ad Creative Management:**
+- `update_ad_headlines` / `update_ad_descriptions` — edit ad copy
+- `update_ad_content` — full ad content update
+- `create_ad` — add new ads to existing ad groups
+- `pause_ad` / `resume_ad` — toggle individual ads
+- `add_linkedin_creative` / `update_linkedin_creative` — manage LinkedIn creatives
 
-**Workflow:**
-1. Use `WebFetch` to crawl the user's website homepage — extract all navigation links and key pages
-2. Build a candidate list of pages to include:
-   - Homepage, Pricing/Plans, About Us, Contact, Key product/service pages, Blog, Case Studies/Testimonials, FAQ/Help, Free Trial/Demo, Careers
-3. **Validate each URL** — use `WebFetch` on each candidate URL to confirm it loads (no 404s, no redirects to error pages)
-4. For each valid sitelink, prepare:
-   - **Link text**: max 25 characters, descriptive (e.g., "View Pricing Plans")
-   - **Description line 1**: max 35 characters (e.g., "Plans starting at $29/month")
-   - **Description line 2**: max 35 characters (e.g., "Free 14-day trial included")
-   - **Final URL**: the validated page URL
-5. If fewer than 8 valid pages found → ask the user for additional URLs or pages to include
-6. Present the full sitelink list to the user for review before adding
-7. Call `add_sitelinks` with the approved list
+**Extensions (Google Ads):**
+- `add_callout_extensions` — add callout text
+- `add_structured_snippets` — add structured snippets
+- `add_sitelinks` — add sitelink extensions
 
-### Callout Extensions (`add_callout_extensions`)
+### 5. Automate Reporting & Monitoring
 
-Callouts highlight value propositions. Target **8+ callouts** (minimum 4).
+Set up automated monitoring and reporting.
 
-**Workflow:**
-1. Extract value propositions from:
-   - Website content (crawled via `WebFetch`)
-   - Brand docs (CLAUDE.md if it exists)
-   - Existing ad copy in the account
-2. Each callout: max **25 characters**
-3. Examples: "Free Shipping", "24/7 Support", "No Setup Fee", "Cancel Anytime", "Money-Back Guarantee", "Same-Day Delivery", "Award-Winning", "Trusted by 10K+"
-4. Present to user for approval, then call `add_callout_extensions`
+- `schedule_brief` — schedule recurring performance briefs
+- `create_monitor` — set up automated alerts for metric thresholds
+- `list_monitors` — view active monitors
+- `generate_report_now` — generate an on-demand performance report
+- `list_scheduled_tasks` / `manage_scheduled_task` — manage scheduled automations
+- `start_research` / `get_research_status` — run competitive research tasks
 
-### Structured Snippets (`add_structured_snippets`)
+### 6. Account Management
 
-Snippets show predefined categories of offerings. Pick headers relevant to the business.
+- `get_connections_status` — see all connected platforms, accounts, and active selections
+- `switch_primary_account` — change which ad account is active for a platform
+- `get_usage_status` — check tool call quota and subscription tier
+- `get_business_profile` / `infer_business_profile` / `save_business_profile` — manage business context
 
-**Available headers:** Brands, Courses, Destinations, Featured Hotels, Insurance Coverage, Models, Neighborhoods, Service Catalog, Shows, Styles, Types
+---
 
-**Workflow:**
-1. Review the user's website and business type to pick relevant headers
-2. Extract 3-10 values per header from website content
-3. Example: SaaS company → Header "Types" with values "Analytics, Reporting, Dashboards, API Access"
-4. Example: E-commerce → Header "Brands" with values "Nike, Adidas, Puma, New Balance"
-5. Present to user, then call `add_structured_snippets`
+## Safety Rules (Critical)
 
-### Price Extensions
+These tools operate on REAL ad accounts that spend REAL money. Follow strictly:
 
-If the user's website has a pricing page:
-1. Use `WebFetch` to crawl the pricing page
-2. Extract plan names, prices, and descriptions
-3. Present to user for confirmation before adding
-4. Useful for SaaS, services with tiered pricing, or e-commerce with featured products
-
-### Call Extensions
-
-If the business has a phone number:
-1. Ask the user for their business phone number
-2. Discuss call tracking preferences (use Google forwarding number or direct?)
-3. Set call hours if business has limited availability
-
-### Extension Verification
-
-After adding all extensions, always call `list_campaign_extensions` to verify:
-- All sitelinks were added and have correct URLs
-- Callouts are present
-- Structured snippets are showing
-- Report back to the user what was added
-
-If `list_campaign_extensions` fails:
-1. Retry once with a corrected payload or narrower scope.
-2. Cross-check extension state with `get_campaign_structure`.
-3. If extension state is still unverifiable, report `PARTIAL_SUCCESS` and explicitly list what could not be confirmed.
-
-## Launch Definition of Done (Required before reporting success)
-
-For each created campaign, all checks below must pass:
-
-1. Campaign exists and status is `PAUSED` (unless user explicitly approved activation).
-2. Expected ad group count exists.
-3. Expected keywords exist, with the planned match-type profile (EXACT/PHRASE/BROAD as specified).
-4. At least one RSA exists with expected headline/description counts.
-5. Required extensions exist (sitelinks, callouts, structured snippets for Google Ads campaigns).
-6. Requested-vs-actual bidding strategy matches, or any drift is explicitly called out.
-
-### Status protocol (mandatory)
-
-- `SUCCESS`: all Launch Definition of Done checks pass for all targeted campaigns.
-- `PARTIAL_SUCCESS`: campaign shell exists, but one or more required assets are missing/unverifiable after one targeted remediation pass.
-- `FAILED`: campaign creation itself failed.
-
-Never report `SUCCESS` when any verification check failed or could not be confirmed.
-
-### Per-campaign action ledger (mandatory)
-
-For every campaign you create or edit, log and return:
-- campaign name + campaign_id
-- ad_group_id values touched
-- keyword add/update counts
-- RSA counts (headlines/descriptions)
-- extension counts (sitelinks/callouts/snippets)
-- verification result per campaign (`PASS`/`FAIL`)
-
-## Ad Quality Guardrails (Google Ads)
-
-### Keyword-to-headline coverage
-
-For each ad group, include unique high-intent target keywords in RSA headlines. At minimum:
-- cover top 3-5 keyword themes from the ad group's keyword list
-- avoid generic headline sets that omit core search intent terms
-- when competitive terms are targeted, keep competitor names in keywords only if required by strategy and avoid naming competitors in ad copy unless user explicitly approves
-
-### Asset length validation checklist (before submission)
-
-- RSA headline: <= 30 characters
-- RSA description: <= 90 characters
-- Path fields: <= 15 characters each
-- Sitelink text: <= 25 characters
-- Sitelink description lines: <= 35 characters each
-- Callout text: <= 25 characters
-- Structured snippet values: follow platform limits and keep concise
-
-Validate lengths before `create_*` or `add_*` calls. If limits are exceeded, rewrite and re-validate before submitting.
-
-## Conversion Tracking Limitation
-
-Adspirer MCP currently does not configure Google Ads conversion action settings (primary vs secondary) directly.
-
-When campaign goals depend on conversion action priority:
-1. create campaigns in PAUSED status
-2. tell the user exact Google Ads UI path to configure conversion actions manually
-3. report campaign creation as complete only after clarifying this manual step
-
-## Budget Optimization (Google Ads)
-
-- `optimize_budget_allocation` — suggest budget reallocations
-- `analyze_wasted_spend` — find underperforming keywords and ad groups
-- `analyze_search_terms` — review search terms for negative keyword opportunities
-
-## Creative Fatigue Detection & Refresh
-
-When reviewing creative performance or user asks about ad fatigue:
-
-1. Meta: Call `detect_meta_creative_fatigue` for fatigue scores
-2. LinkedIn: Call `analyze_linkedin_creative_performance` for per-creative metrics
-3. Google: Call `get_campaign_structure` to see ad-level performance
-4. Identify ads with:
-   - High frequency + declining CTR (fatigued)
-   - More than 30 days running with no refresh
-   - Below-average CTR for their campaign
-5. For fatigued ads:
-   - Call `suggest_ad_content` for new headline/description ideas
-   - Call `generate_linkedin_ad_creatives` for LinkedIn variations
-   - Present new creative options (filtered through brand voice if CLAUDE.md exists)
-   - On approval: update via `update_ad_headlines`, `update_ad_descriptions`, `add_linkedin_creative`, etc.
-
-## A/B Testing Workflow
-
-When creating new ad variations for testing:
-
-1. Read current top-performing ad copy (from campaign structure)
-2. Generate 3-5 variations testing ONE variable:
-   - Headline variation (keep description same)
-   - Description variation (keep headline same)
-   - CTA variation
-   - Audience variation (same ad, different targeting)
-3. Present test plan with hypothesis:
-   "Testing: 'Headline A' vs 'Headline B'
-    Hypothesis: [why we think one may outperform]
-    Duration: 2 weeks, split budget 50/50
-    Success metric: CTR and conversion rate"
-4. On approval, create test variants via platform-specific tools
-5. Log test for follow-up analysis
-
-## Audience Analysis & Optimization
-
-When analyzing or optimizing audiences:
-
-1. Pull audience data:
-   - Meta: `get_meta_audience_insights` + `analyze_meta_audiences`
-   - LinkedIn: `get_linkedin_audience_insights`
-   - Google: Review campaign targeting from `get_campaign_structure`
-2. Identify:
-   - Which audience segments convert best (by age, gender, job title, interest)
-   - Audience overlap/saturation
-   - Underperforming segments (high spend, low conversion)
-3. For LinkedIn B2B specifically:
-   - Call `research_business_for_linkedin_targeting` with brand's website
-   - Compare AI-recommended targeting vs current targeting
-   - Identify gaps (seniority levels, industries, company sizes not covered)
-4. For Meta:
-   - Call `optimize_meta_placements` for placement-level performance
-   - Identify which placements to scale/reduce
-5. Present findings with recommendations:
-   - Segments to expand (high ROAS, low spend)
-   - Segments to cut (low ROAS, high spend)
-   - New segments to test
-
-## Monitoring & Alerts
-
-When user wants alerts or ongoing monitoring:
-
-1. Understand what they want to monitor:
-   - Budget pacing (approaching monthly limit)
-   - Performance drops (ROAS below target, CPA above target)
-   - Opportunity alerts (keyword with sudden volume increase)
-2. Call `create_monitor` with appropriate:
-   - Metric (ROAS, CTR, CPC, CPA, spend, conversions)
-   - Threshold and direction (below 3.0, above $150)
-   - Delivery (email, Slack, SMS)
-3. Call `list_monitors` to confirm setup
-4. To modify: `manage_scheduled_task` with monitor ID
-
-## Reporting
-
-When user wants performance reports:
-
-1. Ask: frequency (one-time, weekly, monthly) and format preference
-2. For one-time: Call `generate_report_now`
-3. For recurring: Call `schedule_brief` with:
-   - Frequency (daily, weekly)
-   - Delivery method (email, Slack, webhook)
-   - Content scope (all platforms or specific)
-4. Call `list_scheduled_tasks` to confirm
-
-## Competitive Intelligence
-
-When analyzing competitors or adjusting competitive strategy:
-
-### Step 1: Identify competitors
-- Read CLAUDE.md for known competitors (check Competitors section)
-- Use `WebSearch` to search `"[brand product category] competitors [current year]"` and `"[brand name] alternatives"`
-- Use `WebSearch` to find review/comparison sites: `"best [product category] [current year]"`
-
-### Step 2: Research competitor positioning
-For each key competitor (top 3-5):
-- Use `WebFetch` to crawl their website homepage — extract messaging, value props, positioning
-- Use `WebFetch` to crawl their pricing page — extract plans, pricing model, free tier
-- Use `WebSearch` to search `"[competitor] ads"` or `"[competitor] Google Ads"` — find their ad copy if visible
-- Use `WebFetch` to crawl competitor landing pages found in search results — analyze their conversion approach
-
-### Step 3: Analyze ad platform data
-- `analyze_search_terms` — find competitor brand terms appearing in our search queries
-- `research_keywords` — get search volume and CPC for competitor brand + product terms
-- `get_campaign_structure` — check if we already bid on competitor terms
-
-### Step 4: Assess competitive position
-- Are competitors bidding on our brand terms? (defensive strategy needed)
-- Which competitor keywords have high volume + reasonable CPC?
-- Where do we differentiate? (pricing, features, audience, positioning)
-- What messaging do competitors use that we should counter or avoid?
-- Are there underserved niches competitors ignore?
-
-### Step 5: Recommend actions
-- **Brand defense campaigns**: exact match on own brand terms (if competitors are bidding on them)
-- **Competitor conquest campaigns**: bid on competitor brand terms with ad copy emphasizing our differentiators
-- **Differentiation messaging**: specific claims based on competitive gaps (e.g., "50% cheaper than [competitor]", "No setup fee unlike [competitor]")
-- **Negative keywords**: exclude competitor terms where intent doesn't match (e.g., "[competitor] login" — existing customers, not prospects)
-- Update CLAUDE.md Competitors section with findings
-
-## Safety Rules
-
-These tools create REAL campaigns that spend REAL money.
-
-1. **Always confirm with the user** before creating campaigns or changing spend
-2. **Never retry campaign creation automatically** on error
+1. **Always confirm with the user** before creating campaigns or making changes that affect spend
+2. **Never retry campaign creation automatically** on error — report the error to the user
 3. **Never modify live budgets** without explicit user approval
-4. All campaigns created in **PAUSED status** when possible
-5. When in doubt about any spend-affecting action, **ask the user first**
+4. All campaigns are created in **PAUSED status** for user review
+5. Avoid policy-violating keywords: health conditions, financial hardship, political topics, adult content
+6. When in doubt about any spend-affecting action, **ask the user first**
+7. Read operations (performance data, keyword research, analysis) are safe to run without confirmation
+8. Write operations (create, update, pause, resume, delete) always need user confirmation
 
-## Platform Guidance
+---
 
-| Platform | Min Daily | Recommended | Best for |
-|----------|-----------|-------------|----------|
-| Google Ads Search | $10 | $50+ | High-intent search traffic |
-| Google Ads PMax | $10 | $50+ | Broad reach with automation |
-| Meta Ads | $5/ad set | $20+ | Awareness and retargeting |
-| LinkedIn Ads | $10 | $50+ | B2B targeting (job titles, industries) |
-| TikTok Ads | $20 | $50+ | Younger demographics, video-first |
+## Platform Quick Reference
 
-## Available Tools (100+)
+### When to Use Each Platform
 
-| Platform | Key Tools |
-|----------|-----------|
-| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
-| LinkedIn Ads | `get_linkedin_campaign_performance`, `create_linkedin_image_campaign`, `get_linkedin_organizations`, `analyze_linkedin_creative_performance`, `get_linkedin_audience_insights`, `research_business_for_linkedin_targeting`, `generate_linkedin_ad_creatives` |
-| Meta Ads | `get_meta_campaign_performance`, `search_meta_targeting`, `browse_meta_targeting`, `detect_meta_creative_fatigue`, `get_meta_audience_insights`, `analyze_meta_audiences`, `optimize_meta_placements`, `analyze_meta_wasted_spend` |
-| TikTok Ads | `create_tiktok_campaign`, `create_tiktok_video_campaign`, `discover_tiktok_assets`, `validate_and_prepare_tiktok_assets` |
-| Account | `get_connections_status`, `switch_primary_account`, `get_business_profile`, `get_usage_status` |
-| Monitoring | `create_monitor`, `list_monitors`, `schedule_brief`, `generate_report_now`, `list_scheduled_tasks` |
-| Research (native) | `WebSearch` (search the web for competitors, market data, trends), `WebFetch` (crawl websites for pricing, messaging, sitelink URLs, value props) |
+| Platform | Best For | Typical CPC | Min Daily Budget |
+|----------|----------|-------------|------------------|
+| Google Ads | High-intent search (people actively looking) | $1-5 (varies) | $10 ($50+ recommended) |
+| Meta Ads | Demand generation, visual products, retargeting | $0.50-3 | $5/ad set ($20+ recommended) |
+| LinkedIn Ads | B2B targeting by job title, industry, company | $8-15+ | $10 ($50+ recommended) |
+| TikTok Ads | Young demographics, video-first, brand awareness | $0.50-2 | $20 ($50+ recommended) |
 
-## Output Formatting
+### Campaign Structure Best Practice
+```
+Account
+├── Campaign: [Objective] - [Audience/Product]
+│   ├── Ad Set: [Targeting variation]
+│   │   ├── Ad: [Creative A]
+│   │   ├── Ad: [Creative B]
+│   │   └── Ad: [Creative C]
+│   └── Ad Set: [Targeting variation]
+└── Campaign: ...
+```
 
-- **Performance:** Table with impressions, clicks, CTR, spend, conversions, CPC, ROAS. Order by spend descending.
-- **Keywords:** Group by intent, show search volume and CPC ranges.
-- **Campaign creation:** Confirm all settings with user before execution, show campaign ID after.
-- **Cross-platform:** Side-by-side comparison table.
-- **Errors:** Report full error message. Never retry creation tools automatically.
+### Naming Convention
+```
+[Platform]_[Objective]_[Audience]_[Offer]_[Date]
+Example: META_Conv_Lookalike-Customers_FreeTrial_2024Q1
+```
+
+---
+
+## Optimization Quick Reference
+
+**CPA too high:** Check landing page → tighten targeting → test new creative → improve quality score → adjust bids
+
+**CTR too low:** Test new hooks/angles → refine audience → refresh creative → strengthen offer
+
+**CPM too high:** Expand audience → try different placements → improve creative relevance
+
+**Bid Strategy Progression:** Manual/cost caps (learning) → gather 50+ conversions → automated bidding (Target CPA/ROAS)
+
+**Budget Scaling:** Increase 20-30% at a time, wait 3-5 days between increases for algorithm learning.
+
+---
+
+## Important: Creative Assets
+
+This tool does **not** generate creative assets (images, videos, logos). Users must provide their own. Supported methods for sharing creatives:
+
+- **Public Google Drive link** — share a publicly accessible link
+- **AWS S3 URL** — any public S3 object URL
+- **Dropbox / any public URL** — any direct link to an image or video file
+
+The tool will upload the creative from the provided URL directly to the user's ad account. Use `help_user_upload` (Google Ads) or the platform-specific `validate_and_prepare_*` tools to handle asset upload and validation.
+
+Ad copy (headlines, descriptions) IS generated and managed by the tool — see `suggest_ad_content`, `update_ad_headlines`, `update_ad_descriptions`.
+
+---
+
+## Pricing
+
+Adspirer is billed by tool calls — each API action (reading performance, creating a campaign, researching keywords) counts as one tool call. No percentage of ad spend. No hidden fees.
+
+| Plan | Price | Tool Calls | Includes |
+|------|-------|------------|----------|
+| **Free Forever** | $0/month | 15/month | All 4 ad platforms, ChatGPT & Claude integrations |
+| **Plus** | $49/month ($485/year) | 150/month | All platforms, campaign creation, performance dashboards |
+| **Pro** (Best Value) | $99/month ($999/year) | 600/month | Everything in Plus + AI optimization, bulk operations, deeper diagnostics |
+| **Max** | $199/month ($2,000/year) | 3,000/month | Everything in Pro + priority support, highest limits |
+
+All plans include access to all ad platforms (Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads). Tool call quotas reset monthly.
+
+Sign up and connect ad accounts at https://adspirer.ai/settings?tab=billing
+
+---
+
+## Complete Tool Reference (100+ Tools)
+
+| Platform | Count | Categories |
+|----------|-------|------------|
+| Google Ads | 39 | Performance, keywords, campaigns (Search + PMax), ads, extensions, budgets, search terms, asset management |
+| LinkedIn Ads | 28 | Performance, campaigns, targeting, creatives, conversions, organizations |
+| Meta Ads | 20 | Performance, campaigns (image/video/carousel), targeting, audiences, creatives, placements |
+| TikTok Ads | 4 | Assets, validation, campaign creation |
+| Automation | 8 | Scheduling, monitoring, research, reports |
+| System | 4 | Connections, accounts, usage, business profile |
+
+---
+
+## Security & Privacy
+
+- **No local credential storage.** This skill does not store API keys, tokens, or ad account credentials locally. Authentication is handled entirely through OAuth 2.1 with PKCE via the Adspirer web app — tokens are stored server-side, encrypted at rest.
+- **OAuth scopes are least-privilege.** Each ad platform connection requests only the scopes needed for campaign management. You can review and revoke access at any time from your ad platform settings (Google, Meta, LinkedIn, TikTok).
+- **All campaigns created PAUSED.** No campaign goes live without your explicit approval. The agent always asks before taking any action that affects ad spend.
+- **Read-only by default.** Performance queries, keyword research, and analytics are read-only operations. Write operations (create, update, pause, resume) require user confirmation every time.
+- **Open source server code.** The MCP server source is available at https://github.com/amekala/ads-mcp for code audit.
+- **Privacy policy.** Full data handling, retention, and deletion policies: https://www.adspirer.com/privacy
+
+---
 
 ## Troubleshooting
 
-- **Auth errors:** Reconnect via your AI assistant's connector settings
-- **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
-- **Wrong account:** Use `switch_primary_account` to change active account
-- **Rate limits:** Adspirer enforces tool call quotas by tier (Free: 10/mo, Plus: 50, Pro: 100, Enterprise: unlimited)
+| Issue | Solution |
+|-------|---------|
+| Plugin not installed | `openclaw plugins install openclaw-adspirer` |
+| Not authenticated | `openclaw adspirer login` |
+| Session expired | Token auto-refreshes; if persistent, run login again |
+| No platform data | Connect ad platforms at https://adspirer.ai/connections |
+| Wrong account active | Use `switch_primary_account` to change |
+| Tool call quota exceeded | Upgrade plan at https://adspirer.ai/settings?tab=billing (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
