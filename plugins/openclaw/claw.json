@@ -62,6 +62,6 @@
     }
   ],
   "permissions": {
-    "network": ["mcp.adspirer.com", "www.adspirer.com"]
+    "network": ["mcp.adspirer.com", "www.adspirer.com", "adspirer.ai"]
   }
 }
