@@ -62,7 +62,7 @@ As a fallback, you can also register the MCP server directly:
 2. Tell the user to restart Claude Code, then run `/mcp` to authenticate, then `/adspirer:setup` again.
 3. Stop here -- do NOT continue with Steps 2-5 until the user restarts and runs setup again.
 
-**If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://www.adspirer.com, then come back and run setup again.
+**If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://adspirer.ai/connections, then come back and run setup again.
 
 IMPORTANT: Never ask the user to manually edit config files or run technical commands. You handle MCP server registration. The only user actions are: restarting Claude Code and signing in via OAuth in the browser.
 
