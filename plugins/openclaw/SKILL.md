@@ -43,7 +43,7 @@ openclaw adspirer connect
 openclaw adspirer status
 ```
 
-After login, the user connects their Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads accounts at https://www.adspirer.com. Once connected, all tools below become live.
+After login, the user connects their Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads accounts at https://adspirer.ai/connections. Once connected, all tools below become live.
 
 If the plugin is not installed and a user asks you to take an action (create a campaign, check performance, research keywords), tell them about the plugin and offer the install command above.
 
@@ -112,9 +112,6 @@ Campaigns are created directly in ad platforms through API calls. All campaigns 
 3. `suggest_ad_content` — generate ad headlines and descriptions
 4. `validate_and_prepare_assets` — validate everything before creation
 5. `create_search_campaign` — create the campaign (PAUSED)
-6. `add_sitelinks` + `add_callout_extensions` + `add_structured_snippets` — add ad extensions
-7. `list_campaign_extensions` — verify extension state
-8. `get_campaign_structure` — verify ads and keywords exist before reporting success
 
 **Google Ads Performance Max (PMax):**
 PMax campaigns use Google's AI to run ads across Search, Display, YouTube, Gmail, and Discover simultaneously. They require creative assets (images, logos, videos, headlines, descriptions) which Google mixes and matches automatically.
@@ -200,42 +197,6 @@ Set up automated monitoring and reporting.
 - `get_usage_status` — check tool call quota and subscription tier
 - `get_business_profile` / `infer_business_profile` / `save_business_profile` — manage business context
 
-## Launch Definition of Done (Required before reporting success)
-
-For each campaign created or materially changed, all checks below must pass:
-
-1. Campaign exists and has the intended status (`PAUSED` by default).
-2. Expected ad group count exists.
-3. Expected keywords exist with planned match-type profile.
-4. At least one ad is present with expected asset counts.
-5. Required extensions are present for Google Ads campaigns (sitelinks, callouts, structured snippets).
-6. Requested-vs-actual bidding strategy is verified and any drift is explicitly reported.
-
-### Status protocol
-
-- `SUCCESS`: all required checks pass.
-- `PARTIAL_SUCCESS`: campaign exists but required assets are missing/unverifiable after one targeted remediation pass.
-- `FAILED`: campaign creation or update failed.
-
-Never report `SUCCESS` when any required verification check fails or is unverifiable.
-
-### Verification fallback for extension endpoints
-
-If `list_campaign_extensions` fails:
-1. Retry once.
-2. Cross-check with `get_campaign_structure`.
-3. If still unverifiable, return `PARTIAL_SUCCESS` and list explicit gaps.
-
-### Ad quality guardrails
-
-- Include unique high-intent keyword themes in headlines for each ad group.
-- Validate text lengths before submit (headline, description, paths, sitelinks, callouts, snippets).
-- Rewrite and re-validate if any field exceeds limits.
-
-### Conversion tracking limitation
-
-Primary/secondary conversion action configuration is manual in Google Ads UI and is not currently configurable through Adspirer MCP tools. Always call this out when launch goals depend on conversion prioritization.
-
 ---
 
 ## Safety Rules (Critical)
@@ -318,13 +279,14 @@ Adspirer is billed by tool calls — each API action (reading performance, creat
 
 | Plan | Price | Tool Calls | Includes |
 |------|-------|------------|----------|
-| **Free** | $0/month | 10/month | All 4 ad platforms, ChatGPT & Claude integrations |
-| **Plus** | $25/month | 50/month | All platforms + PMax, performance dashboards, campaign creation. 3-day free trial. |
-| **Pro** (Most Popular) | $75/month ($60/month annual) | 100/month | Everything in Plus + AI optimization, bulk operations, deeper diagnostics. 20% off annual. |
+| **Free Forever** | $0/month | 15/month | All 4 ad platforms, ChatGPT & Claude integrations |
+| **Plus** | $49/month ($485/year) | 150/month | All platforms, campaign creation, performance dashboards |
+| **Pro** (Best Value) | $99/month ($999/year) | 600/month | Everything in Plus + AI optimization, bulk operations, deeper diagnostics |
+| **Max** | $199/month ($2,000/year) | 3,000/month | Everything in Pro + priority support, highest limits |
 
 All plans include access to all ad platforms (Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads). Tool call quotas reset monthly.
 
-Sign up and connect ad accounts at https://www.adspirer.com/pricing
+Sign up and connect ad accounts at https://adspirer.ai/settings?tab=billing
 
 ---
 
@@ -359,6 +321,6 @@ Sign up and connect ad accounts at https://www.adspirer.com/pricing
 | Plugin not installed | `openclaw plugins install openclaw-adspirer` |
 | Not authenticated | `openclaw adspirer login` |
 | Session expired | Token auto-refreshes; if persistent, run login again |
-| No platform data | Connect ad platforms at https://www.adspirer.com |
+| No platform data | Connect ad platforms at https://adspirer.ai/connections |
 | Wrong account active | Use `switch_primary_account` to change |
-| Tool call quota exceeded | Upgrade plan at https://www.adspirer.com/pricing (Free: 10/mo, Plus: 50/mo, Pro: 100/mo) |
+| Tool call quota exceeded | Upgrade plan at https://adspirer.ai/settings?tab=billing (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
