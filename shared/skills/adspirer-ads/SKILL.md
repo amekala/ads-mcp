@@ -226,10 +226,11 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
      targeting, and creative direction throughout this creation flow.
 2. Discuss bidding strategy with user (see Bidding Strategy section above)
 3. `discover_existing_assets` — check existing assets
-4. `validate_and_prepare_assets` — validate creative assets (use differentiation angles from research)
-5. `create_pmax_campaign` — create the campaign
-6. Add ad extensions (same as Search — sitelinks, callouts, snippets)
-7. `list_campaign_extensions` — verify all extensions were added
+4. `validate_and_prepare_assets` — validate creative assets (see PMax Asset Limits below)
+5. `validate_video` — validate YouTube videos if user provides them (see PMax Asset Limits)
+6. `create_pmax_campaign` — create the campaign
+7. Add ad extensions (same as Search — sitelinks, callouts, snippets)
+8. `list_campaign_extensions` — verify all extensions were added
 
 **Meta Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand audience positioning
@@ -385,6 +386,81 @@ For each ad group, include unique high-intent target keywords in RSA headlines. 
 - Structured snippet values: follow platform limits and keep concise
 
 Validate lengths before `create_*` or `add_*` calls. If limits are exceeded, rewrite and re-validate before submitting.
+
+## PMax Asset Limits (CRITICAL — enforce before every PMax campaign)
+
+Google Ads Performance Max enforces strict asset limits per asset group. Exceeding these limits causes campaign creation to fail with `ENABLED_IMAGE_ASSET_LINKS_PER_ASSET_GROUP` or similar errors. **The agent MUST enforce these limits before calling `validate_and_prepare_assets` or `create_pmax_campaign`.**
+
+### Image Asset Limits
+
+| Asset type | Minimum | Maximum | Notes |
+|------------|---------|---------|-------|
+| Landscape images (1.91:1) | 1 | 20 | Required — at least 1 |
+| Square images (1:1) | 1 | 20 | Required — at least 1 |
+| Portrait images (4:5) | 0 | 20 | Optional |
+| **TOTAL marketing images** | **2** | **20** | **Across ALL ratios combined** |
+| Square logos (1:1) | 1 | 5 | Required — at least 1 |
+| Landscape logos (4:1) | 0 | 5 | Optional |
+
+**CRITICAL**: The 20-image limit is TOTAL across landscape + square + portrait, NOT 20 per ratio. If a user provides 10 landscape + 15 square + 13 portrait = 38 images, you must reduce to 20 total.
+
+**When user provides more than 20 total marketing images:**
+1. Inform the user: "Google Ads allows max 20 marketing images total per PMax asset group across all ratios. You provided [N]. I'll select the best 20."
+2. Distribute proportionally across ratios while respecting minimums (at least 1 landscape, at least 1 square)
+3. Prefer keeping variety across ratios over loading up one ratio
+4. `validate_and_prepare_assets` handles this automatically, but you should inform the user proactively
+
+**When user provides fewer than minimums:**
+- Missing landscape images: Ask the user to provide at least 1 landscape image (1.91:1 ratio, 1200x628px recommended)
+- Missing square images: Ask the user to provide at least 1 square image (1:1 ratio, 1200x1200px recommended)
+- Missing square logo: Ask the user to provide at least 1 square logo (1:1 ratio, 128x128px minimum)
+- Do NOT proceed with campaign creation until minimums are met
+
+### Text Asset Limits
+
+| Asset type | Minimum | Maximum | Max characters |
+|------------|---------|---------|---------------|
+| Headlines | 3 | 15 | 30 chars each |
+| Long headlines | 1 | 5 | 90 chars each |
+| Descriptions | 2 | 5 | 90 chars each |
+| Business name | 1 | 1 | 25 chars |
+
+**When user provides more than the maximum:**
+- Truncate to the limit, keeping the first N items
+- Inform the user: "PMax allows max [N] [asset type]. Using the first [N]."
+
+**When user provides fewer than minimums:**
+- Ask for the missing assets. Example: "PMax requires at least 3 headlines. You provided 1. Please provide 2 more headlines (max 30 characters each)."
+- Do NOT proceed until minimums are met
+
+### Video Asset Limits
+
+| Asset type | Minimum | Maximum | Requirements |
+|------------|---------|---------|-------------|
+| YouTube videos | 0 | 5 | Must be YouTube video IDs/URLs |
+
+**Video validation workflow:**
+1. Call `validate_video` with `platform="pmax"` for each video
+2. This validates the YouTube video ID format only (11 chars, alphanumeric)
+3. Google Ads API will verify the video exists, is public/unlisted, and embeddable during campaign creation
+4. If user provides more than 5 videos, use only the first 5 and inform them
+5. Videos are optional — campaigns can be created without them (Google will auto-generate video ads from images)
+
+### Asset Limit Enforcement Checklist (before calling create_pmax_campaign)
+
+Before creating any PMax campaign, verify:
+- [ ] At least 1 landscape image provided
+- [ ] At least 1 square image provided
+- [ ] Total marketing images (landscape + square + portrait) <= 20
+- [ ] At least 1 square logo provided
+- [ ] At least 3 headlines (max 30 chars each)
+- [ ] At least 1 long headline (max 90 chars)
+- [ ] At least 2 descriptions (max 90 chars each)
+- [ ] Business name provided (max 25 chars)
+- [ ] Videos (if any) validated via `validate_video`
+- [ ] Videos count <= 5
+
+If any check fails, ask the user for the missing/corrected assets before proceeding.
 
 ## Conversion Tracking Limitation
 
