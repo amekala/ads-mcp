@@ -266,8 +266,15 @@ You have TWO knowledge sources. Always use both:
     - Call `mcp__adspirer__add_callout_extensions` -- target 8+ callouts from website value props
     - Call `mcp__adspirer__add_structured_snippets` -- pick relevant headers, extract values from website
     - Call `mcp__adspirer__list_campaign_extensions` -- verify everything was added
-12. Log decision to MEMORY.md
-13. Tell the user conversion action primary/secondary setup is manual in Google Ads UI (not configurable through MCP tools).
+12. **For PMax campaigns — add search themes and audience signals:**
+    - Ask user for search themes or derive from keyword research + brand context
+    - Call `mcp__adspirer__add_pmax_search_themes` -- add up to 50 themes per asset group
+    - Call `mcp__adspirer__get_pmax_search_themes` -- verify themes were added
+    - Call `mcp__adspirer__search_audiences` -- find relevant in-market, affinity, and custom audiences
+    - Present audience recommendations to user for approval
+    - Call `mcp__adspirer__add_pmax_audience_signal` -- add audience signal with approved segments
+13. Log decision to MEMORY.md
+14. Tell the user conversion action primary/secondary setup is manual in Google Ads UI (not configurable through MCP tools).
 
 ### Campaign execution contract (mandatory)
 1. Bind every write operation to explicit IDs (campaign_id/ad_group_id). Never rely on "latest campaign" context.

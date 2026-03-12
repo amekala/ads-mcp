@@ -42,7 +42,9 @@ Always start here before any ad operation:
 | Switch accounts | Account Management | `switch_primary_account` |
 | Compare platforms | Cross-Platform | Call each platform's performance tool, present side-by-side |
 | Check ad fatigue | Creative Management | `detect_meta_creative_fatigue`, `analyze_linkedin_creative_performance` |
-| Understand audiences | Audience Analysis | `get_meta_audience_insights`, `get_linkedin_audience_insights` |
+| Understand audiences | Audience Analysis | `get_meta_audience_insights`, `get_linkedin_audience_insights`, `search_audiences` |
+| Manage PMax search themes | PMax Search Themes | `add_pmax_search_themes`, `get_pmax_search_themes`, `remove_pmax_search_themes` |
+| Manage PMax audience signals | PMax Audience Signals | `add_pmax_audience_signal`, `get_pmax_audience_signals`, `remove_pmax_audience_signal`, `search_audiences` |
 | Add ad extensions | Ad Extensions | `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions` |
 | Change bidding strategy | Bidding Strategy | `update_bid_strategy`, `get_campaign_structure` |
 | Add/manage keywords | Keyword Management | `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
@@ -226,10 +228,19 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
      targeting, and creative direction throughout this creation flow.
 2. Discuss bidding strategy with user (see Bidding Strategy section above)
 3. `discover_existing_assets` — check existing assets
-4. `validate_and_prepare_assets` — validate creative assets (use differentiation angles from research)
-5. `create_pmax_campaign` — create the campaign
-6. Add ad extensions (same as Search — sitelinks, callouts, snippets)
-7. `list_campaign_extensions` — verify all extensions were added
+4. `validate_and_prepare_assets` — validate creative assets (see PMax Asset Limits below)
+5. `validate_video` — validate YouTube videos if user provides them (see PMax Asset Limits)
+6. `create_pmax_campaign` — create the campaign
+7. Add ad extensions (same as Search — sitelinks, callouts, snippets)
+8. `list_campaign_extensions` — verify all extensions were added
+9. **Add search themes (recommended)** — see PMax Search Themes & Audience Signals section below:
+   - Ask user for search themes or derive from keyword research + brand context
+   - `add_pmax_search_themes` — add up to 50 themes per asset group
+   - `get_pmax_search_themes` — verify themes were added
+10. **Add audience signals (recommended)** — see PMax Search Themes & Audience Signals section below:
+    - `search_audiences` — find relevant in-market, affinity, and custom audiences
+    - Present audience recommendations to user for approval
+    - `add_pmax_audience_signal` — add audience signal combining selected segments
 
 **Meta Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand audience positioning
@@ -385,6 +396,147 @@ For each ad group, include unique high-intent target keywords in RSA headlines. 
 - Structured snippet values: follow platform limits and keep concise
 
 Validate lengths before `create_*` or `add_*` calls. If limits are exceeded, rewrite and re-validate before submitting.
+
+## PMax Asset Limits (CRITICAL — enforce before every PMax campaign)
+
+Google Ads Performance Max enforces strict asset limits per asset group. Exceeding these limits causes campaign creation to fail with `ENABLED_IMAGE_ASSET_LINKS_PER_ASSET_GROUP` or similar errors. **The agent MUST enforce these limits before calling `validate_and_prepare_assets` or `create_pmax_campaign`.**
+
+### Image Asset Limits
+
+| Asset type | Minimum | Maximum | Notes |
+|------------|---------|---------|-------|
+| Landscape images (1.91:1) | 1 | 20 | Required — at least 1 |
+| Square images (1:1) | 1 | 20 | Required — at least 1 |
+| Portrait images (4:5) | 0 | 20 | Optional |
+| **TOTAL marketing images** | **2** | **20** | **Across ALL ratios combined** |
+| Square logos (1:1) | 1 | 5 | Required — at least 1 |
+| Landscape logos (4:1) | 0 | 5 | Optional |
+
+**CRITICAL**: The 20-image limit is TOTAL across landscape + square + portrait, NOT 20 per ratio. If a user provides 10 landscape + 15 square + 13 portrait = 38 images, you must reduce to 20 total.
+
+**When user provides more than 20 total marketing images:**
+1. Inform the user: "Google Ads allows max 20 marketing images total per PMax asset group across all ratios. You provided [N]. I'll select the best 20."
+2. Distribute proportionally across ratios while respecting minimums (at least 1 landscape, at least 1 square)
+3. Prefer keeping variety across ratios over loading up one ratio
+4. `validate_and_prepare_assets` handles this automatically, but you should inform the user proactively
+
+**When user provides fewer than minimums:**
+- Missing landscape images: Ask the user to provide at least 1 landscape image (1.91:1 ratio, 1200x628px recommended)
+- Missing square images: Ask the user to provide at least 1 square image (1:1 ratio, 1200x1200px recommended)
+- Missing square logo: Ask the user to provide at least 1 square logo (1:1 ratio, 128x128px minimum)
+- Do NOT proceed with campaign creation until minimums are met
+
+### Text Asset Limits
+
+| Asset type | Minimum | Maximum | Max characters |
+|------------|---------|---------|---------------|
+| Headlines | 3 | 15 | 30 chars each |
+| Long headlines | 1 | 5 | 90 chars each |
+| Descriptions | 2 | 5 | 90 chars each |
+| Business name | 1 | 1 | 25 chars |
+
+**When user provides more than the maximum:**
+- Truncate to the limit, keeping the first N items
+- Inform the user: "PMax allows max [N] [asset type]. Using the first [N]."
+
+**When user provides fewer than minimums:**
+- Ask for the missing assets. Example: "PMax requires at least 3 headlines. You provided 1. Please provide 2 more headlines (max 30 characters each)."
+- Do NOT proceed until minimums are met
+
+### Video Asset Limits
+
+| Asset type | Minimum | Maximum | Requirements |
+|------------|---------|---------|-------------|
+| YouTube videos | 0 | 5 | Must be YouTube video IDs/URLs |
+
+**Video validation workflow:**
+1. Call `validate_video` with `platform="pmax"` for each video
+2. This validates the YouTube video ID format only (11 chars, alphanumeric)
+3. Google Ads API will verify the video exists, is public/unlisted, and embeddable during campaign creation
+4. If user provides more than 5 videos, use only the first 5 and inform them
+5. Videos are optional — campaigns can be created without them (Google will auto-generate video ads from images)
+
+### Asset Limit Enforcement Checklist (before calling create_pmax_campaign)
+
+Before creating any PMax campaign, verify:
+- [ ] At least 1 landscape image provided
+- [ ] At least 1 square image provided
+- [ ] Total marketing images (landscape + square + portrait) <= 20
+- [ ] At least 1 square logo provided
+- [ ] At least 3 headlines (max 30 chars each)
+- [ ] At least 1 long headline (max 90 chars)
+- [ ] At least 2 descriptions (max 90 chars each)
+- [ ] Business name provided (max 25 chars)
+- [ ] Videos (if any) validated via `validate_video`
+- [ ] Videos count <= 5
+
+If any check fails, ask the user for the missing/corrected assets before proceeding.
+
+## PMax Search Themes & Audience Signals
+
+Search themes and audience signals are **PMax-only** features — they do not apply to Search, Display, or other campaign types. Both are configured at the asset group level.
+
+### Search Themes
+
+Search themes are short phrases (max 50 per asset group) that tell Google which search queries your PMax campaign should target. They supplement Google's automated targeting with explicit intent signals.
+
+**When to add search themes:**
+- During PMax campaign creation (step 9 above)
+- When user wants to refine PMax targeting ("add search themes to my PMax campaign")
+- When search term analysis reveals high-performing queries not yet covered
+- When expanding into new market segments
+
+**Workflow:**
+1. `get_pmax_search_themes` — check existing themes on the campaign (requires `campaign_id`)
+2. Derive theme candidates from:
+   - Keyword research results (`research_keywords`)
+   - Search term reports (`analyze_search_terms`)
+   - Brand context and product categories
+   - Competitive research findings
+3. Present candidate themes to user for approval
+4. `add_pmax_search_themes` — add approved themes (params: `campaign_id`, `search_themes` list)
+5. `get_pmax_search_themes` — verify themes were added
+
+**Limits and rules:**
+- Max **50 search themes** per asset group (Google's limit)
+- Duplicates are filtered automatically (case-insensitive)
+- Empty/whitespace themes are filtered automatically
+- Search themes only support **add** and **remove** — no update (remove + re-add instead)
+- To remove: `remove_pmax_search_themes` with the theme resource names from `get_pmax_search_themes`
+
+### Audience Signals
+
+Audience signals tell Google which audience segments are most likely to convert. They are **signals, not hard targeting** — Google uses them as starting points and expands from there. Only **one audience signal** is allowed per asset group (containing multiple segments).
+
+**When to add audience signals:**
+- During PMax campaign creation (step 10 above)
+- When user wants to add targeting to a PMax campaign
+- When audience analysis reveals high-value segments
+- When launching PMax for a specific product/audience niche
+
+**Supported segment types:**
+| Type | Tool parameter | Description |
+|------|---------------|-------------|
+| In-market audiences | `in_market_audience_ids` | Users actively researching/comparing products in a category |
+| Affinity audiences | `affinity_audience_ids` | Users with sustained interests and habits |
+| Custom audiences | `custom_audience_ids` | Account-level custom audience segments |
+| User lists (remarketing) | `user_list_ids` | First-party data — website visitors, customer lists, CRM uploads |
+
+**Workflow:**
+1. `get_pmax_audience_signals` — check existing signals on the campaign (requires `campaign_id`)
+2. Discover available audiences:
+   - `search_audiences` — search by keyword across all audience types (in-market, affinity, custom)
+   - Use brand context and competitive research to inform search terms
+3. Present audience recommendations organized by type with rationale
+4. Get user approval for segment selection
+5. `add_pmax_audience_signal` — add signal with selected segment IDs
+6. `get_pmax_audience_signals` — verify signal was added
+
+**Limits and rules:**
+- Only **one audience signal** per asset group — it must combine all desired segments
+- To change: `remove_pmax_audience_signal` (with resource name), then `add_pmax_audience_signal` with updated segments
+- Audience signals only support **add** and **remove** — no update
+- Use `search_audiences` to find audience IDs — do not guess or hardcode IDs
 
 ## Conversion Tracking Limitation
 
@@ -546,7 +698,7 @@ These tools create REAL campaigns that spend REAL money.
 
 | Platform | Key Tools |
 |----------|-----------|
-| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
+| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords`, `add_pmax_search_themes`, `get_pmax_search_themes`, `remove_pmax_search_themes`, `add_pmax_audience_signal`, `get_pmax_audience_signals`, `remove_pmax_audience_signal`, `search_audiences` |
 | LinkedIn Ads | `get_linkedin_campaign_performance`, `create_linkedin_image_campaign`, `get_linkedin_organizations`, `analyze_linkedin_creative_performance`, `get_linkedin_audience_insights`, `research_business_for_linkedin_targeting`, `generate_linkedin_ad_creatives` |
 | Meta Ads | `get_meta_campaign_performance`, `search_meta_targeting`, `browse_meta_targeting`, `detect_meta_creative_fatigue`, `get_meta_audience_insights`, `analyze_meta_audiences`, `optimize_meta_placements`, `analyze_meta_wasted_spend` |
 | TikTok Ads | `create_tiktok_campaign`, `create_tiktok_video_campaign`, `discover_tiktok_assets`, `validate_and_prepare_tiktok_assets` |
