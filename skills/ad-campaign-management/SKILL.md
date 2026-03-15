@@ -684,6 +684,56 @@ These tools create REAL campaigns that spend REAL money.
 4. All campaigns created in **PAUSED status** when possible
 5. When in doubt about any spend-affecting action, **ask the user first**
 
+## Critical: Input Format Requirements
+
+Follow these rules EXACTLY when calling Adspirer tools to avoid validation errors:
+
+### IDs Must Be Strings
+All IDs (campaign_id, ad_account_id, video_id, image_hash, ad_group_id, keyword_id, organization_id, creative_id) MUST be passed as quoted strings, never as bare integers.
+
+- ✅ `"existing_video_id": "1333064875515942"`
+- ❌ `"existing_video_id": 1333064875515942`
+
+### Never Modify IDs
+Copy IDs exactly as returned by list/discover tools. Do not round, truncate, or change any digits. If `list_campaigns` returns `campaign_id: "120240129373510507"`, use that exact value.
+
+### Always Call List/Discover Before Create/Update
+Many tools require IDs from prior tool calls:
+- `list_campaigns` → get `campaign_id` before update/pause/structure
+- `get_campaign_structure` → get `ad_group_id` before keyword operations
+- `discover_existing_assets` → get `image_hash`, `video_id` before campaign creation
+- `get_linkedin_organizations` → get `organization_id` and `account_id`
+
+### Text Length Limits
+Respect character limits — the server will reject text that's too long:
+- Google Ads headline: max 30 characters
+- Google Ads description: max 90 characters
+- Google Ads sitelink text: max 25 characters
+- Google Ads callout: max 25 characters
+- Meta primary_text: max 125 characters
+- Meta headline: max 40 characters
+
+### Enum Values Are Case-Insensitive
+The server auto-normalizes casing, but these are the expected values:
+- **status:** ENABLED, PAUSED, ACTIVE, ARCHIVED
+- **objective:** OUTCOME_TRAFFIC, OUTCOME_SALES, OUTCOME_LEADS, etc.
+- **match_type:** EXACT, PHRASE, BROAD
+- **call_to_action:** LEARN_MORE, SHOP_NOW, SIGN_UP, etc.
+- **date_range:** last_7_days, last_30_days, last_90_days, etc.
+- **campaign_type:** search, pmax, image, video, carousel, etc.
+
+### Budgets Are Numbers
+Pass budget fields (`budget_daily`, `budget_amount`, `target_cpa`) as numbers, not strings:
+- ✅ `"budget_daily": 50`
+- ❌ `"budget_daily": "50"`
+
+Budget is in the account's local currency (not cents). Meta minimum varies by currency.
+
+### Keywords Format
+For `add_negative_keywords`, each keyword must be an object:
+- ✅ `"keywords": [{"text": "free", "match_type": "BROAD"}]`
+- ❌ `"keywords": ["free", "cheap"]`
+
 ## Platform Guidance
 
 | Platform | Min Daily | Recommended | Best for |

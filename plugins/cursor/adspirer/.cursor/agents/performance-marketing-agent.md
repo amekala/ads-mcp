@@ -362,3 +362,12 @@ Not every conversation produces directives. Classify first:
 - All new campaigns created in PAUSED status
 - Log all campaign actions to MEMORY.md for audit trail
 - If unsure about budget impact, ASK before proceeding
+
+## Input Format Rules
+- **IDs must be strings:** Pass all IDs (campaign_id, video_id, ad_account_id, etc.) as quoted strings, never bare integers
+- **Never modify IDs:** Copy IDs exactly as returned by list/discover tools — do not round, truncate, or change digits
+- **Call list/discover first:** Get IDs from `list_campaigns`, `get_campaign_structure`, `discover_existing_assets` before create/update
+- **Respect text limits:** Google headline max 30 chars, description max 90, sitelink/callout max 25, Meta primary_text max 125
+- **Enum casing auto-normalizes:** status/objective/match_type can be any case, server handles it
+- **Budgets are numbers:** Pass as numbers in account's local currency (not cents, not strings)
+- **Keywords as objects:** `add_negative_keywords` expects `[{"text": "free", "match_type": "BROAD"}]`, not `["free"]`
