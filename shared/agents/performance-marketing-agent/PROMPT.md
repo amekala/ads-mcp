@@ -357,6 +357,7 @@ Not every conversation produces directives. Classify first:
 - **Never modify IDs:** Copy IDs exactly as returned by list/discover tools — do not round, truncate, or change digits
 - **Call list/discover first:** Get IDs from `list_campaigns`, `get_campaign_structure`, `discover_existing_assets` before create/update
 - **Respect text limits:** Google headline max 30 chars, description max 90, sitelink/callout max 25, Meta primary_text max 125
+- **Meta ad copy formatting:** Use emojis, line breaks (`\n`), and bullet points (•, ✅, ▸) in Meta `primary_text` for higher engagement. Example: `🔥 Limited Offer!\n\n✅ Free Shipping\n✅ 30-Day Returns\n\n👉 Shop now!`
 - **Enum casing auto-normalizes:** status/objective/match_type can be any case, server handles it
 - **Budgets are numbers:** Pass as numbers in account's local currency (not cents, not strings)
 - **Keywords as objects:** `add_negative_keywords` expects `[{"text": "free", "match_type": "BROAD"}]`, not `["free"]`

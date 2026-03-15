@@ -709,8 +709,15 @@ Respect character limits — the server will reject text that's too long:
 - Google Ads description: max 90 characters
 - Google Ads sitelink text: max 25 characters
 - Google Ads callout: max 25 characters
-- Meta primary_text: max 125 characters
+- Meta primary_text: max 125 characters (supports emojis, line breaks, bullet points)
 - Meta headline: max 40 characters
+
+### Meta Ad Copy Formatting
+Meta primary_text supports rich formatting for higher engagement:
+- Use emojis strategically: 🔥 ✅ 🎯 💰 ⚡ 🚀 👉 ⭐
+- Use line breaks (\n) and bullet points (•, ✅, ▸) for readability
+- Example: "🔥 Limited Time Offer!\n\n✅ Free Shipping\n✅ 30-Day Returns\n\n👉 Shop now!"
+- Bold/italic/HTML are NOT supported — plain text with emojis only
 
 ### Enum Values Are Case-Insensitive
 The server auto-normalizes casing, but these are the expected values:
