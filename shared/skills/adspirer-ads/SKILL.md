@@ -45,6 +45,8 @@ Always start here before any ad operation:
 | Understand audiences | Audience Analysis | `get_meta_audience_insights`, `get_linkedin_audience_insights`, `search_audiences` |
 | Manage PMax search themes | PMax Search Themes | `add_pmax_search_themes`, `get_pmax_search_themes`, `remove_pmax_search_themes` |
 | Manage PMax audience signals | PMax Audience Signals | `add_pmax_audience_signal`, `get_pmax_audience_signals`, `remove_pmax_audience_signal`, `search_audiences` |
+| Create Demand Gen campaign | Demand Gen Creation | `discover_existing_assets`, `search_audiences`, `create_demandgen_campaign` |
+| Create YouTube campaign | YouTube Creation | `discover_existing_assets`, `validate_video`, `search_audiences`, `create_youtube_campaign` |
 | Add ad extensions | Ad Extensions | `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions` |
 | Change bidding strategy | Bidding Strategy | `update_bid_strategy`, `get_campaign_structure` |
 | Add/manage keywords | Keyword Management | `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords` |
@@ -241,6 +243,55 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
     - `search_audiences` — find relevant in-market, affinity, and custom audiences
     - Present audience recommendations to user for approval
     - `add_pmax_audience_signal` — add audience signal combining selected segments
+
+**Google Ads Demand Gen (exact order):**
+
+Demand Gen campaigns run across YouTube (In-Feed, In-Stream, Shorts), Gmail, Discover, and Display. They support two ad formats: **multi_asset** (image ads) and **video_responsive** (video ads). Demand Gen is ideal for awareness and consideration campaigns with visual, entertainment-focused creatives.
+
+1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+2. Discuss bidding strategy with user:
+   - **Maximize Clicks** (default, no conversion tracking needed)
+   - **Target CPA** (requires conversion tracking)
+   - **Maximize Conversions** (requires conversion tracking)
+   - **Target ROAS** (requires conversion value tracking)
+3. `discover_existing_assets` — check existing images, logos, videos
+4. For multi_asset format: need landscape (1.91:1) OR square (1:1) images + logo
+5. For video_responsive format: need YouTube video IDs (validate with `validate_video`) + logo
+6. `search_audiences` — find relevant in-market, affinity audiences for `audience_segments` parameter
+7. `create_demandgen_campaign` — create the campaign with:
+   - `target_locations`: supports countries, states, cities globally (e.g., `["India"]`, `["Bangalore, India"]`)
+   - `audience_segments`: `{"in_market_audience_ids": [80463], "affinity_audience_ids": [92913]}`
+   - `channels`: optional channel controls (e.g., `{"display": false}` for YouTube + Gmail + Discover only)
+   - `call_to_action`: e.g., `"LEARN_MORE"`, `"SIGN_UP"`, `"SHOP_NOW"`
+   - `existing_images`: reuse from `discover_existing_assets` (preferred)
+8. Add ad extensions (sitelinks, callouts, snippets)
+9. `list_campaign_extensions` — verify extensions added
+
+**Key Demand Gen details:**
+- Budget: minimum ~$20/day recommended
+- All campaigns created PAUSED
+- Location and audience targeting are set at the **ad group level** (not campaign level)
+- Audience targeting uses grouped Audience resources with in-market, affinity, and remarketing segments
+- Channel controls: all channels ON by default. Disable specific channels via `channels` parameter
+
+**Google Ads YouTube Video (exact order):**
+
+YouTube campaigns are Demand Gen campaigns with YouTube-only channel controls (Gmail, Discover, Display disabled). They require at least one YouTube video.
+
+1. Get user's YouTube video URL or ID
+2. `validate_video` — validate the video (must be public or unlisted)
+3. `discover_existing_assets` — find existing logos
+4. `search_audiences` — find relevant audiences
+5. `create_youtube_campaign` — create with:
+   - `youtube_video_id`: primary video (11 chars)
+   - `target_locations`: city/state/country level
+   - `audience_segments`: in-market + affinity targeting
+   - `logo_asset_id` OR `asset_bundle_id` for logo
+   - `additional_video_ids`: up to 4 more videos
+6. Add ad extensions (sitelinks, callouts, snippets)
+
+**YouTube placements enabled:** In-Feed, In-Stream, Shorts
+**YouTube placements disabled:** Gmail, Discover, Display
 
 **Meta Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand audience positioning
@@ -740,6 +791,8 @@ For `add_negative_keywords`, each keyword must be an object:
 |----------|-----------|-------------|----------|
 | Google Ads Search | $10 | $50+ | High-intent search traffic |
 | Google Ads PMax | $10 | $50+ | Broad reach with automation |
+| Google Ads Demand Gen | $10 | $20+ | YouTube, Gmail, Discover — visual awareness + consideration |
+| Google Ads YouTube | $10 | $20+ | YouTube-only video ads (In-Feed, In-Stream, Shorts) |
 | Meta Ads | $5/ad set | $20+ | Awareness and retargeting |
 | LinkedIn Ads | $10 | $50+ | B2B targeting (job titles, industries) |
 | TikTok Ads | $20 | $50+ | Younger demographics, video-first |
@@ -748,7 +801,7 @@ For `add_negative_keywords`, each keyword must be an object:
 
 | Platform | Key Tools |
 |----------|-----------|
-| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords`, `add_pmax_search_themes`, `get_pmax_search_themes`, `remove_pmax_search_themes`, `add_pmax_audience_signal`, `get_pmax_audience_signals`, `remove_pmax_audience_signal`, `search_audiences` |
+| Google Ads | `get_campaign_performance`, `research_keywords`, `create_search_campaign`, `create_pmax_campaign`, `create_demandgen_campaign`, `create_youtube_campaign`, `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms`, `suggest_ad_content`, `get_campaign_structure`, `discover_existing_assets`, `validate_video`, `add_sitelinks`, `add_callout_extensions`, `add_structured_snippets`, `list_campaign_extensions`, `update_bid_strategy`, `add_keywords`, `remove_keywords`, `update_keyword`, `add_negative_keywords`, `remove_negative_keywords`, `add_pmax_search_themes`, `get_pmax_search_themes`, `remove_pmax_search_themes`, `add_pmax_audience_signal`, `get_pmax_audience_signals`, `remove_pmax_audience_signal`, `search_audiences` |
 | LinkedIn Ads | `get_linkedin_campaign_performance`, `create_linkedin_image_campaign`, `get_linkedin_organizations`, `analyze_linkedin_creative_performance`, `get_linkedin_audience_insights`, `research_business_for_linkedin_targeting`, `generate_linkedin_ad_creatives` |
 | Meta Ads | `get_meta_campaign_performance`, `search_meta_targeting`, `browse_meta_targeting`, `detect_meta_creative_fatigue`, `get_meta_audience_insights`, `analyze_meta_audiences`, `optimize_meta_placements`, `analyze_meta_wasted_spend` |
 | TikTok Ads | `create_tiktok_campaign`, `create_tiktok_video_campaign`, `discover_tiktok_assets`, `validate_and_prepare_tiktok_assets` |
