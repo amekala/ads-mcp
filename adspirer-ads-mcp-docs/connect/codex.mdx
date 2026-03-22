@@ -1,0 +1,29 @@
+---
+title: "Connect Codex to Adspirer"
+description: "Set up OpenAI Codex CLI with the Adspirer MCP server for AI-powered ad management from your terminal."
+---
+
+# Connect Codex
+
+Add Adspirer to OpenAI's Codex CLI agent.
+
+<Steps>
+  <Step title="Edit Codex Config">
+    Add to `~/.codex/config.toml`:
+
+    ```toml
+    [mcp_servers.adspirer]
+    url = "https://mcp.adspirer.com/mcp"
+    ```
+  </Step>
+  <Step title="Restart Codex">
+    Restart your Codex session to load the MCP server.
+  </Step>
+  <Step title="Authorize">
+    Complete the OAuth flow when prompted on first tool use.
+  </Step>
+</Steps>
+
+<Check>
+**Verify:** Ask Codex "Show my active campaigns" to confirm the connection.
+</Check>

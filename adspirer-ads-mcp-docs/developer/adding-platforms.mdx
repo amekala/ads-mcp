@@ -1,0 +1,31 @@
+---
+title: "Adding Ad Platforms"
+description: "How to add support for new advertising platforms to the Adspirer MCP server."
+---
+
+# Adding Ad Platforms
+
+This guide covers how to extend the Adspirer MCP server with support for additional advertising platforms.
+
+## Current Platforms
+
+| Platform | Tools | Status |
+|----------|-------|--------|
+| Google Ads | 39 | GA |
+| LinkedIn Ads | 28 | GA |
+| Meta Ads | 20 | GA |
+| TikTok Ads | 4 | GA |
+
+## Integration Requirements
+
+Adding a new ad platform requires:
+
+1. **API integration** — OAuth flow and API client for the platform
+2. **Tool definitions** — MCP tool schemas for each supported action
+3. **Asset validation** — Platform-specific asset requirements and validation
+4. **Shared skill updates** — Update campaign management and performance review skills
+5. **Documentation** — Add platform tool reference page and connection guide
+
+## Contribution Process
+
+The MCP server backend is maintained privately. To suggest a new platform integration, open an issue on the [GitHub repo](https://github.com/amekala/ads-mcp/issues) with your use case and priority.

@@ -1,0 +1,54 @@
+---
+title: "Connect Claude to Adspirer"
+description: "Set up Claude Desktop, Web, or iOS with the Adspirer MCP server for AI-powered ad campaign management."
+---
+
+# Connect Claude
+
+Claude has native MCP support, making it the easiest way to get started with Adspirer.
+
+<Steps>
+  <Step title="Open Claude Settings">
+    Go to **Settings → Connectors → Add custom connector**
+  </Step>
+  <Step title="Configure the MCP Server">
+    - **Name:** Adspirer
+    - **URL:** `https://mcp.adspirer.com/mcp`
+  </Step>
+  <Step title="Authorize">
+    Complete the OAuth 2.1 sign-in flow. This securely links your Adspirer account without sharing passwords.
+  </Step>
+  <Step title="Link Ad Accounts">
+    On first use, ask Claude to connect your ad platforms:
+
+    ```
+    Connect my Google Ads account
+    ```
+
+    Follow the prompts to link Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads.
+  </Step>
+</Steps>
+
+<Check>
+**Verify:** Ask Claude "Show me my active campaigns" to confirm everything is connected.
+</Check>
+
+## Example Prompts
+
+Try these to get started:
+
+- "What's my Google Ads ROAS this month?"
+- "Research keywords for [your product] and show me CPCs"
+- "Create a Performance Max campaign for [your goal]"
+- "Analyze my LinkedIn ad performance and suggest improvements"
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Claude doesn't show MCP tools">
+    Make sure you're using Claude Desktop, Web, or iOS with MCP support enabled. The connector should appear under Settings → Connectors.
+  </Accordion>
+  <Accordion title="OAuth sign-in fails">
+    Try clearing your browser cookies for `adspirer.com` and reconnecting. If the issue persists, contact [support](mailto:abhi@adspirer.com).
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,34 @@
+---
+title: "Adding IDE Plugins"
+description: "How to create a new IDE plugin for the Adspirer MCP server — plugin structure, shared skills integration, and distribution."
+---
+
+# Adding IDE Plugins
+
+This guide covers how to add support for a new AI client or IDE to the Adspirer plugin system.
+
+## Plugin Structure
+
+Each plugin lives in `plugins/<ide-name>/` and contains:
+
+```
+plugins/my-ide/
+├── manifest.json          # Plugin metadata and capabilities
+├── install.sh             # Installation script
+├── agent-instructions/    # IDE-specific agent prompts
+├── commands/              # Slash commands (if supported)
+└── config/                # IDE-specific configuration files
+```
+
+## Integration Steps
+
+1. **Create the plugin directory** under `plugins/`
+2. **Define the manifest** with plugin metadata, supported features, and MCP server URL
+3. **Adapt shared skills** from `shared/skills/` to the IDE's format
+4. **Write agent instructions** tailored to the IDE's capabilities
+5. **Create installation script** for one-command setup
+6. **Test** the full workflow: install → authenticate → use tools
+
+## Shared Skills Integration
+
+Plugins should reference the shared skills in `shared/skills/` as their source of truth. When a shared skill is updated, plugins should regenerate their implementations.

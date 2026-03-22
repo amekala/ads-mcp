@@ -1,0 +1,37 @@
+---
+title: "Server Registry"
+description: "Adspirer's registration on the MCP Server Registry — discovery, metadata, and integration details."
+---
+
+# Server Registry
+
+The Adspirer MCP server is registered on the official [MCP Server Registry](https://registry.modelcontextprotocol.io) for easy discovery and integration.
+
+## Registry Details
+
+| Field | Value |
+|-------|-------|
+| **Registry ID** | `com.adspirer/ads` |
+| **Server URL** | `https://mcp.adspirer.com/mcp` |
+| **Transport** | Streamable HTTP |
+| **Authentication** | OAuth 2.1 with PKCE |
+| **Dynamic Client Registration** | Supported |
+
+## Discovery
+
+AI clients that support the MCP Server Registry can discover Adspirer automatically. The `server.json` manifest in the repo root contains the full registry entry with:
+
+- Server metadata (name, description, version)
+- Supported capabilities (tools, resources, prompts)
+- Authentication requirements
+- Contact and support information
+
+## Integration
+
+To integrate with any MCP-compatible client, you only need the server URL:
+
+```
+https://mcp.adspirer.com/mcp
+```
+
+The server handles authentication, capability negotiation, and tool discovery automatically via the MCP protocol.

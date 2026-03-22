@@ -1,0 +1,239 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "Adspirer MCP Server",
+  "description": "Open-source MCP server for AI-powered ad management. 100+ tools across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.",
+  "colors": {
+    "primary": "#2563EB",
+    "light": "#F8FAFC",
+    "dark": "#0F172A"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png",
+    "href": "https://www.adspirer.com?utm_source=mcp-docs&utm_medium=logo&utm_content=home"
+  },
+  "appearance": {
+    "default": "dark",
+    "strict": false
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs",
+    "codeblocks": {
+      "theme": {
+        "light": "github-light",
+        "dark": "github-dark"
+      }
+    }
+  },
+  "metadata": {
+    "timestamp": true
+  },
+  "banner": {
+    "content": "Looking for product documentation? Visit the [Adspirer Docs →](/docs/introduction)",
+    "dismissible": true
+  },
+  "search": {
+    "prompt": "Search MCP server docs..."
+  },
+  "background": {
+    "decoration": "gradient"
+  },
+  "errors": {
+    "404": {
+      "redirect": false,
+      "title": "Page Not Found",
+      "description": "This page doesn't exist or may have moved. **[Go to MCP docs home →](/mcp/introduction)**"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "icon": "book-open",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "how-mcp-works"
+            ]
+          },
+          {
+            "group": "Connect Your AI Client",
+            "pages": [
+              "connect/claude",
+              "connect/chatgpt",
+              "connect/claude-code",
+              "connect/cursor",
+              "connect/codex",
+              "connect/openclaw",
+              "connect/windsurf"
+            ]
+          },
+          {
+            "group": "Ad Platform Tools",
+            "pages": [
+              "platforms/google-ads",
+              "platforms/meta-ads",
+              "platforms/linkedin-ads",
+              "platforms/tiktok-ads"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Skills & Agents",
+        "icon": "wand-magic-sparkles",
+        "groups": [
+          {
+            "group": "Agent Skills",
+            "pages": [
+              "skills/overview",
+              "skills/campaign-management",
+              "skills/performance-review",
+              "skills/setup-onboarding",
+              "skills/wasted-spend-audit",
+              "skills/ad-copy-generation"
+            ]
+          },
+          {
+            "group": "Agent Architecture",
+            "pages": [
+              "agents/overview",
+              "agents/strategy-aware-execution",
+              "agents/multi-account"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Developer",
+        "icon": "code",
+        "groups": [
+          {
+            "group": "Developer Guide",
+            "pages": [
+              "developer/architecture",
+              "developer/adding-ide-plugins",
+              "developer/adding-platforms",
+              "developer/server-registry"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/security",
+              "reference/privacy",
+              "reference/terms",
+              "reference/support",
+              "reference/changelog"
+            ]
+          }
+        ]
+      }
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Product Docs",
+          "href": "https://www.adspirer.com/docs",
+          "icon": "book"
+        },
+        {
+          "anchor": "GitHub",
+          "href": "https://github.com/amekala/ads-mcp",
+          "icon": "github"
+        },
+        {
+          "anchor": "Get Started Free",
+          "href": "https://adspirer.ai?utm_source=mcp-docs&utm_medium=sidebar&utm_content=get-started",
+          "icon": "rocket"
+        }
+      ]
+    }
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Product Docs",
+        "href": "https://www.adspirer.com/docs"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get Started Free",
+      "href": "https://adspirer.ai?utm_source=mcp-docs&utm_medium=nav&utm_content=get-started"
+    }
+  },
+  "integrations": {
+    "ga4": {
+      "measurementId": "G-ZX09MFTP89"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "add-mcp",
+      "cursor",
+      "vscode"
+    ]
+  },
+  "seo": {
+    "metatags": {
+      "og:site_name": "Adspirer MCP Server Documentation",
+      "og:locale": "en_US",
+      "twitter:card": "summary_large_image",
+      "twitter:site": "@abhilashreddi",
+      "robots": "index, follow",
+      "author": "Adspirer",
+      "category": "Technology",
+      "language": "en"
+    },
+    "indexing": "all"
+  },
+  "footer": {
+    "links": [
+      {
+        "header": "Product",
+        "items": [
+          { "label": "Adspirer.com", "href": "https://www.adspirer.com?utm_source=mcp-docs&utm_medium=footer" },
+          { "label": "Product Docs", "href": "https://www.adspirer.com/docs" },
+          { "label": "Pricing", "href": "https://www.adspirer.com/pricing?utm_source=mcp-docs&utm_medium=footer" },
+          { "label": "Book a Demo", "href": "https://www.adspirer.com/book-demo?utm_source=mcp-docs&utm_medium=footer" }
+        ]
+      },
+      {
+        "header": "MCP Server",
+        "items": [
+          { "label": "Quick Start", "href": "/mcp/quickstart" },
+          { "label": "Tools & Skills", "href": "/mcp/skills/overview" },
+          { "label": "Security", "href": "/mcp/reference/security" },
+          { "label": "Changelog", "href": "/mcp/reference/changelog" }
+        ]
+      },
+      {
+        "header": "Connect",
+        "items": [
+          { "label": "GitHub", "href": "https://github.com/amekala/ads-mcp" },
+          { "label": "Twitter", "href": "https://x.com/abhilashreddi" },
+          { "label": "LinkedIn", "href": "https://www.linkedin.com/company/adspirer" },
+          { "label": "YouTube", "href": "https://www.youtube.com/@Adspirer" }
+        ]
+      }
+    ],
+    "socials": {
+      "x": "https://x.com/abhilashreddi",
+      "github": "https://github.com/amekala/ads-mcp",
+      "linkedin": "https://www.linkedin.com/company/adspirer",
+      "youtube": "https://www.youtube.com/@Adspirer"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+---
+title: "Security"
+description: "Adspirer MCP server security — OAuth 2.1 authentication, data encryption, access controls, and privacy protections."
+---
+
+# Security
+
+Adspirer is built with security-first principles. Your ad account credentials and campaign data are protected at every layer.
+
+## Authentication
+
+- **OAuth 2.1 with PKCE** — Industry-standard authentication protocol
+- **Dynamic client registration** — Supported for seamless AI client integration
+- **No API keys stored** — Authentication tokens are managed server-side
+- **Per-platform authorization** — Each ad platform requires separate OAuth consent
+
+## Data Protection
+
+- **HTTPS/TLS encryption** — All data encrypted in transit
+- **No conversation logging** — Your AI conversations are not stored or monitored
+- **No ad data retention** — Campaign data is fetched in real-time, not cached
+- **Scoped access** — You control exactly which ad accounts are accessible
+
+## Safety Guardrails
+
+The MCP server includes built-in safety guardrails:
+
+| Action | Protected? | Details |
+|--------|-----------|---------|
+| Delete campaigns | Yes | Cannot delete existing campaigns |
+| Pause running campaigns | Yes | Requires explicit confirmation |
+| Modify existing budgets | Yes | Requires explicit approval |
+| Create new campaigns | Allowed | With standard validation |
+| Read performance data | Allowed | Read-only access is unrestricted |
+
+## Compliance
+
+- SOC 2 Type II aligned practices
+- GDPR-compliant data handling
+- No third-party data sharing
+
+For security questions, contact [abhi@adspirer.com](mailto:abhi@adspirer.com).

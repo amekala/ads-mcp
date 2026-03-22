@@ -1,0 +1,85 @@
+---
+title: "Adspirer MCP Server"
+description: "Open-source MCP server for AI-powered ad campaign management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 100+ tools accessible from any MCP-compatible AI assistant."
+---
+
+# Adspirer MCP Server
+
+The Adspirer MCP (Model Context Protocol) server connects your AI assistant directly to advertising platforms. Create, analyze, and optimize ad campaigns across **Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads** — all through natural language.
+
+<Note>
+**MCP Remote URL:** `https://mcp.adspirer.com/mcp`
+**Transport:** Streamable HTTP | **Auth:** OAuth 2.1 with PKCE
+**Registry:** [`com.adspirer/ads`](https://registry.modelcontextprotocol.io)
+</Note>
+
+## What You Can Do
+
+<CardGroup cols={2}>
+  <Card title="Create Campaigns" icon="bullhorn">
+    Launch Search, Performance Max, video, carousel, and lead gen campaigns across all platforms with a single conversation.
+  </Card>
+  <Card title="Analyze Performance" icon="chart-line">
+    Get real-time metrics, ROAS analysis, and actionable optimization recommendations.
+  </Card>
+  <Card title="Research Keywords" icon="magnifying-glass">
+    Access real CPC data, search volume, and competitive analysis for keyword planning.
+  </Card>
+  <Card title="Optimize Budgets" icon="coins">
+    AI-powered budget allocation, bid strategy adjustments, and wasted spend identification.
+  </Card>
+</CardGroup>
+
+## Platform Coverage
+
+| Platform | Tools | Key Capabilities |
+|----------|-------|-----------------|
+| **Google Ads** | 39 | Search campaigns, Performance Max, keyword research, ad extensions, asset management |
+| **LinkedIn Ads** | 28 | Sponsored content, lead gen forms, audience targeting, campaign analytics |
+| **Meta Ads** | 20 | Image/carousel/video campaigns, audience targeting, performance tracking |
+| **TikTok Ads** | 4 | In-feed video/image campaigns, asset validation |
+| **Total** | **100+** | Plus 2 resources and 6 prompts |
+
+## Compatible AI Clients
+
+<CardGroup cols={3}>
+  <Card title="Claude" href="/mcp/connect/claude">
+    Desktop, Web & iOS
+  </Card>
+  <Card title="ChatGPT" href="/mcp/connect/chatgpt">
+    Desktop & Web
+  </Card>
+  <Card title="Claude Code" href="/mcp/connect/claude-code">
+    Terminal IDE
+  </Card>
+  <Card title="Cursor" href="/mcp/connect/cursor">
+    AI Code Editor
+  </Card>
+  <Card title="Codex" href="/mcp/connect/codex">
+    OpenAI CLI
+  </Card>
+  <Card title="OpenClaw" href="/mcp/connect/openclaw">
+    Agentic Platform
+  </Card>
+</CardGroup>
+
+## Safety by Design
+
+The MCP server is designed with guardrails:
+
+- **Cannot** delete existing campaigns
+- **Cannot** pause running campaigns without confirmation
+- **Cannot** modify existing budgets without approval
+- All actions require explicit OAuth authorization
+- No conversation data is logged or stored
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/mcp/quickstart">
+    Connect your AI client in under 2 minutes
+  </Card>
+  <Card title="How MCP Works" icon="circle-nodes" href="/mcp/how-mcp-works">
+    Understand the protocol powering Adspirer
+  </Card>
+</CardGroup>
