@@ -31,7 +31,7 @@
     "timestamp": true
   },
   "banner": {
-    "content": "Looking for product documentation? Visit the [Adspirer Docs →](/docs/introduction)",
+    "content": "Looking for product documentation? Visit the [Adspirer Docs →](https://www.adspirer.com/docs/introduction)",
     "dismissible": true
   },
   "search": {
@@ -44,7 +44,7 @@
     "404": {
       "redirect": false,
       "title": "Page Not Found",
-      "description": "This page doesn't exist or may have moved. **[Go to MCP docs home →](/mcp/introduction)**"
+      "description": "This page doesn't exist or may have moved. **[Go to MCP docs home →](/introduction)**"
     }
   },
   "navigation": {
@@ -213,10 +213,10 @@
       {
         "header": "MCP Server",
         "items": [
-          { "label": "Quick Start", "href": "/mcp/quickstart" },
-          { "label": "Tools & Skills", "href": "/mcp/skills/overview" },
-          { "label": "Security", "href": "/mcp/reference/security" },
-          { "label": "Changelog", "href": "/mcp/reference/changelog" }
+          { "label": "Quick Start", "href": "/quickstart" },
+          { "label": "Tools & Skills", "href": "/skills/overview" },
+          { "label": "Security", "href": "/reference/security" },
+          { "label": "Changelog", "href": "/reference/changelog" }
         ]
       },
       {
