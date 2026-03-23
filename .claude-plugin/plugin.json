@@ -4,5 +4,18 @@
   "version": "2.0.0",
   "author": {
     "name": "Adspirer"
-  }
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/amekala/ads-mcp",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "google-ads",
+    "meta-ads",
+    "linkedin-ads",
+    "tiktok-ads",
+    "performance-marketing",
+    "campaign-management",
+    "mcp"
+  ]
 }
