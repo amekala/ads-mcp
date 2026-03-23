@@ -103,11 +103,6 @@ process_agent_prompt() {
   content="$(cat "$src")"
   content="$(echo "$content" | sed "s/{{CONTEXT_FILE}}/$context_file/g")"
 
-  if [ "$codex_mode" = "yes" ]; then
-    # Codex MCP tools are exposed without the mcp__adspirer__ prefix.
-    content="$(echo "$content" | sed 's/mcp__adspirer__//g')"
-  fi
-
   echo "$content"
 }
 
@@ -144,8 +139,6 @@ model: sonnet
 memory: project
 skills:
   - ad-campaign-management
-mcpServers:
-  adspirer: {}
 ---
 
 EOF
