@@ -113,6 +113,12 @@ Available commands after setup:
 claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp
 ```
 
+> **Important: Do not use both options.** Option 1 (plugin) and Option 2 (`claude mcp add`) register the same MCP server in different config files (`settings.json` vs `settings.local.json`). Using both creates a duplicate that causes connection errors. Pick one:
+>
+> - **If you used Option 1 and it's not working**, remove the manual entry: `claude mcp remove adspirer`
+> - **If you used Option 2 and want to switch to the full plugin**, first run `claude mcp remove adspirer`, then follow Option 1
+> - **To check for duplicates**, run `claude mcp list` — you should see only one `adspirer` entry
+
 ### ChatGPT
 
 Requires a **Plus or Pro plan**.
