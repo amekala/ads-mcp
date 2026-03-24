@@ -235,6 +235,18 @@ Codex (CLI / IDE)
 
 ## Troubleshooting
 
+### Nothing works (all tools fail)
+
+If **no Adspirer tools work** — even basic ones like checking connections — follow these steps in order:
+
+1. **Re-authenticate:** Run `codex mcp login adspirer` to refresh the connection.
+2. **Refresh Adspirer session:** Go to [adspirer.ai](https://adspirer.ai), log out, log back in, then run `codex mcp login adspirer` again.
+3. **Reinstall MCP:** Run `codex mcp add adspirer --url https://mcp.adspirer.com/mcp` and restart.
+
+> **Note:** If some ad platforms work but one doesn't (e.g., Google works but LinkedIn fails), that's a platform-specific issue — reconnect just that platform at [adspirer.ai/connections](https://adspirer.ai/connections).
+
+### Other issues
+
 | Problem | Solution |
 |---------|----------|
 | MCP server not found | Run `codex mcp add adspirer --url https://mcp.adspirer.com/mcp` and restart |

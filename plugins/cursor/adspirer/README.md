@@ -217,6 +217,18 @@ Cursor IDE (Agent Mode)
 
 ## Troubleshooting
 
+### Nothing works (all tools fail)
+
+If **no Adspirer tools work** — even basic ones like checking connections — follow these steps in order:
+
+1. **Check tool permissions:** Read tools (performance, research, status) should be set to **Always allow**. Write tools (campaign creation, budget changes) should be set to **Custom** (ask each time). If tools are blocked, nothing will execute.
+2. **Disconnect and reconnect:** Open Cursor Settings > MCP, remove the Adspirer server, re-add it with URL `https://mcp.adspirer.com/mcp`, and complete OAuth again.
+3. **Refresh Adspirer session:** Go to [adspirer.ai](https://adspirer.ai), log out, log back in, then retry in Cursor.
+
+> **Note:** If some ad platforms work but one doesn't (e.g., Google works but LinkedIn fails), that's a platform-specific issue — reconnect just that platform at [adspirer.ai/connections](https://adspirer.ai/connections).
+
+### Other issues
+
 | Problem | Solution |
 |---------|----------|
 | Install fails with permission/hooks error | Run the install from your **system terminal**, not Cursor's built-in terminal (it's sandboxed) |

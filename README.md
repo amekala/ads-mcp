@@ -9,7 +9,7 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 - **Registry ID:** [`com.adspirer/ads`](https://registry.modelcontextprotocol.io)
 - **Authentication:** OAuth 2.1 with PKCE (dynamic client registration supported)
 - **Website:** https://www.adspirer.com
-- **Support:** abhi@adspirer.com
+- **Support:** support@adspirer.com
 
 ## What It Does
 
@@ -157,7 +157,7 @@ See [SECURITY.md](SECURITY.md) for vulnerability reporting.
 
 ## Support
 
-- **Email:** abhi@adspirer.com
+- **Email:** support@adspirer.com
 - **Issues:** https://github.com/amekala/ads-mcp/issues
 - **Website:** https://www.adspirer.com
 - **Server Status:** https://mcp.adspirer.com/health

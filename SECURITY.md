@@ -2,7 +2,7 @@
 
 ## Reporting Vulnerabilities
 
-**Email:** abhi@adspirer.com
+**Email:** support@adspirer.com
 **Response Time:** Within 48 hours
 
 Please include:

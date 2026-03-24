@@ -37,7 +37,7 @@ To use Ads MCP, you must:
 
 ### Account Responsibilities
 - You are responsible for all activity under your connected accounts
-- You must promptly notify us of any unauthorized use at abhi@adspirer.com
+- You must promptly notify us of any unauthorized use at support@adspirer.com
 - We are not liable for losses due to compromised credentials
 
 ## 5. User Responsibilities
@@ -213,7 +213,7 @@ If you access the Service from outside the United States, you are responsible fo
 ## 18. Dispute Resolution
 
 ### Informal Resolution
-Before filing a claim, you agree to contact us at abhi@adspirer.com to attempt informal resolution.
+Before filing a claim, you agree to contact us at support@adspirer.com to attempt informal resolution.
 
 ### Arbitration
 If informal resolution fails, disputes will be resolved through **binding arbitration** in Delaware, except where prohibited by law.
@@ -249,7 +249,7 @@ We are not liable for delays or failures due to events beyond our reasonable con
 
 For questions about these Terms:
 
-**Email:** abhi@adspirer.com
+**Email:** support@adspirer.com
 **Subject Line:** "Ads MCP Terms"
 **Response Time:** Within 2 business days
 

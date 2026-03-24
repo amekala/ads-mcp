@@ -359,6 +359,18 @@ Sign up and connect ad accounts at https://adspirer.ai/settings?tab=billing
 
 ## Troubleshooting
 
+### Connection Issues (Nothing Works)
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails:
+
+1. **Re-authenticate:** Run `openclaw adspirer login` to refresh the connection.
+2. **Refresh Adspirer session:** Log out of https://adspirer.ai, log back in, then run `openclaw adspirer login` again.
+3. **Reinstall:** Run `openclaw plugins install openclaw-adspirer` then `openclaw adspirer login`.
+
+**Important:** If some platforms work but one doesn't, that's a platform-specific issue. Reconnect just that platform at https://adspirer.ai/connections.
+
+### Other Issues
+
 | Issue | Solution |
 |-------|---------|
 | Plugin not installed | `openclaw plugins install openclaw-adspirer` |

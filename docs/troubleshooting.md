@@ -1,14 +1,50 @@
 # Troubleshooting
 
+## Common Connection Issues (Nothing Works)
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails — this is a connection issue between the AI client and the Adspirer MCP server. Follow these steps in order:
+
+### Step 1: Check Tool Permissions
+
+The user's AI client may be blocking Adspirer tools. The correct settings are:
+- **Read tools** (performance analysis, keyword research, connection status): **Always allow**
+- **Write tools** (campaign creation, budget changes): **Custom** (ask each time)
+
+If tools are set to "Block" or "Never allow," nothing will execute. This is the most common cause of "tools not working" reports.
+
+### Step 2: Disconnect and Reconnect the Adspirer Connector
+
+- **Claude (web/desktop):** Customize → Connectors → Disconnect Ads MCP → Connect again → Complete OAuth
+- **ChatGPT:** Settings → Connectors → Remove Adspirer-MCP → Re-add with URL `https://mcp.adspirer.com/mcp` → Complete OAuth
+- **Claude Code:** `claude mcp remove adspirer` → `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` → Restart → `/mcp` to authenticate
+- **Cursor:** Re-connect via MCP settings
+
+**Note:** Claude and ChatGPT web connectors frequently disconnect — typically every 1–2 weeks. This is normal behavior for web-based AI clients, not an Adspirer issue. Users just need to re-enable and re-authenticate when it happens.
+
+### Step 3: Refresh Adspirer Session (Clerk Auth)
+
+If reconnecting the connector doesn't fix the issue, the user's Adspirer login session (Clerk auth) may have expired:
+1. Go to https://adspirer.ai
+2. Log out (click avatar → Sign out)
+3. Log back in
+4. Return to the AI client and retry
+
+### When Does This NOT Apply?
+
+These steps apply only when **nothing works**. If some ad platforms work but one doesn't (e.g., Google Ads works but LinkedIn fails), the MCP server is reachable — that's a platform-specific issue. Have the user reconnect just that platform at https://adspirer.ai/connections.
+
+---
+
 ## Authentication Issues
 
 ### "401 Unauthorized" error when calling MCP tools
 
 **Solution:**
 1. Check that your OAuth token hasn't expired - try reconnecting your account
-2. Disconnect and reconnect your Google Ads/TikTok accounts in Claude/ChatGPT settings
-3. Verify you've completed the OAuth flow successfully
-4. Check server logs for specific authentication errors
+2. Disconnect and reconnect the Adspirer connector in your AI client settings (see "Common Connection Issues" above)
+3. Refresh your Adspirer session — log out of https://adspirer.ai, log back in
+4. Verify you've completed the OAuth flow successfully
+5. Check server logs for specific authentication errors
 
 ### "No primary account found"
 
@@ -82,7 +118,7 @@
 1. Wait 60 seconds before retrying the operation
 2. Avoid calling the same tool repeatedly in quick succession
 3. Rate limits: 100 requests/hour for free tier (if applicable)
-4. Contact support at abhi@adspirer.com if rate limits are blocking legitimate use
+4. Contact support at support@adspirer.com if rate limits are blocking legitimate use
 
 ---
 
@@ -118,11 +154,15 @@
 
 ### MCP server shows "Disconnected" in Claude/ChatGPT
 
+Claude and ChatGPT web connectors disconnect every 1–2 weeks. This is normal behavior for web-based AI clients — not an Adspirer issue.
+
 **Solution:**
-1. Check server status at https://mcp.adspirer.com/health
-2. Verify MCP URL is correct: `https://mcp.adspirer.com/mcp` (use `/mcp` endpoint, not `/sse`)
-3. Try removing and re-adding the MCP server connection
-4. Check our status page or contact support for ongoing incidents
+1. Go to your AI client's connector settings (Claude: Customize → Connectors, ChatGPT: Settings → Connectors)
+2. Re-enable or re-add the Adspirer connector
+3. Complete the OAuth flow if prompted
+4. Verify tool permissions: read tools → **Always allow**, write tools → **Custom**
+5. If it still doesn't work, log out of https://adspirer.ai, log back in, then retry
+6. Check server status at https://mcp.adspirer.com/health if the issue persists
 
 ### Tools work in ChatGPT but not in Claude (or vice versa)
 
@@ -138,7 +178,7 @@
 
 **Still having issues?**
 
-- **Email:** abhi@adspirer.com (Subject: "Ads MCP Support")
+- **Email:** support@adspirer.com (Subject: "Ads MCP Support")
 - **Response Time:** Within 24 hours on business days (Mon-Fri)
 - **Bug Reports:** https://github.com/amekala/ads-mcp/issues
 - **Status Page:** Check https://mcp.adspirer.com/health for service status

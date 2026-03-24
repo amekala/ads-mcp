@@ -1012,6 +1012,18 @@ For `add_negative_keywords`, each keyword must be an object:
 
 ## Troubleshooting
 
+### Connection Issues (Nothing Works)
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails — guide the user through these steps in order:
+
+1. **Check tool permissions:** Read tools should be allowed, write tools should require confirmation. Blocked tools prevent anything from executing.
+2. **Re-authenticate:** Run `codex mcp login adspirer` to refresh the connection.
+3. **Refresh Adspirer session:** Log out of https://adspirer.ai, log back in, then retry.
+
+**Important:** If some platforms work but one doesn't, that's a platform-specific issue, not a connection problem. Reconnect just that platform at https://adspirer.ai/connections.
+
+### Other Issues
+
 - **Auth errors:** Run `codex mcp login adspirer` to re-authenticate
 - **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
 - **Wrong account:** Use `switch_primary_account` to change active account

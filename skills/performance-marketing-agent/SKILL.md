@@ -438,6 +438,18 @@ For `add_negative_keywords`, each keyword must be an object:
 
 ---
 
+## Connection Troubleshooting
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails — guide the user through these steps:
+
+1. **Check tool permissions:** Read tools should be **Always allow**, write tools should be **Custom** (ask each time). Blocked tools prevent anything from executing.
+2. **Disconnect and reconnect** the Adspirer connector in the AI client settings, then complete OAuth again.
+3. **Refresh Adspirer session:** Log out of https://adspirer.ai, log back in, then retry.
+
+Claude and ChatGPT web connectors may disconnect every 1–2 weeks — this is normal. Users just re-enable and re-authenticate.
+
+**Important:** If some platforms work but one doesn't, that's a platform-specific issue, not a connection problem. Reconnect just that platform at https://adspirer.ai/connections.
+
 ## Safety
 
 - All campaigns created in **PAUSED status** for review

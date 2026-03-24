@@ -2,9 +2,9 @@
 
 ## Getting Help
 
-- **Email:** abhi@adspirer.com
+- **Email:** support@adspirer.com
 - **Website:** https://www.adspirer.com/
-- **Documentation:** https://docs.adspirer.com/mcp
+- **Documentation:** https://www.adspirer.com/docs
 
 ## Issue Reporting
 
@@ -16,5 +16,5 @@ Please use GitHub Issues for:
 ## Commercial Support
 
 For enterprise support, custom integrations, or SLA guarantees:
-- Email: abhi@adspirer.com
+- Email: support@adspirer.com
 - Include "Enterprise Support" in subject line

@@ -1013,6 +1013,18 @@ For `add_negative_keywords`, each keyword must be an object:
 
 ## Troubleshooting
 
+### Connection Issues (Nothing Works)
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails — guide the user through these steps in order:
+
+1. **Check tool permissions:** Read tools (performance, research, status) should be set to **Always allow**. Write tools (campaign creation, budget changes) should be set to **Custom** (ask each time). Blocked tools prevent anything from executing.
+2. **Disconnect and reconnect** the Adspirer MCP server in Cursor's MCP settings, then complete OAuth again.
+3. **Refresh Adspirer session:** Log out of https://adspirer.ai, log back in, then retry.
+
+**Important:** If some platforms work but one doesn't, that's a platform-specific issue, not a connection problem. Reconnect just that platform at https://adspirer.ai/connections.
+
+### Other Issues
+
 - **Auth errors:** Reconnect via your AI assistant's connector settings
 - **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
 - **Wrong account:** Use `switch_primary_account` to change active account

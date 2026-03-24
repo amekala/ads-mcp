@@ -267,10 +267,47 @@ Your campaigns are owned by you, not by Ads MCP.
 
 ### How do I get help?
 
-- **Email:** abhi@adspirer.com (response within 24 hours on business days)
+- **Email:** support@adspirer.com (response within 24 hours on business days)
 - **Issues:** https://github.com/amekala/ads-mcp/issues
 - **Status:** https://mcp.adspirer.com/health
 - **Website:** https://www.adspirer.com
+
+---
+
+## Troubleshooting Connection Issues
+
+If **no tools work at all** — even `get_connections_status` or `echo_test` fails — follow these steps in order:
+
+### 1. Check Tool Permissions
+
+Your AI client needs the right tool permission settings:
+- **Read tools** (performance analysis, keyword research, connection status): Set to **Always allow**
+- **Write tools** (campaign creation, budget changes): Set to **Custom** (ask each time)
+
+If tools are set to "Block" or "Never allow," Adspirer can't execute anything.
+
+### 2. Disconnect and Reconnect the Adspirer Connector
+
+- **Claude (web/desktop):** Customize → Connectors → Disconnect Ads MCP → Connect again → Complete OAuth
+- **ChatGPT:** Settings → Connectors → Remove Adspirer-MCP → Re-add with URL `https://mcp.adspirer.com/mcp` → Complete OAuth
+- **Claude Code:** `claude mcp remove adspirer` → `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` → Restart → `/mcp` to authenticate
+- **Cursor:** Re-connect via MCP settings
+
+> **Note:** Claude and ChatGPT web connectors may disconnect every 1–2 weeks. This is normal behavior for web-based AI clients — just re-enable and re-authenticate when it happens.
+
+### 3. Refresh Your Adspirer Session
+
+If reconnecting the connector doesn't fix it, your login session may have expired:
+1. Go to https://adspirer.ai
+2. Log out (click your avatar → Sign out)
+3. Log back in
+4. Return to your AI client and try again
+
+### When Does This NOT Apply?
+
+These steps apply when **nothing works**. If some ad platforms work but one doesn't (e.g., Google works but LinkedIn fails), the MCP server is reachable — that's a platform-specific issue. Reconnect just that platform at https://adspirer.ai/connections.
+
+For more detailed troubleshooting, see [docs/troubleshooting.md](docs/troubleshooting.md).
 
 ---
 

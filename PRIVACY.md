@@ -109,16 +109,16 @@ We implement industry-standard security measures:
 You have the following rights regarding your data:
 
 ### Access
-- **Request a Copy:** Email abhi@adspirer.com to request a copy of your data
+- **Request a Copy:** Email support@adspirer.com to request a copy of your data
 - **Response Time:** Within 14 business days
 
 ### Correction
 - **Update Information:** Request corrections to inaccurate campaign data
-- **Method:** Email abhi@adspirer.com with specific corrections
+- **Method:** Email support@adspirer.com with specific corrections
 
 ### Deletion
 - **Disconnect Accounts:** Disconnect your advertising accounts via Claude/ChatGPT settings
-- **Full Deletion Request:** Email abhi@adspirer.com with subject "Delete My Data"
+- **Full Deletion Request:** Email support@adspirer.com with subject "Delete My Data"
 - **Confirmation:** We will confirm deletion within 7 business days
 - **Scope:** All data except legally required retention (e.g., financial records)
 
@@ -146,7 +146,7 @@ Ads MCP integrates with:
 
 ## Children's Privacy
 
-Ads MCP is not intended for users under 18 years of age. We do not knowingly collect data from children. If you believe we have collected data from a child under 18, please contact us immediately at abhi@adspirer.com.
+Ads MCP is not intended for users under 18 years of age. We do not knowingly collect data from children. If you believe we have collected data from a child under 18, please contact us immediately at support@adspirer.com.
 
 ## Changes to This Policy
 
@@ -162,7 +162,7 @@ We may update this Privacy Policy to reflect changes in our practices or legal r
 
 For questions, concerns, or requests regarding this Privacy Policy:
 
-**Email:** abhi@adspirer.com
+**Email:** support@adspirer.com
 **Subject Line:** "Ads MCP Privacy"
 **Response Time:** Within 2 business days
 
