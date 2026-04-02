@@ -243,7 +243,7 @@ If you're contributing to this repo or adding new ad platforms/IDE support:
 ```bash
 ./scripts/sync-skills.sh          # Generate IDE-specific skills from templates
 ./scripts/sync-skills.sh --check  # Verify generated files match committed (CI mode)
-./scripts/validate.sh             # Run all 48 offline validation checks
+./scripts/validate.sh             # Run all 62 offline validation checks
 ./scripts/validate.sh --live      # Also test MCP endpoint connectivity
 ```
 
