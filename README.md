@@ -93,6 +93,16 @@ Add to `~/.codex/config.toml`:
 url = "https://mcp.adspirer.com/mcp"
 ```
 
+### Gemini CLI
+
+Install as an extension:
+
+```bash
+gemini extensions install github.com/amekala/ads-mcp
+```
+
+A browser window opens for OAuth authentication on first use. Custom commands available: `/adspirer:setup`, `/adspirer:performance-review`, `/adspirer:wasted-spend`, `/adspirer:write-ad-copy`, `/adspirer:refresh`.
+
 ### OpenClaw
 
 ```bash
@@ -171,6 +181,7 @@ This repo distributes plugins for 4 AI platforms from a single monorepo:
 | **Claude Code** | Repo root | 1 generated + 5 slash commands | `/plugin marketplace add` |
 | **Cursor** | `plugins/cursor/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
 | **Codex** | `plugins/codex/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
+| **Gemini CLI** | Repo root | 1 reused + 5 custom commands | `gemini extensions install` |
 | **OpenClaw** | `plugins/openclaw/` | 1 standalone (self-contained) | `openclaw plugins install` |
 
 Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` as templates, then compiled into IDE-specific versions by `scripts/sync-skills.sh`.
@@ -199,6 +210,11 @@ Edit once (source of truth)
                 |     ├─ plugins/codex/adspirer/skills/adspirer-*/SKILL.md
                 |     └─ plugins/codex/adspirer/agents/performance-marketing-agent.toml
                 |
+                +--> Gemini CLI (reuses Claude Code skill)
+                |     ├─ gemini-extension.json
+                |     ├─ GEMINI.md
+                |     └─ commands/adspirer/*.toml
+                |
                 └--> OpenClaw (standalone, not generated)
                       └─ plugins/openclaw/SKILL.md
 ```
@@ -210,6 +226,7 @@ Edit once (source of truth)
 | **Claude Code** | Repo root + `shared/skills/` + `shared/agents/` | `skills/`, `agents/`, `commands/`, `.claude-plugin/` | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer` |
 | **Cursor** | `plugins/cursor/adspirer/` + shared sources | `plugins/cursor/adspirer/.cursor/skills/`, `plugins/cursor/adspirer/.cursor/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)` |
 | **Codex** | `plugins/codex/adspirer/` + shared sources | `plugins/codex/adspirer/skills/`, `plugins/codex/adspirer/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)` |
+| **Gemini CLI** | Repo root | `gemini-extension.json`, `GEMINI.md`, `commands/adspirer/` | `gemini extensions install github.com/amekala/ads-mcp` |
 | **OpenClaw** | `plugins/openclaw/` | `plugins/openclaw/` (standalone, no sync generation) | `openclaw plugins install openclaw-adspirer` |
 
 ## Developer Guide
@@ -226,7 +243,7 @@ If you're contributing to this repo or adding new ad platforms/IDE support:
 ```bash
 ./scripts/sync-skills.sh          # Generate IDE-specific skills from templates
 ./scripts/sync-skills.sh --check  # Verify generated files match committed (CI mode)
-./scripts/validate.sh             # Run all 48 offline validation checks
+./scripts/validate.sh             # Run all 62 offline validation checks
 ./scripts/validate.sh --live      # Also test MCP endpoint connectivity
 ```
 

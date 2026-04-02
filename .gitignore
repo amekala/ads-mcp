@@ -17,3 +17,4 @@ Thumbs.db
 .tts-venv/
 generate-tts.py
 *.mp3
+marketplace/

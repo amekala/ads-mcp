@@ -9,6 +9,7 @@ SHARED_AGENTS="$REPO_ROOT/shared/agents"
 CURSOR_SKILLS="$REPO_ROOT/plugins/cursor/adspirer/.cursor/skills"
 CODEX_SKILLS="$REPO_ROOT/plugins/codex/adspirer/skills"
 CLAUDE_SKILLS="$REPO_ROOT/skills"
+GEMINI_SKILLS="$REPO_ROOT/plugins/gemini/skills"
 
 # Target agent files (generated from shared agent prompts)
 CURSOR_AGENT="$REPO_ROOT/plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md"
@@ -21,6 +22,7 @@ CLAUDE_AGENT="$REPO_ROOT/agents/performance-marketing-agent.md"
 # Cursor: CONTEXT_FILE=BRAND.md, AUTH=reconnect msg, keep_websearch=yes, keep_memory=yes, keep=CURSOR_CLAUDE
 # Codex:  CONTEXT_FILE=AGENTS.md, AUTH=codex mcp login, keep_websearch=no, keep_memory=no, keep=CODEX
 # Claude: CONTEXT_FILE=CLAUDE.md, AUTH=reconnect msg, keep_websearch=yes, keep_memory=yes, keep=CURSOR_CLAUDE
+# Gemini: CONTEXT_FILE=GEMINI.md, AUTH=reconnect msg, keep_websearch=no, keep_memory=no, keep=CURSOR_CLAUDE
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -269,6 +271,33 @@ generate_all() {
     echo "$result" > "$dest_dir/SKILL.md"
   fi
 
+  # -- Gemini CLI (only adspirer-ads, like Claude Code) --
+  local gemini_out
+  if [ -n "${out_root:-}" ]; then
+    gemini_out="$out_root/gemini"
+    mkdir -p "$gemini_out/ad-campaign-management"
+  fi
+
+  if [ -f "$ads_src" ]; then
+    local gemini_dest_dir
+    if [ -n "${out_root:-}" ]; then
+      gemini_dest_dir="$gemini_out/ad-campaign-management"
+    else
+      gemini_dest_dir="$GEMINI_SKILLS/ad-campaign-management"
+    fi
+    mkdir -p "$gemini_dest_dir"
+
+    local gemini_result
+    gemini_result="$(process_template "$ads_src" "gemini" "GEMINI.md" \
+      "Run the mcp auth command to re-authenticate" \
+      "CURSOR_CLAUDE" "no" "no")"
+
+    # Change frontmatter name
+    gemini_result="$(echo "$gemini_result" | sed 's/^name: adspirer-ads$/name: ad-campaign-management/')"
+
+    echo "$gemini_result" > "$gemini_dest_dir/SKILL.md"
+  fi
+
   # -- Agents (Claude/Cursor/Codex) --
   generate_agents "$out_root"
 }
@@ -311,6 +340,15 @@ case "$MODE" in
     # Compare Claude
     expected="$CLAUDE_SKILLS/ad-campaign-management/SKILL.md"
     actual="$TMPDIR/claude/ad-campaign-management/SKILL.md"
+    if [ -f "$expected" ]; then
+      diff -q "$expected" "$actual" >/dev/null 2>&1 || { echo "DIFF: $expected"; rc=1; }
+    else
+      echo "MISSING: $expected"; rc=1
+    fi
+
+    # Compare Gemini
+    expected="$GEMINI_SKILLS/ad-campaign-management/SKILL.md"
+    actual="$TMPDIR/gemini/ad-campaign-management/SKILL.md"
     if [ -f "$expected" ]; then
       diff -q "$expected" "$actual" >/dev/null 2>&1 || { echo "DIFF: $expected"; rc=1; }
     else
@@ -374,6 +412,13 @@ case "$MODE" in
     # Diff Claude
     expected="$CLAUDE_SKILLS/ad-campaign-management/SKILL.md"
     actual="$TMPDIR/claude/ad-campaign-management/SKILL.md"
+    if [ -f "$expected" ]; then
+      diff --color=always -u "$expected" "$actual" || true
+    fi
+
+    # Diff Gemini
+    expected="$GEMINI_SKILLS/ad-campaign-management/SKILL.md"
+    actual="$TMPDIR/gemini/ad-campaign-management/SKILL.md"
     if [ -f "$expected" ]; then
       diff --color=always -u "$expected" "$actual" || true
     fi
