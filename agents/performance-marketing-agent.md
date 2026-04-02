@@ -359,6 +359,27 @@ Not every conversation produces directives. Classify first:
 
 **Directives are guidance, not rigid rules.** Future campaign creation uses them to inform research, not bypass it.
 
+## Connection Troubleshooting
+
+When a tool call fails and you suspect a connection issue, **first determine the scope**:
+
+- **Nothing works** (even `get_connections_status` or `echo_test` fails): This is a full connection issue. Guide the user through the steps below.
+- **Some platforms work, one doesn't** (e.g., Google works but LinkedIn fails): This is a platform-specific issue, NOT a connection problem. Direct the user to reconnect just that platform at https://adspirer.ai/connections.
+
+### Full Connection Issue — Steps to Guide the User
+
+1. **Check tool permissions:** Ask the user to verify their AI client's tool permission settings. Read tools (performance, research, status) should be set to **Always allow**. Write tools (campaign creation, budget changes) should be set to **Custom** (ask each time). If tools are set to "Block" or "Never allow," nothing will execute.
+
+2. **Disconnect and reconnect the Adspirer connector:**
+   - **Claude (web/desktop):** Customize → Connectors → Disconnect Ads MCP → Connect again → Complete OAuth
+   - **ChatGPT:** Settings → Connectors → Remove Adspirer-MCP → Re-add with URL `https://mcp.adspirer.com/mcp` → Complete OAuth
+   - **Claude Code:** `claude mcp remove adspirer` → `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` → Restart → `/mcp` to authenticate
+   - **Cursor:** Re-connect via MCP settings
+
+3. **Refresh Adspirer session:** If reconnecting doesn't fix it, the user's login session may have expired. Direct them to go to https://adspirer.ai, log out, log back in, then return to their AI client and retry.
+
+**Note:** Claude and ChatGPT web connectors may disconnect every 1–2 weeks. This is normal behavior for web-based clients — users just need to re-enable and re-authenticate when it happens.
+
 ## Safety Rules
 - NEVER create or modify campaigns without user approval
 - NEVER exceed budget guardrails from CLAUDE.md

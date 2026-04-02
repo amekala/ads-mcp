@@ -1,0 +1,46 @@
+name: Gemini CLI Extension Release
+
+on:
+  push:
+    tags:
+      - 'gemini-v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create release archive
+        run: |
+          mkdir -p release-staging/commands/adspirer
+          mkdir -p release-staging/skills/ad-campaign-management
+
+          cp gemini-extension.json release-staging/
+          cp GEMINI.md release-staging/
+          cp -r commands/adspirer/*.toml release-staging/commands/adspirer/
+          cp -r skills/ad-campaign-management/SKILL.md release-staging/skills/ad-campaign-management/
+
+          cd release-staging
+          tar -czf ../adspirer-ads.tar.gz .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: adspirer-ads.tar.gz
+          body: |
+            ## Gemini CLI Extension
+
+            Install:
+            ```bash
+            gemini extensions install github.com/amekala/ads-mcp
+            ```
+
+            ### What's included
+            - `gemini-extension.json` — Extension manifest with remote MCP server
+            - `GEMINI.md` — Model context (tool workflows, safety rules)
+            - 5 custom commands (`/adspirer:setup`, `/adspirer:performance-review`, `/adspirer:wasted-spend`, `/adspirer:write-ad-copy`, `/adspirer:refresh`)
+            - `ad-campaign-management` skill

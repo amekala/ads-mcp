@@ -1,5 +1,5 @@
 ---
-name: adspirer-ads
+name: ad-campaign-management
 description: Manage ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Use when the user wants to analyze campaign performance, research keywords, create campaigns, optimize budgets, or manage ad accounts via the Adspirer MCP server.
 ---
 
@@ -35,8 +35,8 @@ Always start here before any ad operation:
 | View campaign metrics | Performance Analysis | `get_campaign_performance`, `get_meta_campaign_performance`, `get_linkedin_campaign_performance` |
 | Cross-platform overview | Cross-Platform Dashboard | See Cross-Platform section below |
 | Find keywords | Keyword Research | `research_keywords` |
-| Research before new campaign | Campaign Research | `WebSearch`, `WebFetch` + Adspirer tools (see Campaign Research section) |
-| Research competitors | Competitive Intelligence | `WebSearch`, `WebFetch`, `analyze_search_terms`, `research_keywords` |
+| Research before new campaign | Campaign Research | Web search + Adspirer tools (see Campaign Research section) |
+| Research competitors | Competitive Intelligence | Web search, `analyze_search_terms`, `research_keywords` |
 | Create a campaign | Campaign Creation | Campaign Research first, then platform-specific flows below |
 | Reduce wasted spend | Budget Optimization | `optimize_budget_allocation`, `analyze_wasted_spend`, `analyze_search_terms` |
 | Switch accounts | Account Management | `switch_primary_account` |
@@ -101,7 +101,7 @@ When the user asks for overall performance, a weekly review, or cross-platform c
 
 ## Campaign Research (run before creating ANY new campaign)
 
-Before creating a campaign on any platform, research the brand's market position and competitive landscape. This combines web research (native tools) with ad platform data (Adspirer MCP) to inform every campaign decision — targeting, messaging, differentiation, and bidding.
+Before creating a campaign on any platform, research the brand's market position and competitive landscape. This combines web research with ad platform data (Adspirer MCP) to inform every campaign decision — targeting, messaging, differentiation, and bidding.
 
 ### Step 0: Load Strategy Directives
 Read STRATEGY.md — `## Active Directives` and skim `## Decision Log`. If directives exist, note them
@@ -116,7 +116,7 @@ are available. I'll use them as a starting point and validate with fresh data. W
 to do a full re-analysis instead?"
 
 ### Step 1: Understand the brand's own website
-Use `WebFetch` to crawl the brand's website. Extract:
+Crawl the brand's website. Extract:
 - What they sell (products, services, pricing tiers)
 - Key value propositions and differentiators
 - Target audience language (how they describe their customers)
@@ -125,13 +125,13 @@ Use `WebFetch` to crawl the brand's website. Extract:
 - CTAs used on the site (what actions they push visitors toward)
 
 ### Step 2: Research the competitive landscape
-Use `WebSearch` to search for:
+Search for:
 - `"[brand's product category] competitors"` — find who they compete with
 - `"[competitor name] vs [brand name]"` — find comparison content
 - `"[competitor name] pricing"` — understand competitor price points
 - `"best [product category] [current year]"` — find review/comparison sites
 
-Then use `WebFetch` to crawl the top 3-5 competitor websites. Extract:
+Then crawl the top 3-5 competitor websites. Extract:
 - Their positioning and messaging (how they describe themselves)
 - Their pricing (cheaper? more expensive? different model?)
 - Their unique claims (what do they say they do better?)
@@ -203,7 +203,7 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 **For ALL new campaigns**: Run Campaign Research first (see section above) unless the user has already provided competitive context or this is a follow-up campaign for an existing brand workspace with research already done.
 
 **Google Ads Search (exact order):**
-1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+1. Campaign Research — crawl brand + competitor websites, present research brief
 1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for keyword selection,
      bidding, targeting, and ad copy throughout this creation flow.
 2. `research_keywords` — mandatory, informed by competitive research
@@ -212,7 +212,7 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 5. `validate_and_prepare_assets` — validate before creation (use differentiation angles from research in ad copy)
 6. `create_search_campaign` — create the campaign (PAUSED status)
 7. Add ad extensions (see Ad Extensions section below):
-   - Crawl user's website with `WebFetch` to find real page URLs
+   - Crawl user's website to find real page URLs
    - `add_sitelinks` — add 10+ validated sitelinks
    - `add_callout_extensions` — add 4+ callouts (use value props from research)
    - `add_structured_snippets` — add relevant structured snippets
@@ -225,7 +225,7 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 11. Do not report success until this campaign passes Launch Definition of Done.
 
 **Google Ads Performance Max:**
-1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+1. Campaign Research — crawl brand + competitor websites, present research brief
 1.5. **Apply strategy directives** — load STRATEGY.md. Use as context for bidding,
      targeting, and creative direction throughout this creation flow.
 2. Discuss bidding strategy with user (see Bidding Strategy section above)
@@ -248,7 +248,7 @@ Always run before creating Search campaigns. Never use generic SEO keywords.
 
 Demand Gen campaigns run across YouTube (In-Feed, In-Stream, Shorts), Gmail, Discover, and Display. They support two ad formats: **multi_asset** (image ads) and **video_responsive** (video ads). Demand Gen is ideal for awareness and consideration campaigns with visual, entertainment-focused creatives.
 
-1. Campaign Research — crawl brand + competitor websites via `WebFetch`/`WebSearch`, present research brief
+1. Campaign Research — crawl brand + competitor websites, present research brief
 2. Discuss bidding strategy with user:
    - **Maximize Clicks** (default, no conversion tracking needed)
    - **Target CPA** (requires conversion tracking)
@@ -311,7 +311,7 @@ YouTube campaigns are Demand Gen campaigns with YouTube-only channel controls (G
 5. `create_linkedin_image_campaign` — create the campaign
 
 **TikTok Ads:**
-1. Campaign Research — crawl brand website, research competitor video ad strategies via `WebSearch`
+1. Campaign Research — crawl brand website, research competitor video ad strategies
 1.5. **Apply strategy directives** — load STRATEGY.md > TikTok Ads and Cross-Platform sections.
      Use as context for creative direction and audience targeting.
 2. `discover_tiktok_assets` — check existing assets
@@ -331,10 +331,10 @@ Call `list_campaign_extensions` to check what already exists on the campaign. Ne
 Sitelinks are the most impactful extension. Target **10+ sitelinks** (more is better — Google rotates the best performers).
 
 **Workflow:**
-1. Use `WebFetch` to crawl the user's website homepage — extract all navigation links and key pages
+1. Crawl the user's website homepage — extract all navigation links and key pages
 2. Build a candidate list of pages to include:
    - Homepage, Pricing/Plans, About Us, Contact, Key product/service pages, Blog, Case Studies/Testimonials, FAQ/Help, Free Trial/Demo, Careers
-3. **Validate each URL** — use `WebFetch` on each candidate URL to confirm it loads (no 404s, no redirects to error pages)
+3. **Validate each URL** — confirm it loads (no 404s, no redirects to error pages)
 4. For each valid sitelink, prepare:
    - **Link text**: max 25 characters, descriptive (e.g., "View Pricing Plans")
    - **Description line 1**: max 35 characters (e.g., "Plans starting at $29/month")
@@ -350,8 +350,8 @@ Callouts highlight value propositions. Target **8+ callouts** (minimum 4).
 
 **Workflow:**
 1. Extract value propositions from:
-   - Website content (crawled via `WebFetch`)
-   - Brand docs (BRAND.md if it exists)
+   - Website content (crawled)
+   - Brand docs (GEMINI.md if it exists)
    - Existing ad copy in the account
 2. Each callout: max **25 characters**
 3. Examples: "Free Shipping", "24/7 Support", "No Setup Fee", "Cancel Anytime", "Money-Back Guarantee", "Same-Day Delivery", "Award-Winning", "Trusted by 10K+"
@@ -373,16 +373,15 @@ Snippets show predefined categories of offerings. Pick headers relevant to the b
 ### Price Extensions
 
 If the user's website has a pricing page:
-1. Use `WebFetch` to crawl the pricing page
+1. Crawl the pricing page
 2. Extract plan names, prices, and descriptions
 3. Present to user for confirmation before adding
-4. Useful for SaaS, services with tiered pricing, or e-commerce with featured products
 
 ### Call Extensions
 
 If the business has a phone number:
 1. Ask the user for their business phone number
-2. Discuss call tracking preferences (use Google forwarding number or direct?)
+2. Discuss call tracking preferences
 3. Set call hours if business has limited availability
 
 ### Extension Verification
@@ -618,7 +617,7 @@ When reviewing creative performance or user asks about ad fatigue:
 5. For fatigued ads:
    - Call `suggest_ad_content` for new headline/description ideas
    - Call `generate_linkedin_ad_creatives` for LinkedIn variations
-   - Present new creative options (filtered through brand voice if BRAND.md exists)
+   - Present new creative options (filtered through brand voice if GEMINI.md exists)
    - On approval: update via `update_ad_headlines`, `update_ad_descriptions`, `add_linkedin_creative`, etc.
 
 ## A/B Testing Workflow
@@ -695,16 +694,16 @@ When user wants performance reports:
 When analyzing competitors or adjusting competitive strategy:
 
 ### Step 1: Identify competitors
-- Read BRAND.md for known competitors (check Competitors section)
-- Use `WebSearch` to search `"[brand product category] competitors [current year]"` and `"[brand name] alternatives"`
-- Use `WebSearch` to find review/comparison sites: `"best [product category] [current year]"`
+- Read GEMINI.md for known competitors (check Competitors section)
+- Search for `"[brand product category] competitors [current year]"` and `"[brand name] alternatives"`
+- Search for review/comparison sites: `"best [product category] [current year]"`
 
 ### Step 2: Research competitor positioning
 For each key competitor (top 3-5):
-- Use `WebFetch` to crawl their website homepage — extract messaging, value props, positioning
-- Use `WebFetch` to crawl their pricing page — extract plans, pricing model, free tier
-- Use `WebSearch` to search `"[competitor] ads"` or `"[competitor] Google Ads"` — find their ad copy if visible
-- Use `WebFetch` to crawl competitor landing pages found in search results — analyze their conversion approach
+- Crawl their website homepage — extract messaging, value props, positioning
+- Crawl their pricing page — extract plans, pricing model, free tier
+- Search for `"[competitor] ads"` or `"[competitor] Google Ads"` — find their ad copy if visible
+- Crawl competitor landing pages found in search results — analyze their conversion approach
 
 ### Step 3: Analyze ad platform data
 - `analyze_search_terms` — find competitor brand terms appearing in our search queries
@@ -721,9 +720,9 @@ For each key competitor (top 3-5):
 ### Step 5: Recommend actions
 - **Brand defense campaigns**: exact match on own brand terms (if competitors are bidding on them)
 - **Competitor conquest campaigns**: bid on competitor brand terms with ad copy emphasizing our differentiators
-- **Differentiation messaging**: specific claims based on competitive gaps (e.g., "50% cheaper than [competitor]", "No setup fee unlike [competitor]")
-- **Negative keywords**: exclude competitor terms where intent doesn't match (e.g., "[competitor] login" — existing customers, not prospects)
-- Update BRAND.md Competitors section with findings
+- **Differentiation messaging**: specific claims based on competitive gaps
+- **Negative keywords**: exclude competitor terms where intent doesn't match
+- Update GEMINI.md Competitors section with findings
 
 ## Safety Rules
 
@@ -1033,7 +1032,7 @@ If **no tools work at all** — even `get_connections_status` or `echo_test` fai
 
 ### Other Issues
 
-- **Auth errors:** Reconnect via your AI assistant's connector settings
+- **Auth errors:** Run the mcp auth command to re-authenticate
 - **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
 - **Wrong account:** Use `switch_primary_account` to change active account
 - **Rate limits:** Adspirer enforces tool call quotas by tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo)

@@ -1016,11 +1016,19 @@ For `add_negative_keywords`, each keyword must be an object:
 
 If **no tools work at all** — even `get_connections_status` or `echo_test` fails — guide the user through these steps in order:
 
-1. **Check tool permissions:** Read tools should be allowed, write tools should require confirmation. Blocked tools prevent anything from executing.
-2. **Re-authenticate:** Run `codex mcp login adspirer` to refresh the connection.
-3. **Refresh Adspirer session:** Log out of https://adspirer.ai, log back in, then retry.
+1. **Check tool permissions:** The user's AI client may be blocking Adspirer tools. Read tools (performance, research, status) should be set to **Always allow**. Write tools (campaign creation, budget changes) should be set to **Custom** (ask each time). If tools are blocked or set to "Never allow," nothing will execute.
 
-**Important:** If some platforms work but one doesn't, that's a platform-specific issue, not a connection problem. Reconnect just that platform at https://adspirer.ai/connections.
+2. **Disconnect and reconnect the Adspirer connector:**
+   - **Claude (web/desktop):** Customize → Connectors → Disconnect Ads MCP → Connect again → Complete OAuth
+   - **ChatGPT:** Settings → Connectors → Remove Adspirer-MCP → Re-add with URL `https://mcp.adspirer.com/mcp` → Complete OAuth
+   - **Claude Code:** `claude mcp remove adspirer` → `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` → Restart → `/mcp` to authenticate
+   - **Cursor:** Re-connect via MCP settings
+
+3. **Refresh Adspirer session:** If reconnecting doesn't fix it, the user's login session may have expired. Direct them to go to https://adspirer.ai, log out, log back in, then return to their AI client and try again.
+
+**Claude and ChatGPT web connectors** may disconnect every 1–2 weeks. This is normal behavior — users just need to re-enable and re-authenticate when it happens.
+
+**Important:** These steps apply only when *nothing* works. If some ad platforms work but one doesn't (e.g., Google works but LinkedIn fails), that is NOT a connection issue — the MCP server is reachable. In that case, have the user reconnect just that platform at https://adspirer.ai/connections.
 
 ### Other Issues
 
