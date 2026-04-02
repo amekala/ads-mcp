@@ -1,0 +1,11 @@
+prompt = """
+Refresh my ad account data. Pull latest metrics from all connected platforms.
+
+1. Call `get_connections_status`
+2. Pull fresh performance data:
+   - Google: `get_campaign_performance` with lookback_days=30
+   - LinkedIn: `get_linkedin_campaign_performance` with lookback_days=30
+   - Meta: `get_meta_campaign_performance` with lookback_days=30
+3. Call `get_business_profile` for any profile updates
+4. Summarize current state and highlight any notable changes
+"""

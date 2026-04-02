@@ -1,0 +1,11 @@
+prompt = """
+Find and fix wasted ad spend across {{args}}.
+Default to all connected platforms if none specified.
+
+1. Call `get_connections_status` to check connected platforms
+2. Call `analyze_wasted_spend` for Google Ads waste
+3. Call `analyze_meta_wasted_spend` for Meta Ads waste
+4. Call `analyze_linkedin_wasted_spend` for LinkedIn Ads waste
+5. Call `analyze_search_terms` to find irrelevant search terms
+6. Calculate total waste amount, identify top sources, and recommend specific fixes with expected savings
+"""

@@ -1,0 +1,13 @@
+prompt = """
+Set up my ad account workspace. Follow these steps:
+
+1. Call `get_connections_status` to check which ad platforms are connected
+2. Call `get_business_profile` for account details
+3. For each connected platform, pull last 30 days of performance data:
+   - Google: `get_campaign_performance` with lookback_days=30
+   - LinkedIn: `get_linkedin_campaign_performance` with lookback_days=30
+   - Meta: `get_meta_campaign_performance` with lookback_days=30
+4. Call `get_benchmark_context` for industry benchmarks
+5. Present a summary: connected accounts, active campaigns, key metrics, and KPI targets
+6. Ask what I'd like to work on
+"""

@@ -328,7 +328,81 @@ else
 fi
 
 # --------------------------------------------------------------------------
-# Check 10 (optional): MCP endpoint connectivity
+# Check 10: Gemini CLI Extension
+# --------------------------------------------------------------------------
+echo ""
+echo "--- Gemini CLI Extension ---"
+
+check "gemini-extension.json exists"
+if [ -f "gemini-extension.json" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "gemini-extension.json is valid JSON"
+if jq empty gemini-extension.json 2>/dev/null; then
+    pass
+else
+    fail "Invalid JSON"
+fi
+
+check "gemini-extension.json has required fields (name, version)"
+if jq -e '.name and .version' gemini-extension.json > /dev/null 2>&1; then
+    pass
+else
+    fail "Missing name or version"
+fi
+
+check "gemini-extension.json name is lowercase with dashes"
+GEM_NAME=$(jq -r '.name' gemini-extension.json 2>/dev/null)
+if echo "$GEM_NAME" | grep -qE '^[a-z0-9-]+$'; then
+    pass
+else
+    fail "Name '$GEM_NAME' must be lowercase with dashes only"
+fi
+
+check "gemini-extension.json mcpServers.adspirer configured"
+if jq -e '.mcpServers.adspirer' gemini-extension.json > /dev/null 2>&1; then
+    pass
+else
+    fail "Missing mcpServers.adspirer"
+fi
+
+check "gemini-extension.json MCP URL points to production"
+GEM_URL=$(jq -r '.mcpServers.adspirer.url // .mcpServers.adspirer.httpUrl' gemini-extension.json 2>/dev/null)
+if [ "$GEM_URL" = "https://mcp.adspirer.com/mcp" ]; then
+    pass
+else
+    fail "URL is '$GEM_URL' (expected https://mcp.adspirer.com/mcp)"
+fi
+
+check "GEMINI.md context file exists"
+if [ -f "GEMINI.md" ]; then
+    pass
+else
+    fail "File not found"
+fi
+
+check "Gemini commands directory exists"
+if [ -d "commands/adspirer" ]; then
+    pass
+else
+    fail "Directory not found"
+fi
+
+for cmd in commands/adspirer/*.toml; do
+    [ -f "$cmd" ] || continue
+    check "$(basename "$cmd") contains prompt field"
+    if grep -q '^prompt' "$cmd"; then
+        pass
+    else
+        fail "Missing 'prompt' field"
+    fi
+done
+
+# --------------------------------------------------------------------------
+# Check 11 (optional): MCP endpoint connectivity
 # --------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then
     echo ""

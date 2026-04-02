@@ -1,0 +1,19 @@
+{
+  "name": "adspirer-ads",
+  "version": "1.0.0",
+  "description": "Manage Google, Meta, TikTok & LinkedIn ads via natural language. 100+ tools for campaigns, analytics & optimization.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "adspirer": {
+      "url": "https://mcp.adspirer.com/mcp",
+      "type": "http",
+      "timeout": 120000,
+      "oauth": {
+        "authorizationUrl": "https://mcp.adspirer.com/oauth/authorize",
+        "tokenUrl": "https://mcp.adspirer.com/oauth/token",
+        "registrationUrl": "https://mcp.adspirer.com/oauth/register",
+        "scopes": ["openid", "mcp.full"]
+      }
+    }
+  }
+}

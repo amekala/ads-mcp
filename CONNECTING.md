@@ -10,6 +10,7 @@ Ads MCP enables AI assistants to manage advertising campaigns across **Google Ad
 - [Connecting to ChatGPT](#chatgpt)
 - [Connecting to Cursor](#cursor)
 - [Connecting to OpenAI Codex](#openai-codex)
+- [Connecting to Gemini CLI](#gemini-cli)
 - [FAQ](#faq)
 
 ---
@@ -159,6 +160,28 @@ Add to `~/.codex/config.toml`:
 url = "https://mcp.adspirer.com/mcp"
 ```
 
+### Gemini CLI
+
+Install as a Gemini CLI extension:
+
+```bash
+gemini extensions install github.com/amekala/ads-mcp
+```
+
+On first use, a browser window opens for OAuth authentication. Complete sign-in and link your ad accounts at https://www.adspirer.com.
+
+Available commands after install:
+- `/adspirer:setup` — Set up workspace and pull campaign data
+- `/adspirer:performance-review` — Cross-platform performance review
+- `/adspirer:wasted-spend` — Find and fix wasted spend
+- `/adspirer:write-ad-copy` — Write ad copy from real data
+- `/adspirer:refresh` — Refresh metrics from all platforms
+
+**Troubleshooting:**
+- Run `/extensions list` to verify extension is loaded
+- Run `/mcp auth adspirer` to re-authenticate if tokens expire
+- Press **F12** (debug console) to check if MCP tools appear
+
 ### Relay
 
 Connect Ads MCP to a Relay agent or workflow: [Relay MCP Integration](https://www.relay.app/integrations/mcp)
@@ -193,6 +216,7 @@ Ads MCP works with any MCP-compatible client:
 - **ChatGPT** -- Supported (Plus/Pro plans)
 - **Cursor** -- Supported
 - **OpenAI Codex** -- Supported
+- **Gemini CLI** -- Supported (extension with custom commands)
 - **Relay** -- Supported
 
 ### What tools are available?
@@ -292,6 +316,7 @@ If tools are set to "Block" or "Never allow," Adspirer can't execute anything.
 - **ChatGPT:** Settings → Connectors → Remove Adspirer-MCP → Re-add with URL `https://mcp.adspirer.com/mcp` → Complete OAuth
 - **Claude Code:** `claude mcp remove adspirer` → `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` → Restart → `/mcp` to authenticate
 - **Cursor:** Re-connect via MCP settings
+- **Gemini CLI:** `gemini extensions uninstall adspirer-ads` → `gemini extensions install github.com/amekala/ads-mcp` → `/mcp auth adspirer`
 
 > **Note:** Claude and ChatGPT web connectors may disconnect every 1–2 weeks. This is normal behavior for web-based AI clients — just re-enable and re-authenticate when it happens.
 

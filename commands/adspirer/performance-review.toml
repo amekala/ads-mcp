@@ -1,0 +1,14 @@
+prompt = """
+Run a cross-platform performance review for {{args}}.
+Default to last 30 days if no time period specified.
+
+1. Call `get_connections_status` to identify active platforms
+2. Pull performance from each connected platform:
+   - Google: `get_campaign_performance`
+   - LinkedIn: `get_linkedin_campaign_performance`
+   - Meta: `get_meta_campaign_performance`
+3. Pull waste analysis: `analyze_wasted_spend`, `analyze_meta_wasted_spend`, `analyze_linkedin_wasted_spend`
+4. Present a unified scorecard table showing: Platform, Campaigns, Spend, CTR, CPA, ROAS, Waste
+5. Highlight top and bottom performers
+6. Recommend top 3 optimization actions
+"""
