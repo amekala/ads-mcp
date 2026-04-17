@@ -1,7 +1,7 @@
 {
   "name": "adspirer-marketplace",
   "metadata": {
-    "description": "Adspirer performance marketing plugins for Claude Code. Manage ad campaigns across Google Ads, Meta, LinkedIn, and TikTok."
+    "description": "Adspirer performance marketing plugins for Claude Code and Cowork. Manage ad campaigns across Google Ads, Meta, LinkedIn, and TikTok."
   },
   "owner": {
     "name": "Adspirer"
@@ -10,7 +10,15 @@
     {
       "name": "adspirer",
       "source": "./",
-      "description": "Brand-specific performance marketing agent across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 100+ tools with brand awareness and persistent memory."
+      "description": "Brand-specific performance marketing agent across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — 150+ tools with brand awareness and persistent memory."
+    },
+    {
+      "name": "adspirer-ads-agent",
+      "source": "./",
+      "description": "Ad campaign management for Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 150+ tools for keyword research, campaign creation, performance analysis, creative fatigue detection, and budget optimization.",
+      "author": {
+        "name": "Adspirer"
+      }
     }
   ]
 }
