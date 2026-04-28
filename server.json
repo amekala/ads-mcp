@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "com.adspirer/ads",
-  "description": "Manage Google, Meta, TikTok & LinkedIn ads. 91 tools for campaigns, analytics & optimization.",
+  "description": "Manage Google, Meta, TikTok & LinkedIn ads. 175+ tools across Search, PMax, Display, Demand Gen, YouTube, image/video/carousel, lead-gen, and Spark Ads — for campaigns, analytics & optimization.",
   "repository": {
     "url": "https://github.com/amekala/ads-mcp",
     "source": "github"

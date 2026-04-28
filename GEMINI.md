@@ -1,11 +1,11 @@
 # Adspirer — Ad Campaign Management
 
-Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (100+ tools).
+Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (175+ tools across Google Search/PMax/Display/Demand Gen/YouTube, Meta image/video/carousel/lead-gen, LinkedIn sponsored content/carousel/lead-gen with campaign groups, and TikTok in-feed/Spark/Carousel/App Promotion).
 
 ## Quick Start
 
 1. Call `get_connections_status` to see which ad platforms are connected
-2. If no platforms connected, direct the user to https://www.adspirer.com to link accounts
+2. If no platforms connected, direct the user to https://adspirer.ai/connections to link accounts
 3. For campaign performance, call the platform-specific performance tool
 4. Present results in tables with key metrics
 
@@ -32,7 +32,7 @@ Always start here before any ad operation:
 
 - Call `get_connections_status`
 - Shows connected platforms, primary/secondary accounts, account IDs
-- If the target platform is not connected, direct the user to https://www.adspirer.com
+- If the target platform is not connected, direct the user to https://adspirer.ai/connections
 
 ### Step 2: Identify the Task
 
@@ -106,7 +106,8 @@ All campaigns are created in **PAUSED** status. Follow this order:
 
 ### Google Ads Campaign Types
 - `create_search_campaign` — Search campaigns
-- `create_pmax_campaign` — Performance Max campaigns
+- `create_pmax_campaign` — Performance Max campaigns (with `add_pmax_search_themes` + `add_pmax_audience_signal`)
+- `create_display_campaign` — Display campaigns (Standard + Smart Display); use `add_display_ad_group` + `add_display_ad`
 - `create_youtube_campaign` — YouTube video campaigns
 - `create_demandgen_campaign` — Demand Gen campaigns
 
@@ -122,16 +123,19 @@ All campaigns are created in **PAUSED** status. Follow this order:
 - `create_linkedin_text_campaign` — Text campaigns
 
 ### TikTok Ads Campaign Types
-- `create_tiktok_campaign` — In-Feed image campaigns
-- `create_tiktok_video_campaign` — Video campaigns
+- `create_tiktok_campaign` — Flexible objective; pass `tiktok_item_id` or `card_id` for Spark Ads. APP_PROMOTION objective for app installs.
+- `create_tiktok_video_campaign` — In-feed video
+- `create_tiktok_carousel_card` then `add_tiktok_ad` — Carousel
 
 ## Budget Optimization
 
 - `optimize_budget_allocation` — Rebalance Google Ads budgets across campaigns
 - `optimize_meta_budget` — Optimize Meta Ads budget allocation
 - `optimize_linkedin_budget` — Optimize LinkedIn Ads budget allocation
-- `analyze_wasted_spend` / `analyze_meta_wasted_spend` / `analyze_linkedin_wasted_spend` — Find wasted spend
+- `optimize_tiktok_budget` — Optimize TikTok Ads budget allocation
+- `analyze_wasted_spend` / `analyze_meta_wasted_spend` / `analyze_linkedin_wasted_spend` / `analyze_tiktok_wasted_spend` — Find wasted spend across all four platforms
 - `analyze_search_terms` — Find irrelevant search terms burning budget
+- **Raw data mode:** Pass `raw_data: true` to any performance / analytics tool for compact JSON metrics only
 
 ## Monitoring and Reporting
 

@@ -1,7 +1,7 @@
 {
   "name": "adspirer-ads",
   "version": "1.0.0",
-  "description": "Manage Google, Meta, TikTok & LinkedIn ads via natural language. 100+ tools for campaigns, analytics & optimization.",
+  "description": "Manage Google, Meta, TikTok & LinkedIn ads via natural language. 175+ tools across Search, PMax, Display, Demand Gen, YouTube, image/video/carousel, lead-gen, and Spark Ads — for campaigns, analytics & optimization.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {
     "adspirer": {

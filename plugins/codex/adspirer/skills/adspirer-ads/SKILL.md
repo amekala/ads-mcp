@@ -26,7 +26,7 @@ Always start here before any ad operation:
 
 - Call `get_connections_status`
 - Shows connected platforms, primary/secondary accounts, account IDs
-- If the target platform is not connected, direct the user to https://www.adspirer.com
+- If the target platform is not connected, direct the user to https://adspirer.ai/connections
 
 ### Step 2: Identify the Task
 

@@ -27,7 +27,7 @@ Call `get_connections_status` directly.
   Then restart Codex, authenticate via `/mcp`, and run `$adspirer-setup` again."
 <!-- END:CODEX -->
 - **If OAuth is triggered**: tell the user a browser window is opening for authentication. Wait for them to confirm, then retry.
-- **If no platforms are connected**: tell the user to connect ad accounts at https://www.adspirer.com, then run setup again.
+- **If no platforms are connected**: tell the user to connect ad accounts at https://adspirer.ai/connections, then run setup again.
 
 ## Step 2: Scan local folder
 
