@@ -3,7 +3,7 @@ name: adspirer-ads
 description: Manage ad campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Use when the user wants to analyze campaign performance, research keywords, create campaigns, optimize budgets, or manage ad accounts via the Adspirer MCP server.
 ---
 
-Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (100+ tools).
+Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (175+ tools across Google Search/PMax/Display/Demand Gen/YouTube, Meta image/video/carousel/lead-gen, LinkedIn sponsored content/carousel/lead-gen with campaign groups, and TikTok in-feed/Spark/Carousel/App Promotion).
 
 ## When to Use This Skill
 
@@ -79,10 +79,12 @@ When the user asks for overall performance, a weekly review, or cross-platform c
    - Google: `get_campaign_performance`
    - LinkedIn: `get_linkedin_campaign_performance`
    - Meta: `get_meta_campaign_performance`
+   - TikTok: `get_tiktok_campaign_performance`
 3. For each platform, pull waste analysis:
    - Google: `analyze_wasted_spend`
    - LinkedIn: `analyze_linkedin_wasted_spend`
    - Meta: `analyze_meta_wasted_spend`
+   - TikTok: `analyze_tiktok_wasted_spend`
 4. Present a unified scorecard:
 
 | Platform | Campaigns | Spend | CTR | CPA | ROAS | Waste | Health |
@@ -90,6 +92,7 @@ When the user asks for overall performance, a weekly review, or cross-platform c
 | Google   | ...       | ...   | ... | ... | ...  | ...   | ...    |
 | LinkedIn | ...       | ...   | ... | ... | ...  | ...   | ...    |
 | Meta     | ...       | ...   | ... | ... | ...  | ...   | ...    |
+| TikTok   | ...       | ...   | ... | ... | ...  | ...   | ...    |
 | **Total**| ...       | ...   |     |     |      | ...   |        |
 
 5. Highlight:
@@ -293,30 +296,63 @@ YouTube campaigns are Demand Gen campaigns with YouTube-only channel controls (G
 **YouTube placements enabled:** In-Feed, In-Stream, Shorts
 **YouTube placements disabled:** Gmail, Discover, Display
 
+**Google Ads Display (Standard + Smart Display):**
+1. Campaign Research — crawl brand + competitor sites; identify visual positioning angles
+1.5. **Apply strategy directives** — load STRATEGY.md. Use for targeting and creative direction.
+2. Discuss bidding strategy with user
+3. `select_google_campaign_type` — confirm "display" branch (Standard vs Smart Display)
+4. `resolve_google_locations` + `list_google_languages` — resolve geo + language inputs (rejects ambiguous strings)
+5. `discover_existing_assets` + `validate_and_prepare_assets`
+6. `create_display_campaign` — created PAUSED by default; single-flag toggle to launch live
+7. `add_display_ad_group` — add ad groups (with optional schedule + frequency caps)
+8. Targeting via per-surface ADD tools — audiences, topics, placements, keywords, demographics. Use `remove_display_criteria` for removals.
+9. `add_display_ad` — Responsive Display Ads (RDA). Later edits via `update_ad_creative` / `update_ad_headlines` / `update_ad_descriptions` (router auto-dispatches RSA vs RDA)
+
 **Meta Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand audience positioning
 1.5. **Apply strategy directives** — load STRATEGY.md > Meta Ads and Cross-Platform sections.
      Use as context for audience targeting and creative direction.
 2. `get_connections_status` — verify Meta account connected
-3. `search_meta_targeting` or `browse_meta_targeting` — find audiences (informed by competitive gaps)
-4. Create campaign — created in PAUSED status
+3. `select_meta_campaign_type` — pick objective (TRAFFIC, OUTCOME_LEADS, OUTCOME_ENGAGEMENT, CONVERSIONS, app)
+4. `search_meta_targeting` / `browse_meta_targeting` — find interest, behavior, demographic, geo (city-level supported), language; `list_meta_custom_audiences` for retargeting / lookalikes
+5. `discover_meta_assets` + `validate_and_prepare_meta_assets` — validate creative
+6. Create campaign — pick format:
+   - `create_meta_image_campaign` — single-image; supports placement-specific creatives (Feed / Stories / Reels) and emoji headlines
+   - `create_meta_video_campaign` — video creative (DCO supported)
+   - `create_meta_carousel_campaign` — carousel cards
+   - For OUTCOME_LEADS: pass `lead_form_id` (auto-fetched via `list_meta_lead_forms` if omitted)
+   - App campaigns: `app_link_spec` is wired end-to-end
+7. Optional: `add_meta_ad_set` for additional ad sets — supports lifetime budgets, end_time, granular placements (publisher_platforms, facebook_positions, instagram_positions), multi_advertiser, custom_conversion_id, Advantage+ Audience and Advantage+ Creative opt-outs (`degrees_of_freedom_spec`)
 
 **LinkedIn Ads:**
 1. Campaign Research — crawl brand + competitor websites, understand B2B positioning
 1.5. **Apply strategy directives** — load STRATEGY.md > LinkedIn Ads and Cross-Platform sections.
      Use as context for targeting, messaging, and budget allocation.
 2. `get_linkedin_organizations` — get linked company pages
-3. `discover_linkedin_assets` — check existing assets
-4. `validate_and_prepare_linkedin_assets` — validate assets
-5. `create_linkedin_image_campaign` — create the campaign
+3. `search_linkedin_targeting` (typeahead) or `research_business_for_linkedin_targeting` — 14 facets (job functions, seniority, industries, company size, skills, member groups)
+4. `discover_linkedin_assets` — check existing creatives (paginated for 22k+ creatives, deduped)
+5. `validate_and_prepare_linkedin_assets` — validate single-image, video, or carousel assets
+6. Create campaign — pick format:
+   - `create_linkedin_image_campaign` — single-image sponsored content
+   - `create_linkedin_video_campaign` — video sponsored content
+   - `create_linkedin_carousel_campaign` — carousel; build cards via `add_linkedin_carousel_creative`
+   - For lead gen: pass `lead_gen_form_id`
+7. Optional: campaign groups via `campaign_group_id` / `campaign_group_name` or `add_linkedin_campaign_to_group`. `list_linkedin_campaigns` filters by group.
 
 **TikTok Ads:**
 1. Campaign Research — crawl brand website, research competitor video ad strategies
 1.5. **Apply strategy directives** — load STRATEGY.md > TikTok Ads and Cross-Platform sections.
      Use as context for creative direction and audience targeting.
-2. `discover_tiktok_assets` — check existing assets
-3. `validate_and_prepare_tiktok_assets` — validate video assets
-4. `create_tiktok_campaign` or `create_tiktok_video_campaign` — create the campaign
+2. `discover_tiktok_assets` — check existing video / image assets
+3. `validate_and_prepare_tiktok_assets` — validate creative assets
+4. `search_tiktok_targeting` — find interests, behaviors, geo (city-level)
+5. Create campaign — pick objective:
+   - `create_tiktok_campaign` — flexible objective; pass `tiktok_item_id` or `card_id` for Spark Ads (boost organic)
+   - `create_tiktok_video_campaign` — in-feed video
+   - APP_PROMOTION objective for app installs
+   - For carousel: `create_tiktok_carousel_card` then `add_tiktok_ad`
+6. Optional: CBO via `budget_optimize_on` (default true). `add_tiktok_ad_group` for additional ad groups; `update_tiktok_*` to adjust live campaigns
+7. CTAs are server-validated (defaults to LEARN_MORE if `landing_page_url` provided without `call_to_action`). `optimization_event` accepts the full event taxonomy: FORM, ON_WEB_CART, ON_WEB_DETAIL, ON_WEB_REGISTER, COMPLETE_PAYMENT, CONVERSION_LEADS, PAGE_VISIT, etc.
 
 ## Ad Extensions (Google Ads)
 
@@ -796,12 +832,13 @@ For `add_negative_keywords`, each keyword must be an object:
 | Platform | Min Daily | Recommended | Best for |
 |----------|-----------|-------------|----------|
 | Google Ads Search | $10 | $50+ | High-intent search traffic |
-| Google Ads PMax | $10 | $50+ | Broad reach with automation |
+| Google Ads PMax | $10 | $50+ | Broad reach with automation across Search, Display, YouTube, Gmail, Discover |
+| Google Ads Display | $5 | $20+ | Image / responsive display ads across the Google Display Network |
 | Google Ads Demand Gen | $10 | $20+ | YouTube, Gmail, Discover — visual awareness + consideration |
 | Google Ads YouTube | $10 | $20+ | YouTube-only video ads (In-Feed, In-Stream, Shorts) |
-| Meta Ads | $5/ad set | $20+ | Awareness and retargeting |
-| LinkedIn Ads | $10 | $50+ | B2B targeting (job titles, industries) |
-| TikTok Ads | $20 | $50+ | Younger demographics, video-first |
+| Meta Ads | $5/ad set | $20+ | Image, video, carousel, OUTCOME_LEADS — awareness, retargeting, lead gen |
+| LinkedIn Ads | $10 | $50+ | B2B targeting (job titles, industries); image, video, carousel, lead-gen |
+| TikTok Ads | $20 | $50+ | In-feed video, Spark Ads (boost organic), Carousel, App Promotion |
 
 ## Available Tools — Complete Reference
 
@@ -826,6 +863,13 @@ For `add_negative_keywords`, each keyword must be an object:
 - `create_demandgen_campaign` — create Demand Gen campaign (YouTube, Gmail, Discover)
 - `create_youtube_campaign` — create YouTube video campaign
 - `add_demandgen_ad_group` — add ad group to existing Demand Gen campaign
+- `create_display_campaign` — create Google Display campaign (Standard or Smart Display); created PAUSED by default
+- `add_display_ad_group` — add ad group to Display campaign (with optional schedule + frequency caps)
+- `add_display_ad` — add Responsive Display Ad (RDA) to a Display ad group
+- `remove_display_criteria` — unified removal for audiences / topics / placements / keywords / demographics
+- `update_ad_creative` / `update_ad_headlines` / `update_ad_descriptions` — router auto-dispatches RSA vs RDA based on ad type
+- `resolve_google_locations` — resolve geo inputs (rejects ambiguous strings)
+- `list_google_languages` — list supported language codes
 
 **Campaign Management:**
 - `list_campaigns` — list all campaigns with status, budget, performance summary
@@ -976,10 +1020,34 @@ For `add_negative_keywords`, each keyword must be an object:
 - `get_meta_lead_form_submissions` — get lead form submissions
 
 ### TikTok Ads Tools
-- `discover_tiktok_assets` — check existing assets
-- `validate_and_prepare_tiktok_assets` — validate video assets
-- `create_tiktok_campaign` — create campaign
-- `create_tiktok_video_campaign` — create video campaign
+
+**Performance & Analytics:**
+- `get_tiktok_campaign_performance` — campaign metrics. Params: `lookback_days` (default 30)
+- `get_tiktok_ad_performance` — ad-level performance breakdown
+- `analyze_tiktok_wasted_spend` — find underperforming campaigns burning budget
+- `optimize_tiktok_budget` — budget reallocation recommendations
+- `detect_tiktok_creative_fatigue` — identify ads losing effectiveness over time
+- `explain_tiktok_anomaly` — explain sudden metric changes
+- `get_tiktok_audience_insights` — audience composition and CPA breakdowns
+- `analyze_tiktok_geo_performance` — geo-level performance breakdown
+
+**Campaign Creation:**
+- `discover_tiktok_assets` — check existing video / image assets
+- `validate_and_prepare_tiktok_assets` — validate creative assets
+- `upload_tiktok_images` — upload static image assets
+- `search_tiktok_targeting` — find interests, behaviors, geo
+- `create_tiktok_campaign` — flexible objective (TRAFFIC, CONVERSIONS, APP_PROMOTION, etc.); pass `tiktok_item_id` or `card_id` for Spark Ads
+- `create_tiktok_video_campaign` — in-feed video
+- `create_tiktok_carousel_card` — build carousel cards before adding via `add_tiktok_ad`
+
+**Campaign Lifecycle:**
+- `list_tiktok_campaigns` — list all campaigns
+- `get_tiktok_campaign` — campaign details
+- `pause_tiktok_campaign` / `resume_tiktok_campaign` — toggle live state
+- `update_tiktok_campaign` — update campaign settings (CBO via `budget_optimize_on`, etc.)
+- `add_tiktok_ad_group` — add ad groups (with placement, audience, budget)
+- `update_tiktok_ad_group` / `pause_tiktok_ad_group` / `resume_tiktok_ad_group` — ad group lifecycle
+- `add_tiktok_ad` / `update_tiktok_ad` / `pause_tiktok_ad` / `resume_tiktok_ad` — ad lifecycle
 
 ### Account & Utility Tools
 - `get_connections_status` — show connected platforms, account IDs
@@ -1033,6 +1101,7 @@ If **no tools work at all** — even `get_connections_status` or `echo_test` fai
 ### Other Issues
 
 - **Auth errors:** Run `codex mcp login adspirer` to re-authenticate
-- **No data:** Verify ad platform is connected at https://www.adspirer.com. Try longer lookback (60/90 days).
+- **No data:** Verify ad platform is connected at https://adspirer.ai/connections. Try longer lookback (60/90 days).
+- **Raw data needed:** Pass `raw_data: true` to any performance / analytics tool — returns compact JSON of metrics only (impressions, spend, conversions, CPA, CPC, CTR, CVR, ROAS by campaign/date) without recommendations or commentary. Useful for own attribution, dashboards, or token-efficient pipelines.
 - **Wrong account:** Use `switch_primary_account` to change active account
 - **Rate limits:** Adspirer enforces tool call quotas by tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo)

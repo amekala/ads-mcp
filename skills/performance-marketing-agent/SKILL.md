@@ -1,6 +1,6 @@
 ---
 name: performance-marketing-agent
-description: "AI performance marketing agent for paid media, PPC, SEM, and digital marketing. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads campaigns via natural language. Automate keyword research, budget optimization, ROAS tracking, wasted spend analysis, ad creative management, audience targeting, and cross-platform reporting. Powered by Adspirer — 100+ tools for campaign creation, bid optimization, CPA tracking, retargeting, and marketing automation across all major ad platforms."
+description: "AI performance marketing agent for paid media, PPC, SEM, and digital marketing. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads campaigns via natural language. Automate keyword research, budget optimization, ROAS tracking, wasted spend analysis, ad creative management, audience targeting, and cross-platform reporting. Powered by Adspirer — 175+ tools for campaign creation (Google Search/PMax/Display/Demand Gen/YouTube, Meta image/video/carousel/lead-gen, LinkedIn sponsored content/carousel/lead-gen, TikTok in-feed/Spark/Carousel/App Promotion), bid optimization, CPA tracking, retargeting, and marketing automation across all major ad platforms."
 homepage: https://www.adspirer.com
 author: Adspirer
 license: MIT
@@ -58,7 +58,7 @@ metadata:
 
 AI agent for performance marketing, paid media, and digital advertising. Connects directly to ad platform APIs to create campaigns, pull live performance data, research keywords, optimize budgets, and manage ads across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads.
 
-This skill installs the **Adspirer plugin** (`openclaw-adspirer`) — the same 100+ tools, same MCP server, same capabilities as the `adspirer-ads-agent` skill.
+This skill installs the **Adspirer plugin** (`openclaw-adspirer`) — the same 175+ tools, same MCP server, same capabilities as the `adspirer-ads-agent` skill.
 
 ## Setup
 

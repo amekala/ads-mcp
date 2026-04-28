@@ -1,6 +1,6 @@
 ---
 name: adspirer-ads-agent
-description: "Adspirer — AI-powered advertising and performance marketing agent. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads via natural language. 100+ tools for paid media campaign creation, live performance analysis, PPC keyword research with real CPC data, budget optimization, ad creative management, and cross-platform reporting. Create Search, PMax, display, image, video, and carousel campaigns. Analyze wasted ad spend, research keywords, optimize bids and ROAS, automate monitoring, and track CPA across channels. Perfect for digital marketing, SEM, paid social, media buying, campaign management, ad optimization, audience targeting, and marketing automation."
+description: "Adspirer — AI-powered advertising and performance marketing agent. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads via natural language. 175+ tools for paid media campaign creation, live performance analysis, PPC keyword research with real CPC data, budget optimization, ad creative management, and cross-platform reporting. Create Google Search, Performance Max, Display (Standard + Smart), Demand Gen, and YouTube campaigns; Meta image/video/carousel/lead-gen campaigns; LinkedIn sponsored content/carousel/lead-gen with campaign groups; and TikTok in-feed/Spark Ads/Carousel/App Promotion campaigns. Analyze wasted ad spend, research keywords, optimize bids and ROAS, automate monitoring, detect creative fatigue, and track CPA across channels. Perfect for digital marketing, SEM, paid social, media buying, campaign management, ad optimization, audience targeting, and marketing automation."
 homepage: https://www.adspirer.com
 author: Adspirer
 license: MIT
@@ -68,7 +68,7 @@ This is not a reference guide. This skill drives automation. You read and write 
 
 ## How It Works
 
-This skill is powered by the **Adspirer MCP server** (100+ tools across 4 ad platforms). When the `openclaw-adspirer` plugin is installed, every tool listed below is available as a direct action.
+This skill is powered by the **Adspirer MCP server** (175+ tools across 4 ad platforms). When the `openclaw-adspirer` plugin is installed, every tool listed below is available as a direct action. The same tool surface is exposed as REST at `https://api.adspirer.ai` (auth via Personal Access Tokens — `sk_live_...`).
 
 ### Setup (One-Time)
 
@@ -119,19 +119,29 @@ Params: lookback_days
 Returns: impressions, clicks, CTR, spend, leads, cost/lead, engagement metrics
 ```
 
+**TikTok Ads:**
+```
+Tool: get_tiktok_campaign_performance
+Params: lookback_days
+Returns: impressions, clicks, CTR, spend, conversions, CPA, ROAS
+```
+
 **Cross-Platform Comparison:**
 Call each platform's performance tool and present a unified side-by-side table. Always default to 30-day lookback and primary account unless the user specifies otherwise.
 
 **Deep Analysis Tools:**
-- `analyze_wasted_spend` — find underperforming keywords and ad groups burning budget
-- `analyze_search_terms` — review search term reports, identify negative keyword opportunities
+- `analyze_wasted_spend` / `analyze_meta_wasted_spend` / `analyze_linkedin_wasted_spend` / `analyze_tiktok_wasted_spend` — find underperforming spend across all four platforms
+- `analyze_search_terms` — review search term reports, identify negative keyword opportunities (Google)
 - `analyze_meta_ad_performance` — creative-level performance breakdown
 - `analyze_meta_audiences` — audience segment performance
 - `analyze_linkedin_creative_performance` — creative-level LinkedIn metrics
-- `explain_performance_anomaly` — explain sudden changes in Google Ads metrics
-- `explain_meta_anomaly` — explain Meta performance shifts
-- `explain_linkedin_anomaly` — explain LinkedIn metric changes
-- `detect_meta_creative_fatigue` — identify ads losing effectiveness over time
+- `analyze_tiktok_geo_performance` — TikTok geo performance breakdown
+- `explain_performance_anomaly` / `explain_meta_anomaly` / `explain_linkedin_anomaly` / `explain_tiktok_anomaly` — explain sudden metric shifts on each platform
+- `detect_meta_creative_fatigue` / `detect_tiktok_creative_fatigue` — identify ads losing effectiveness over time
+- `get_tiktok_audience_insights` / `get_meta_audience_insights` / `get_linkedin_audience_insights` — audience composition and CPA breakdowns
+- `audit_conversion_tracking` — audit conversion tracking setup across platforms
+
+**Raw data mode:** Pass `raw_data: true` to any performance / analytics tool for compact JSON metrics only — useful when the user asks for "raw data", "just the numbers", or wants output piped to a spreadsheet, dashboard, or their own attribution model.
 
 ### 2. Research Keywords with Real Data
 
@@ -157,36 +167,81 @@ Campaigns are created directly in ad platforms through API calls. All campaigns 
 5. `create_search_campaign` — create the campaign (PAUSED)
 
 **Google Ads Performance Max (PMax):**
-PMax campaigns use Google's AI to run ads across Search, Display, YouTube, Gmail, and Discover simultaneously. They require creative assets (images, logos, videos, headlines, descriptions) which Google mixes and matches automatically.
+PMax campaigns use Google's AI to run ads across Search, Display, YouTube, Gmail, and Discover simultaneously. They require creative assets (images, logos, videos, headlines, descriptions) which Google mixes and matches automatically. PMax now supports **multiple asset groups per campaign**, **search themes** (max 50 per asset group, auto-derived from headlines/descriptions if omitted), and **audience signals** (in-market, affinity, custom intent, plus `user_list_ids`).
 
 **Important: Creative assets are NOT built by this tool.** Users must provide their own creative assets. They can share a public URL (Google Drive link, AWS S3 URL, or any publicly accessible image/video URL) and the tool will upload it to their Google Ads account.
 
 1. `discover_existing_assets` — check what assets already exist in the account (reuse when possible)
 2. `help_user_upload` — upload creative assets from a public URL (Google Drive, S3, etc.) to the ad account
 3. `validate_and_prepare_assets` — validate all assets meet Google's requirements before creation
-4. `create_pmax_campaign` — create the PMax campaign (PAUSED)
+4. `create_pmax_campaign` — create the PMax campaign (PAUSED); supports multiple asset groups
+5. `add_pmax_search_themes` — seed up to 50 search themes per asset group
+6. `add_pmax_audience_signal` — combine in-market + affinity + custom intent + `user_list_ids` audiences (use `search_audiences` to discover IDs)
 
-**Meta Ads (Image, Video, or Carousel):**
+**Google Ads Display (Standard + Smart Display):**
+Display campaigns reach users across the Google Display Network with image / Responsive Display Ads (RDA). Created PAUSED by default; single-flag toggle to launch live.
+
+1. `select_google_campaign_type` — pick `display` (Standard vs Smart Display)
+2. `resolve_google_locations` + `list_google_languages` — resolve geo + language inputs (rejects ambiguous strings)
+3. `discover_existing_assets` + `validate_and_prepare_assets`
+4. `create_display_campaign` — create the campaign
+5. `add_display_ad_group` — add ad groups (with optional schedule + frequency caps)
+6. Targeting via per-surface ADD tools — audiences, topics, placements, keywords, demographics. Use `remove_display_criteria` for any removals.
+7. `add_display_ad` — Responsive Display Ads (RDA). Later edits via `update_ad_creative` / `update_ad_headlines` / `update_ad_descriptions` (router auto-dispatches RSA vs RDA)
+
+**Google Ads Demand Gen:**
+Visual mid-funnel demand creation across YouTube, Discover, and Gmail with multi-asset (landscape / square / portrait) and video responsive creatives.
+
+1. `discover_existing_assets` — check landscape / square / portrait images and videos
+2. `validate_and_prepare_assets` — multi-asset validation
+3. `create_demandgen_campaign` — supports all bidding strategies; honors user's explicit choice
+4. `add_demandgen_ad_group` — per-ad-group locations, audience signals, asset reuse, creative variations
+5. Audience targeting: in-market, affinity, custom intent, custom interest (validated server-side)
+
+**Google Ads YouTube:**
+1. `discover_existing_assets` — check existing video assets
+2. `validate_and_prepare_assets` — business logo auto-injected if missing
+3. `create_youtube_campaign` — supports audience targeting (in-market, affinity, custom intent) and global location targeting
+
+**Meta Ads (Image, Video, Carousel, Lead-Gen, App):**
 Creative assets are NOT generated by this tool. Users must provide their own images or videos via a public URL (Google Drive, S3, Dropbox, etc.) for upload.
 
 1. `get_connections_status` — verify Meta account is connected
-2. `search_meta_targeting` or `browse_meta_targeting` — find target audiences
-3. `select_meta_campaign_type` — determine best campaign type
-4. `discover_meta_assets` — check existing creative assets in the account
+2. `select_meta_campaign_type` — pick objective (TRAFFIC, OUTCOME_LEADS, OUTCOME_ENGAGEMENT, CONVERSIONS, app)
+3. `search_meta_targeting` / `browse_meta_targeting` — find audiences (city-level supported); `list_meta_custom_audiences` for retargeting / lookalikes
+4. `discover_meta_assets` — check existing creative assets
 5. `validate_and_prepare_meta_assets` — validate assets meet Meta's specs
-6. `create_meta_image_campaign` / `create_meta_video_campaign` / `create_meta_carousel_campaign`
+6. Pick a creator:
+   - `create_meta_image_campaign` — single-image; supports placement-specific creatives (Feed / Stories / Reels) and emoji headlines
+   - `create_meta_video_campaign` — video creative (DCO supported)
+   - `create_meta_carousel_campaign` — carousel cards
+   - For OUTCOME_LEADS: pass `lead_form_id` (auto-fetched via `list_meta_lead_forms` if omitted)
+   - App campaigns: `app_link_spec` is wired end-to-end
+7. Optional: `add_meta_ad_set` for additional ad sets — supports lifetime budgets, end_time, granular placements, multi_advertiser, custom_conversion_id, Advantage+ Audience and Advantage+ Creative opt-outs (`degrees_of_freedom_spec`)
 
-**LinkedIn Ads:**
+**LinkedIn Ads (Image, Video, Carousel, Lead-Gen, Campaign Groups):**
 1. `get_linkedin_organizations` — get linked company pages
-2. `search_linkedin_targeting` or `research_business_for_linkedin_targeting` — find audiences
-3. `discover_linkedin_assets` — check existing creative assets
-4. `validate_and_prepare_linkedin_assets` — validate assets
-5. `create_linkedin_image_campaign` — create the campaign
+2. `search_linkedin_targeting` (typeahead) or `research_business_for_linkedin_targeting` — 14 facets (job functions, seniority, industries, skills, member groups, company size)
+3. `discover_linkedin_assets` — paginated for 22k+ creatives
+4. `validate_and_prepare_linkedin_assets` — validate single-image / video / carousel
+5. Pick a creator:
+   - `create_linkedin_image_campaign` — single-image sponsored content
+   - `create_linkedin_video_campaign` — video sponsored content
+   - `create_linkedin_carousel_campaign` — carousel; build cards via `add_linkedin_carousel_creative`
+   - For lead gen: pass `lead_gen_form_id`
+6. Optional: organize via campaign groups — pass `campaign_group_id` / `campaign_group_name` at creation, or `add_linkedin_campaign_to_group` after the fact. `list_linkedin_campaigns` filters by group.
 
-**TikTok Ads:**
+**TikTok Ads (In-Feed, Spark Ads, Carousel, App Promotion):**
 1. `discover_tiktok_assets` — check existing assets
-2. `validate_and_prepare_tiktok_assets` — validate video assets
-3. `create_tiktok_campaign` / `create_tiktok_video_campaign`
+2. `validate_and_prepare_tiktok_assets` — validate video / image assets
+3. `search_tiktok_targeting` — find interests, behaviors, geo
+4. Pick a creator:
+   - `create_tiktok_campaign` — flexible objective; pass `tiktok_item_id` or `card_id` to enable Spark Ads
+   - `create_tiktok_video_campaign` — in-feed video
+   - For carousel: `create_tiktok_carousel_card` then `add_tiktok_ad`
+   - For app installs: APP_PROMOTION objective
+5. Optional: CBO via `budget_optimize_on` (default true). `add_tiktok_ad_group` for additional ad groups; `update_tiktok_*` for live edits
+6. CTAs are server-validated (defaults to LEARN_MORE when `landing_page_url` is provided without `call_to_action`). `optimization_event` accepts the full event taxonomy: FORM, ON_WEB_CART, ON_WEB_DETAIL, ON_WEB_REGISTER, COMPLETE_PAYMENT, etc.
 
 ### 4. Optimize Live Campaigns
 
@@ -196,6 +251,7 @@ Take optimization actions directly on running campaigns.
 - `optimize_budget_allocation` — recommend budget shifts across Google campaigns
 - `optimize_meta_budget` — recommend Meta budget reallocations
 - `optimize_linkedin_budget` — recommend LinkedIn budget changes
+- `optimize_tiktok_budget` — recommend TikTok budget reallocations
 - `optimize_meta_placements` — optimize placement allocation
 
 **Campaign Management:**
@@ -333,16 +389,18 @@ Sign up and connect ad accounts at https://adspirer.ai/settings?tab=billing
 
 ---
 
-## Complete Tool Reference (100+ Tools)
+## Complete Tool Reference (175+ Tools)
 
 | Platform | Count | Categories |
 |----------|-------|------------|
-| Google Ads | 39 | Performance, keywords, campaigns (Search + PMax), ads, extensions, budgets, search terms, asset management |
-| LinkedIn Ads | 28 | Performance, campaigns, targeting, creatives, conversions, organizations |
-| Meta Ads | 20 | Performance, campaigns (image/video/carousel), targeting, audiences, creatives, placements |
-| TikTok Ads | 4 | Assets, validation, campaign creation |
-| Automation | 8 | Scheduling, monitoring, research, reports |
-| System | 4 | Connections, accounts, usage, business profile |
+| Google Ads | 75+ | Performance, keywords, campaigns (Search + PMax + Display + Demand Gen + YouTube), ads (RSA + RDA), extensions, budgets, search terms, PMax search themes + audience signals, asset management, location/language resolvers |
+| LinkedIn Ads | 45 | Performance, campaigns (image / video / carousel / lead-gen), campaign groups, 14 targeting facets, creatives (paginated for 22k+), audience insights, creative fatigue, conversions, organizations |
+| Meta Ads | 36 | Performance, campaigns (image / video / carousel / lead-gen / app), ad sets (lifetime budgets, granular placements, multi_advertiser), Advantage+ controls, targeting (city-level), custom audiences, custom conversions, lead forms |
+| TikTok Ads | 31 | Performance + 8 analytics tools (wasted spend, audience insights, creative fatigue, anomalies, geo), full lifecycle (list / get / pause / resume / update), campaigns (in-feed video / Spark Ads / Carousel / App Promotion), targeting, asset upload + validation |
+| Automation | 9 | Scheduled briefs, performance monitors, on-demand reports, research tasks — cross-platform across Google / Meta / LinkedIn / TikTok |
+| System | 7 | Connections, account switching (single + multi-account), usage, business profile, conversion tracking audit |
+
+**REST API:** the same tool surface is exposed as 178 REST endpoints at `https://api.adspirer.ai/api/v1/tools/<tool_name>/execute` — auth via Personal Access Tokens (`sk_live_...`) created at [adspirer.ai/keys](https://adspirer.ai/keys). Swagger: `https://api.adspirer.ai/docs`.
 
 ---
 
@@ -391,7 +449,7 @@ Use Adspirer when you need to manage paid media campaigns, optimize performance 
 Automate repetitive digital marketing tasks: pull cross-platform performance reports, identify wasted ad spend, research keywords with real search volume and CPC data, adjust bids and budgets, and schedule recurring campaign briefs — all through natural language.
 
 ### Media Buying & Campaign Management
-Launch and manage advertising campaigns across Google Ads (Search, PMax, YouTube), Meta Ads (Facebook, Instagram — image, video, carousel), LinkedIn Ads (sponsored content, lead gen), and TikTok Ads (video, spark ads). Manage budgets, targeting, ad creatives, and extensions from one place.
+Launch and manage advertising campaigns across Google Ads (Search, Performance Max, Display Standard + Smart, Demand Gen, YouTube), Meta Ads (Facebook, Instagram — image, video, carousel, OUTCOME_LEADS, app), LinkedIn Ads (single-image, video, carousel sponsored content, lead-gen forms, campaign groups), and TikTok Ads (in-feed video, Spark Ads, Carousel, App Promotion). Manage budgets, targeting, ad creatives, and extensions from one place.
 
 ### Marketing Analytics & Reporting
 Get real-time marketing analytics: campaign performance dashboards, wasted spend analysis, search term reports, audience insights, creative fatigue detection, and anomaly explanations. Compare performance across all ad platforms side by side.

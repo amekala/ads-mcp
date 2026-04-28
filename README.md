@@ -14,23 +14,25 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 ## What It Does
 
 - **Strategy-aware execution** — strategic decisions persist to `STRATEGY.md` and guide all future campaign creation, keyword research, and ad copy across sessions and subagents
-- **100+ tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
+- **175+ tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
 - Plan and validate campaigns using structured prompts
 - Research keywords with real CPC data and competitive analysis
-- Create Google Ads Search and Performance Max campaigns end-to-end
-- Launch Meta, TikTok, and LinkedIn ad campaigns
-- Analyze performance with actionable optimization recommendations
-- Manage multiple ad accounts across platforms
+- Create Google Ads Search, Performance Max (with search themes + audience signals), **Display** (Standard + Smart), **Demand Gen**, and YouTube campaigns end-to-end
+- Launch Meta image / video / carousel / OUTCOME_LEADS campaigns, LinkedIn sponsored content / carousel / lead-gen forms with campaign groups, and TikTok in-feed / Spark Ads / Carousel / App Promotion campaigns
+- Analyze performance with actionable optimization recommendations — wasted spend, anomaly detection, audience insights, creative fatigue
+- **Raw data mode** (`raw_data=true`) on all 29 performance/analytics tools — JSON-only output for your own attribution, dashboards, or token-efficient pipelines
+- Multi-account, multi-platform — agencies can manage many ad accounts per platform from one workspace
+- Automation — scheduled briefs, performance monitors, on-demand cross-platform reports across all four platforms
 
 ## Platforms & Tools
 
 | Platform | Tools | Capabilities |
 |----------|-------|-------------|
-| Google Ads | 39 | Search campaigns, Performance Max, keyword research, performance analysis, asset management, ad extensions |
-| LinkedIn Ads | 28 | Sponsored content, lead gen forms, audience targeting, campaign analytics |
-| Meta Ads | 20 | Image campaigns, carousel campaigns, audience targeting, performance tracking |
-| TikTok Ads | 4 | In-feed video/image campaigns, asset validation |
-| **Total** | **100+** | Plus 2 resources and 6 prompts |
+| Google Ads | 75+ | Search, Performance Max (with search themes + audience signals), Display (Standard + Smart), Demand Gen, YouTube; keyword research, performance analysis, wasted-spend, asset management, ad extensions (sitelinks / callouts / structured snippets), bidding strategy management |
+| LinkedIn Ads | 45 | Sponsored content (single-image, video, carousel), lead-gen forms, campaign groups, 14 targeting facets, audience insights, creative fatigue analysis, conversion tracking, organizations |
+| Meta Ads | 36 | Image / video / carousel campaigns, OUTCOME_LEADS lead-gen forms, lifetime budgets, granular placements (Feed / Stories / Reels), city-level targeting, custom audiences, custom conversions, Advantage+ controls |
+| TikTok Ads | 31 | In-feed video / image / Spark Ads / Carousel / App Promotion campaigns, full lifecycle (list / get / pause / resume / update for campaigns, ad groups, ads), 8 analytics tools (performance, wasted spend, audience insights, creative fatigue, anomaly detection, geo) |
+| **Total** | **175+** | Plus monitoring, automation (scheduled briefs / monitors / reports), and account management tools — all available over MCP and as REST endpoints at `api.adspirer.ai` |
 
 ## How to Connect
 
@@ -112,6 +114,14 @@ openclaw adspirer connect
 ```
 
 Or install from [ClawHub](https://clawhub.ai/amekala/adspirer-ads-agent).
+
+### Perplexity, Manus, and Other MCP Clients
+
+Adspirer is a standard MCP server — any client that supports MCP connectors with OAuth 2.1 (Perplexity, Manus AI, custom MCP clients) can connect to `https://mcp.adspirer.com/mcp`. Manus also accepts API keys via the Streamable HTTP transport.
+
+### REST API (no MCP client required)
+
+The same tool surface is exposed as 178 REST endpoints at `https://api.adspirer.ai/api/v1/tools/<tool_name>/execute`. Authenticate with a Personal Access Token (`sk_live_...`) created at [adspirer.ai/keys](https://adspirer.ai/keys). Swagger: `https://api.adspirer.ai/docs`. Full reference: [adspirer.com/docs/api-reference](https://www.adspirer.com/docs/api-reference).
 
 ## Example Prompts
 

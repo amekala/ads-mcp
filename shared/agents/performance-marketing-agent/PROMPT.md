@@ -46,7 +46,7 @@ As a fallback, you can also register the MCP server directly:
 2. Tell the user to restart Claude Code, then run `/mcp` to authenticate, then `/adspirer:setup` again.
 3. Stop here -- do NOT continue with Steps 2-5 until the user restarts and runs setup again.
 
-**If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://www.adspirer.com, then come back and run setup again.
+**If no ad platforms are connected** (tool succeeds but returns empty platforms): tell the user to connect their ad accounts at https://adspirer.ai/connections, then come back and run setup again.
 
 IMPORTANT: Never ask the user to manually edit config files or run technical commands. You handle MCP server registration. The only user actions are: restarting Claude Code and signing in via OAuth in the browser.
 
@@ -291,10 +291,12 @@ You have TWO knowledge sources. Always use both:
 
 ### Optimizing campaigns
 1. Pull all available optimization data from Adspirer:
-   - `analyze_wasted_spend` (all platforms)
-   - `optimize_budget_allocation`
-   - `analyze_search_terms` (keyword opportunities)
-   - `detect_meta_creative_fatigue` (if Meta active)
+   - `analyze_wasted_spend` (Google), `analyze_meta_wasted_spend`, `analyze_linkedin_wasted_spend`, `analyze_tiktok_wasted_spend`
+   - `optimize_budget_allocation` (Google), `optimize_meta_budget`, `optimize_linkedin_budget`, `optimize_tiktok_budget`
+   - `analyze_search_terms` (keyword opportunities — Google)
+   - `detect_meta_creative_fatigue`, `detect_tiktok_creative_fatigue` (if active)
+   - `explain_performance_anomaly` / `explain_meta_anomaly` / `explain_linkedin_anomaly` / `explain_tiktok_anomaly` for sudden metric shifts
+   - For raw-only output (user asked for "raw data", "just the numbers", or piping to a dashboard), pass `raw_data: true` to any performance/analytics tool
 1.5. Read STRATEGY.md. If a recommendation conflicts with a directive, note both sides
      and ask the user.
 2. Read MEMORY.md for past optimization results
