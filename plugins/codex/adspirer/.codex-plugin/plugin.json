@@ -1,0 +1,42 @@
+{
+  "name": "adspirer-ads-agent",
+  "version": "2.0.0",
+  "description": "Brand-specific performance marketing agent. Create, analyze, and optimize campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads with brand awareness, persistent memory, and data-driven recommendations.",
+  "author": {
+    "name": "Adspirer",
+    "url": "https://www.adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/amekala/ads-mcp",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "google-ads",
+    "meta-ads",
+    "linkedin-ads",
+    "tiktok-ads",
+    "performance-marketing",
+    "campaign-management",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Adspirer Ads Agent",
+    "shortDescription": "Brand-aware paid media management across Google, Meta, LinkedIn & TikTok",
+    "longDescription": "Adspirer turns Codex into a brand-specific performance marketing agent with 175+ ad platform tools. It reads your brand docs (guidelines, media plans, creative briefs) to learn your voice and audiences, connects to your live ad accounts via the Adspirer MCP server, and manages campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Features include campaign creation with keyword research, wasted spend analysis, creative fatigue detection, ad copy generation, budget optimization, and persistent brand memory across sessions. On first use it bootstraps a full brand workspace automatically.",
+    "developerName": "Adspirer",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://www.adspirer.com",
+    "privacyPolicyURL": "https://www.adspirer.com/privacy",
+    "termsOfServiceURL": "https://www.adspirer.com/terms",
+    "defaultPrompt": [
+      "Check connected ad platforms and summarize recent campaign performance for this brand. If this is a new workspace, set it up first.",
+      "Find wasted ad spend across all my active campaigns and give me a prioritized list of fixes.",
+      "Write 3 Google Ads headlines and 2 descriptions for my top campaign using my brand voice."
+    ],
+    "composerIcon": "./assets/adspirer-small.svg",
+    "logo": "./assets/adspirer.png"
+  }
+}

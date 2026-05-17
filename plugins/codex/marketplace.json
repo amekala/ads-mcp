@@ -1,0 +1,20 @@
+{
+  "name": "adspirer-codex-marketplace",
+  "interface": {
+    "displayName": "Adspirer"
+  },
+  "plugins": [
+    {
+      "name": "adspirer-ads-agent",
+      "source": {
+        "source": "local",
+        "path": "./adspirer"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
