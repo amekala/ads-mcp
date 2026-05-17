@@ -1,0 +1,34 @@
+# Campaign Safety Rules
+# Prevent direct API calls to ad platforms — all operations must go through Adspirer MCP
+# Operational guardrails for campaign reliability:
+# - Never report success until ads, keywords, and extensions are verified.
+# - Use statuses: SUCCESS / PARTIAL_SUCCESS / FAILED.
+# - If extension verification fails, retry once and then report PARTIAL_SUCCESS with explicit gaps.
+# - Conversion action primary/secondary setup is manual in Google Ads UI (not configurable via MCP tools).
+# Strategy-aware execution: before campaign creation or keyword operations,
+# read STRATEGY.md and treat AVOID/CONSTRAINT directives as context that
+# informs keyword selection, bidding, and targeting decisions.
+
+prefix_rule(
+    pattern = ["curl", "https://ads.google.com"],
+    decision = "forbidden",
+    justification = "Google Ads API calls must go through Adspirer MCP, not direct curl",
+)
+
+prefix_rule(
+    pattern = ["curl", "https://graph.facebook.com"],
+    decision = "forbidden",
+    justification = "Meta Ads API calls must go through Adspirer MCP, not direct curl",
+)
+
+prefix_rule(
+    pattern = ["curl", "https://api.linkedin.com"],
+    decision = "forbidden",
+    justification = "LinkedIn Ads API calls must go through Adspirer MCP, not direct curl",
+)
+
+prefix_rule(
+    pattern = ["curl", "https://business-api.tiktok.com"],
+    decision = "forbidden",
+    justification = "TikTok Ads API calls must go through Adspirer MCP, not direct curl",
+)

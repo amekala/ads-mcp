@@ -10,14 +10,14 @@
       "description": "Brand-aware paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 175+ tools for campaign creation, performance analysis, keyword research, wasted spend detection, and ad copy generation.",
       "source": {
         "source": "local",
-        "path": "./plugins/codex/adspirer"
+        "path": "./plugins/adspirer"
       },
       "policy": {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL"
       },
       "category": "Productivity",
-      "icon": "./plugins/codex/adspirer/assets/adspirer-small.svg"
+      "icon": "./plugins/adspirer/assets/adspirer-small.svg"
     }
   ]
 }

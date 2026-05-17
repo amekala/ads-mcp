@@ -1,0 +1,17 @@
+# Adspirer Performance Marketing Agent — Codex Configuration
+# Copy this file to ~/.codex/config.toml (or merge with your existing config)
+
+# Enable multi-agent for sub-agent orchestration (experimental)
+[features]
+multi_agent = true
+
+# Adspirer MCP server (remote, streamable HTTP with OAuth)
+[mcp_servers.adspirer]
+url = "https://mcp.adspirer.com/mcp"
+tool_timeout_sec = 120
+required = true
+
+# Performance Marketing Agent role
+[agents.performance-marketing-agent]
+description = "Brand-specific performance marketing agent. Use when the user asks about ad campaigns, campaign performance, budget optimization, keyword research, ad copy, audience targeting, or anything related to Google Ads, Meta Ads, LinkedIn Ads, or TikTok Ads. Also use for creating campaigns, writing ad copy, or analyzing advertising data."
+config_file = "agents/performance-marketing-agent.toml"
