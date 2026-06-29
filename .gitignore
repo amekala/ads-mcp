@@ -18,3 +18,10 @@ Thumbs.db
 generate-tts.py
 *.mp3
 marketplace/
+
+# Secrets / signing keys — never commit
+*.pem
+*.der
+priv_hex.txt
+.mcpregistry_github_token
+.mcpregistry_registry_token
