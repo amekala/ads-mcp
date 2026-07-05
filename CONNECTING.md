@@ -97,7 +97,7 @@ All tools include safety annotations (`readOnlyHint`, `destructiveHint`) so Clau
 
 1. Open Claude Code in your brand/project folder
 2. Run `/plugin marketplace add amekala/ads-mcp`
-3. Run `/plugin install adspirer`
+3. Run `/plugin install adspirer-advertising-agent`
 4. Run `/mcp` — find **plugin:adspirer:adspirer** and click to authenticate via OAuth
 5. Run `/adspirer:setup` — the agent will pull your campaign data and create a brand workspace (CLAUDE.md)
 

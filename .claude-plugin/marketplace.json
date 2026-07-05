@@ -8,12 +8,16 @@
   },
   "plugins": [
     {
-      "name": "adspirer-ads-agent",
+      "name": "adspirer-advertising-agent",
+      "displayName": "Adspirer Advertising Agent",
       "source": "./",
-      "description": "Ad campaign management for Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. 150+ tools for keyword research, campaign creation, performance analysis, creative fatigue detection, and budget optimization.",
+      "description": "Advertising agent for paid media: ad campaign management for Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads. 150+ tools for PPC keyword research, campaign creation, performance analysis, creative fatigue detection, and budget optimization.",
       "author": {
         "name": "Adspirer"
       }
     }
-  ]
+  ],
+  "renames": {
+    "adspirer-ads-agent": "adspirer-advertising-agent"
+  }
 }

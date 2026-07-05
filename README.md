@@ -52,7 +52,7 @@ Install the full Adspirer plugin (agent + skills + commands + MCP server):
 
 1. Open Claude Code
 2. Run `/plugin marketplace add amekala/ads-mcp`
-3. Run `/plugin install adspirer`
+3. Run `/plugin install adspirer-advertising-agent`
 4. Run `/mcp` — find **plugin:adspirer:adspirer** and click to authenticate
 5. Run `/adspirer:setup` to pull your campaign data and create your brand workspace
 
@@ -233,7 +233,7 @@ Edit once (source of truth)
 
 | AI Client | Repo Source Root | Generated/Runtime Root in Repo | User Installation Path/Method |
 |----------|------------------|--------------------------------|-------------------------------|
-| **Claude Code** | Repo root + `shared/skills/` + `shared/agents/` | `skills/`, `agents/`, `commands/`, `.claude-plugin/` | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer` |
+| **Claude Code** | Repo root + `shared/skills/` + `shared/agents/` | `skills/`, `agents/`, `commands/`, `.claude-plugin/` | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer-advertising-agent` |
 | **Cursor** | `plugins/cursor/adspirer/` + shared sources | `plugins/cursor/adspirer/.cursor/skills/`, `plugins/cursor/adspirer/.cursor/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)` |
 | **Codex** | `plugins/codex/adspirer/` + shared sources | `plugins/codex/adspirer/skills/`, `plugins/codex/adspirer/agents/` | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)` |
 | **Gemini CLI** | Repo root | `gemini-extension.json`, `GEMINI.md`, `commands/adspirer/` | `gemini extensions install github.com/amekala/ads-mcp` |

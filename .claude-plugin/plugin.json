@@ -1,6 +1,7 @@
 {
-  "name": "adspirer-ads-agent",
-  "description": "Brand-specific performance marketing agent. Create, analyze, and optimize campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads with brand awareness, persistent memory, and data-driven recommendations.",
+  "name": "adspirer-advertising-agent",
+  "displayName": "Adspirer Advertising Agent",
+  "description": "Advertising agent for paid media: create, analyze, and optimize ad campaigns across Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads. PPC keyword research with live CPC data, campaign creation, performance analysis, wasted-spend and creative-fatigue detection, and budget optimization — with brand awareness and persistent memory.",
   "author": {
     "name": "Adspirer"
   },
