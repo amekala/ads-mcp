@@ -120,6 +120,26 @@ claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp
 > - **If you used Option 2 and want to switch to the full plugin**, first run `claude mcp remove adspirer`, then follow Option 1
 > - **To check for duplicates**, run `claude mcp list` — you should see only one `adspirer` entry
 
+### Claude Tag (@claude in Slack and team workspaces)
+
+Claude Tag calls the same tool layer over plain HTTP (`POST
+https://api.adspirer.ai/api/v1/tools/<tool>/execute`, also served at
+`mcp.adspirer.com`) using an org **access bundle** instead of OAuth:
+
+1. Claude admin settings → access bundle → **Connect another tool**: Name `Adspirer`,
+   credential type **Bearer**, header `Authorization` / prefix `Bearer` / value = a
+   dedicated `sk_live_...` key from https://adspirer.ai/keys.
+2. **Allowed websites:** add both `api.adspirer.ai` and `mcp.adspirer.com`.
+3. Paste usage guidance into the bundle's **Instructions** tab (calling envelope,
+   `list_connected_accounts` first, account-ID arguments, campaigns always created
+   paused).
+4. Full skill (recipes + 341-tool catalog + `ads_call.sh`): submitted upstream as
+   [anthropics/claude-tag-plugins#3](https://github.com/anthropics/claude-tag-plugins/pull/3);
+   install `adspirer@claude-tag-plugins` once merged.
+
+Note: Tag/REST traffic authenticates with API keys, not OAuth — it will not appear in
+MCP connection metrics; track it via the dedicated key's usage.
+
 ### ChatGPT
 
 Requires a **Plus or Pro plan**.

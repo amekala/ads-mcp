@@ -189,10 +189,20 @@ This repo distributes plugins for 4 AI platforms from a single monorepo:
 | Platform | Directory | Skills | Install Method |
 |----------|-----------|--------|----------------|
 | **Claude Code** | Repo root | 1 generated + 5 slash commands | `/plugin marketplace add` |
+| **Claude Tag (@claude)** | Upstream: [anthropics/claude-tag-plugins PR #3](https://github.com/anthropics/claude-tag-plugins/pull/3) | 1 (`adspirer-api`: SKILL + 341-tool catalog + `ads_call.sh`) | Org access bundle (Bearer `sk_live_` key, hosts `api.adspirer.ai` / `mcp.adspirer.com`); `claude plugin install adspirer@claude-tag-plugins` once merged |
 | **Cursor** | `plugins/cursor/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
 | **Codex** | `plugins/codex/adspirer/` | 5 generated from templates | `install.sh` (one-command) |
 | **Gemini CLI** | Repo root | 1 reused + 5 custom commands | `gemini extensions install` |
 | **OpenClaw** | `plugins/openclaw/` | 1 standalone (self-contained) | `openclaw plugins install` |
+
+> **Claude Tag submission record (2026-07-05):** the `adspirer` plugin for Claude Tag
+> (@claude) was submitted upstream as
+> [anthropics/claude-tag-plugins#3](https://github.com/anthropics/claude-tag-plugins/pull/3)
+> from the fork branch
+> [`amekala/claude-tag-plugins@add-adspirer-plugin`](https://github.com/amekala/claude-tag-plugins/tree/add-adspirer-plugin/adspirer).
+> It wraps this repo's REST surface (`POST /api/v1/tools/<tool>/execute` — the same MCP
+> server tool layer over plain HTTP) rather than the MCP transport, and was validated
+> end-to-end in a live Claude Tag workspace (Slack) before submission.
 
 Skills for Claude Code, Cursor, and Codex are authored once in `shared/skills/` as templates, then compiled into IDE-specific versions by `scripts/sync-skills.sh`.
 The performance marketing agent prompt is also authored once in `shared/agents/performance-marketing-agent/PROMPT.md` and compiled into Claude Code, Cursor, and Codex agent files by the same sync script.
