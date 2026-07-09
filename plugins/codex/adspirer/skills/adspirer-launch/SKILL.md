@@ -69,6 +69,21 @@ Then say, plainly:
 **Never resume a campaign you just created without being asked.** Creating and launching are two
 decisions and the second one is the user's.
 
+## Let them see it before it spends
+
+A campaign is a lot of decisions — budget, targeting, bids, creative, extensions — and reading them
+back as prose is how mistakes get approved.
+
+
+
+Once it's live, don't leave it unattended. Offer to schedule a check on this host — a new campaign's
+first week is when it either finds its footing or quietly burns budget, and the user should hear about
+the second before the invoice does. Set it on the metric that defines success: CPA ceiling, ROAS
+floor, daily spend.
+
+
+Each run costs tool calls, so match the cadence to the spend.
+
 ## When the build fails halfway
 
 Say exactly what exists and what doesn't. A campaign with an ad group and no ad is not "created" —

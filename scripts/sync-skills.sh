@@ -9,7 +9,10 @@ set -euo pipefail
 # Each SKILL.md may contain conditional blocks:
 #   <!-- BEGIN:CODEX --> ... <!-- END:CODEX -->
 # A block survives only if its family is in the target's keep-set. Families in use:
-#   CODEX  CURSOR_CLAUDE  CHATGPT  HAS_MEMORY  NO_MEMORY  HAS_FS  NO_FS
+#   CODEX  CURSOR_CLAUDE  CLAUDE  CHATGPT  HAS_MEMORY  NO_MEMORY  HAS_FS  NO_FS
+#
+# CLAUDE is narrower than CURSOR_CLAUDE: artifacts exist in Claude Code and the Claude
+# desktop app, not in Cursor. CHATGPT gates Sites. Cursor/Codex/Gemini get neither.
 #
 # references/ subfolders are copied verbatim — never template-processed.
 
@@ -38,7 +41,7 @@ target_config() {
   case "$1" in
     cursor)  CONTEXT_FILE="BRAND.md";  AUTH="Reconnect via your AI assistant's connector settings"; KEEP="CURSOR_CLAUDE HAS_MEMORY HAS_FS"; WEBSEARCH="yes"; WANT_WORKSPACE="yes" ;;
     codex)   CONTEXT_FILE="AGENTS.md"; AUTH='Run `codex mcp login adspirer` to re-authenticate';     KEEP="CODEX NO_MEMORY HAS_FS";        WEBSEARCH="no";  WANT_WORKSPACE="yes" ;;
-    claude)  CONTEXT_FILE="CLAUDE.md"; AUTH="Reconnect via your AI assistant's connector settings"; KEEP="CURSOR_CLAUDE HAS_MEMORY HAS_FS"; WEBSEARCH="yes"; WANT_WORKSPACE="yes" ;;
+    claude)  CONTEXT_FILE="CLAUDE.md"; AUTH="Reconnect via your AI assistant's connector settings"; KEEP="CURSOR_CLAUDE CLAUDE HAS_MEMORY HAS_FS"; WEBSEARCH="yes"; WANT_WORKSPACE="yes" ;;
     gemini)  CONTEXT_FILE="GEMINI.md"; AUTH="Run the mcp auth command to re-authenticate";          KEEP="CURSOR_CLAUDE NO_MEMORY HAS_FS"; WEBSEARCH="no";  WANT_WORKSPACE="yes" ;;
     chatgpt) CONTEXT_FILE="";          AUTH="Reconnect Adspirer in ChatGPT under Settings then Connectors"; KEEP="CHATGPT NO_MEMORY NO_FS"; WEBSEARCH="no"; WANT_WORKSPACE="no" ;;
     *) echo "unknown target: $1" >&2; return 1 ;;
