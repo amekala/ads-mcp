@@ -40,15 +40,20 @@ If the folder is empty, that's fine — we'll build context from Adspirer data a
 
 ## Step 3: Pull live campaign data
 
-Call these Adspirer MCP tools (in parallel where possible):
+Follow `adspirer-mcp` for the call contract. Only these are callable by name; everything else goes
+through its platform router with `{"action": "list_tools"}` then `{"action": "execute", ...}`.
 
-1. `get_connections_status` — which platforms are connected
-2. `get_business_profile` — saved brand profile
-3. `list_campaigns` — existing campaigns across all platforms
-4. `get_campaign_performance` (lookback_days: 30) — Google Ads performance
-5. `get_linkedin_campaign_performance` (lookback_days: 30) — LinkedIn performance
-6. `get_meta_campaign_performance` (lookback_days: 30) — Meta performance
-7. `get_benchmark_context` — industry benchmarks
+Call directly:
+
+1. `get_connections_status` — which platforms are connected. Do this first; only pull the rest for
+   platforms that came back connected.
+2. `get_campaign_performance` (lookback_days: 30) — Google Ads performance
+3. `get_meta_campaign_performance` (lookback_days: 30) — Meta performance
+
+Through the router (`action: "execute"`):
+
+4. `google_ads` → `list_campaigns`, `get_business_profile`, `get_benchmark_context`
+5. `linkedin_ads` → `get_linkedin_campaign_performance` (lookback_days: 30)
 
 If any tool errors (platform not connected), skip it and note the gap.
 

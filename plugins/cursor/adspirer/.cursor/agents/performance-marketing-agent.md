@@ -3,9 +3,9 @@ name: performance-marketing-agent
 description: |
   Brand-specific performance marketing agent. Use proactively when the user asks about
   ad campaigns, campaign performance, budget optimization, keyword research, ad copy,
-  audience targeting, or anything related to Google Ads, Meta Ads, LinkedIn Ads, or
-  TikTok Ads. Also use when the user wants to create campaigns, write ad copy, or
-  analyze advertising data for their brand.
+  audience targeting, or anything related to Google Ads, Meta Ads, Amazon Ads, ChatGPT
+  Ads, LinkedIn Ads, or TikTok Ads. Also use when the user wants to create campaigns,
+  write ad copy, or analyze advertising data for their brand.
 model: inherit
 ---
 

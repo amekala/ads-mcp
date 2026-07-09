@@ -376,16 +376,20 @@ Ad copy (headlines, descriptions) IS generated and managed by the tool — see `
 
 Adspirer is billed by tool calls — each API action (reading performance, creating a campaign, researching keywords) counts as one tool call. No percentage of ad spend. No hidden fees.
 
-| Plan | Price | Tool Calls | Includes |
-|------|-------|------------|----------|
-| **Free Forever** | $0/month | 15/month | All 4 ad platforms, ChatGPT & Claude integrations |
-| **Plus** | $49/month ($485/year) | 150/month | All platforms, campaign creation, performance dashboards |
-| **Pro** (Best Value) | $99/month ($999/year) | 600/month | Everything in Plus + AI optimization, bulk operations, deeper diagnostics |
-| **Max** | $199/month ($2,000/year) | 3,000/month | Everything in Pro + priority support, highest limits |
+Adspirer bills per **tool call** — a task the assistant performs — not per dollar of ad spend.
+There is a free tier, three self-serve plans (Plus, Pro, Max), and Enterprise. Annual plans use one
+pooled yearly allowance instead of monthly caps.
 
-All plans include access to all ad platforms (Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads). Tool call quotas reset monthly.
+Prices and included call counts change, so they are not reproduced here. See
+[the pricing page](https://www.adspirer.com/docs/knowledge-base/pricing).
 
-Sign up and connect ad accounts at https://adspirer.ai/settings?tab=billing
+For the current user's plan and remaining quota, call `get_usage_status` — free, and authoritative
+for their account.
+
+All plans include every supported ad platform: Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads,
+Amazon Ads, and ChatGPT Ads.
+
+Connect ad accounts at https://adspirer.ai/connections
 
 ---
 
@@ -436,7 +440,7 @@ If **no tools work at all** — even `get_connections_status` or `echo_test` fai
 | Session expired | Token auto-refreshes; if persistent, run login again |
 | No platform data | Connect ad platforms at https://adspirer.ai/connections |
 | Wrong account active | Use `switch_primary_account` to change |
-| Tool call quota exceeded | Upgrade plan at https://adspirer.ai/settings?tab=billing (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
+| Tool call quota exceeded | Call `get_usage_status` for the user's plan and remaining calls; show the error message, which carries their upgrade link |
 
 ---
 
