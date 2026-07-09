@@ -11,14 +11,15 @@ Run the full brand workspace setup. Follow these steps in order:
    - As a fallback: run `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp` via Bash, then tell the user to restart Claude Code, run `/mcp` to authenticate, then run `/adspirer:setup` again.
    - If the MCP server is registered but not authenticated: tell the user "Run `/mcp`, find the Adspirer server, and authenticate it. Then run `/adspirer:setup` again."
 2. **Scan local folder** for brand docs — use Glob to find files: `**/*.md`, `**/*.txt`, `**/*.csv`, `**/*.yaml`, `**/*.json`, `**/*.pdf`. Read any files found.
-3. **Pull live campaign data** from all connected platforms — call these Adspirer MCP tools directly (in parallel where possible):
-   - `get_connections_status`
-   - `get_business_profile`
-   - `list_campaigns`
+3. **Pull live campaign data** from the platforms that came back connected. Follow `adspirer-mcp` for the call contract.
+
+   Direct calls:
+   - `get_connections_status` — run this first; skip any platform it reports as not connected
    - `get_campaign_performance` (lookback_days: 30)
-   - `list_linkedin_campaigns`
-   - `get_linkedin_campaign_performance` (lookback_days: 30)
    - `get_meta_campaign_performance` (lookback_days: 30)
-   - `get_benchmark_context`
+
+   Through a router, with `{"action": "execute", "tool_name": "...", "arguments": {...}}`:
+   - `google_ads` → `list_campaigns`, `get_business_profile`, `get_benchmark_context`
+   - `linkedin_ads` → `list_linkedin_campaigns`, `get_linkedin_campaign_performance` (lookback_days: 30)
 4. **Create CLAUDE.md** at the project root with: brand context from scanned docs, connected platforms and account info, performance snapshot with key metrics, KPI targets
 5. **Present a summary** of everything found — accounts connected, campaigns discovered, key metrics, and what you can help with

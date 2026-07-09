@@ -112,6 +112,24 @@ done
 [ -z "$bad" ] && pass || fail "routed tool named without the two-step or a protocol reference:$bad"
 
 # ---------------------------------------------------------------------------
+# Skills were not the only place the stale contract hid. commands/ and agents/ and the
+# hand-maintained OpenClaw skill all name routed tools too, and none of them are SKILL.md.
+echo ""; echo "--- Tool-call contract: commands, agents, hand-maintained skills ---"
+EXTRA_CONTRACT_FILES="commands/*.md agents/*.md plugins/openclaw/SKILL.md skills/performance-marketing-agent/SKILL.md"
+
+check "Non-skill files naming a routed tool teach list_tools or defer to adspirer-mcp"
+bad=""
+for f in $EXTRA_CONTRACT_FILES; do
+  [ -f "$f" ] || continue
+  for sentinel in $ROUTED_SENTINELS; do
+    if grep -q "$sentinel" "$f" 2>/dev/null; then
+      grep -qE 'list_tools|adspirer-mcp|"action": "execute"' "$f" || bad="$bad $f"
+      break
+    fi
+  done
+done
+[ -z "$bad" ] && pass || fail "routed tool named without the contract:$bad"
+
 echo ""; echo "--- URL allowlist ---"
 check "No forbidden URLs"
 # Only an actual linkable URL is a violation. Naming a forbidden path inside a
