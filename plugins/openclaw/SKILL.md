@@ -68,7 +68,28 @@ This is not a reference guide. This skill drives automation. You read and write 
 
 ## How It Works
 
-This skill is powered by the **Adspirer MCP server** (175+ tools across 4 ad platforms). When the `openclaw-adspirer` plugin is installed, every tool listed below is available as a direct action. The same tool surface is exposed as REST at `https://api.adspirer.ai` (auth via Personal Access Tokens — `sk_live_...`).
+This skill is powered by the **Adspirer MCP server**, covering Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads. The same tool surface is exposed as REST at `https://api.adspirer.ai` (auth via Personal Access Tokens — `sk_live_...`).
+
+### Calling the tools
+
+Only a few tools are callable by name: `start_here`, `search_tools`, `get_tool_schema`,
+`get_connections_status`, `get_usage_status`, `switch_primary_account`, `get_campaign_performance`
+(Google), `get_meta_campaign_performance`, `audit_conversion_tracking`, `echo_test`.
+
+**Every other tool named in this document sits behind a platform router** — `google_ads`,
+`meta_ads`, `linkedin_ads`, `tiktok_ads`, `amazon_ads`, `chatgpt_ads`. Call the router twice:
+
+```
+{"action": "list_tools"}                                    # free, always first
+{"action": "execute", "tool_name": "...", "arguments": {}}  # exact name from step 1
+```
+
+Calling a routed tool by name returns "tool not found". `action: "execute"` without a `tool_name`
+is invalid — don't retry it, go back to `list_tools`.
+
+Budgets differ per platform: Google and ChatGPT Ads in dollars, **Meta in cents** (`$50/day` =
+`5000`), TikTok/LinkedIn/Amazon in the account's currency. Campaigns are created **paused** on every
+platform.
 
 ### Setup (One-Time)
 
