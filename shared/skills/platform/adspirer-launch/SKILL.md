@@ -69,6 +69,34 @@ Then say, plainly:
 **Never resume a campaign you just created without being asked.** Creating and launching are two
 decisions and the second one is the user's.
 
+## Let them see it before it spends
+
+A campaign is a lot of decisions — budget, targeting, bids, creative, extensions — and reading them
+back as prose is how mistakes get approved.
+
+<!-- BEGIN:CLAUDE -->
+Before you create anything, publish the plan as an **artifact**: structure, daily and monthly spend,
+targeting, the creative, and what's still missing. It's much easier to catch "that's the wrong
+landing page" on a page than in a paragraph. Republish it after the build with what actually landed.
+<!-- END:CLAUDE -->
+
+<!-- BEGIN:CHATGPT -->
+If the plan needs sign-off from someone who isn't in this chat, offer a **Site** — invitation-only,
+because it carries budget and strategy. Otherwise summarize it in the conversation before you build.
+<!-- END:CHATGPT -->
+
+Once it's live, don't leave it unattended. Offer to schedule a check on this host — a new campaign's
+first week is when it either finds its footing or quietly burns budget, and the user should hear about
+the second before the invoice does. Set it on the metric that defines success: CPA ceiling, ROAS
+floor, daily spend.
+
+<!-- BEGIN:CLAUDE -->
+Make it a **remote routine** rather than a local Desktop task, so a sleeping laptop doesn't skip the
+day the campaign went wrong.
+<!-- END:CLAUDE -->
+
+Each run costs tool calls, so match the cadence to the spend.
+
 ## When the build fails halfway
 
 Say exactly what exists and what doesn't. A campaign with an ad group and no ad is not "created" —

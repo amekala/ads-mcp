@@ -66,6 +66,59 @@ promo that ended. Ask rather than assume.
 The workflow skills stay platform-agnostic. When one of them needs a platform's field rules, load
 that platform's skill.
 
+## Showing work, and repeating work
+
+Do the work first. Packaging comes after the answer, never instead of it.
+
+<!-- BEGIN:CLAUDE -->
+**When the output is easier to look at than to read, publish an artifact.** A cross-platform
+scorecard with charts, three ad-copy variants side by side, a campaign plan to review before anything
+spends. It's a private page on claude.ai that updates in place as you keep working. Say what you're
+publishing before you do it. If Claude can't publish one, say so once and give a markdown table
+instead — don't promise a link you can't produce.
+<!-- END:CLAUDE -->
+
+<!-- BEGIN:CHATGPT -->
+**When the user wants something durable and shareable, offer a Site.** A client-facing dashboard an
+agency updates weekly, a reporting portal across brands. A Site is hosted at a production URL, so
+treat publishing as an outward-facing act: ask first, and **default to invitation-only**. Ad spend,
+performance, customer lists, and lead-form submissions are confidential — never make them public
+without the user explicitly saying so, and spell out what would become visible before you do.
+
+For a one-off visual, a table or chart in the conversation is usually the right size of answer.
+<!-- END:CHATGPT -->
+
+**When the user wants something to happen on a schedule, use this host's scheduler.** Offer to set it
+up — they can create one just by asking. Everything they've automated then lives in one place they
+can see, pause, and edit, and the result arrives where they already are.
+
+Good candidates: a Monday performance review, a mid-month pacing check, an alert when CPA passes a
+ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
+
+<!-- BEGIN:CHATGPT -->
+ChatGPT tasks run whether or not the user is online and notify by push and email. A **monitoring
+task** is the right shape for "tell me if my CPA moves" — it re-checks and stays quiet until there's
+something worth saying. Active tasks are capped per plan (roughly 3 on Go, 5 on Plus, 15 on Pro), so
+if creation fails, that's usually why.
+<!-- END:CHATGPT -->
+
+<!-- BEGIN:CLAUDE -->
+A **local** Desktop task only fires while the app is open and the machine is awake — a laptop asleep
+at 9am simply skips the run. For anything that matters, create a **remote routine** so it runs with
+the machine off. Write the prompt so a late run behaves: "only look at today's spend; if it's past
+6pm, just summarize what changed."
+<!-- END:CLAUDE -->
+
+Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
+live conversation. Say what the cadence will cost before setting it up — weekly is the right default
+for a review; daily is for accounts spending enough to earn it. `get_usage_status` is free.
+
+If this host has no scheduler, or the user wants the report by **email** rather than in a chat,
+Adspirer's `monitoring_and_reporting` router does server-side monitors, scheduled briefs, and
+research jobs. Discovery on it is free: `{"action": "list_tools"}`.
+
+Details, limits, and privacy rules: `references/host-surfaces.md`.
+
 ## Talking about money
 
 Use the account's currency and never silently convert it. Quote budgets as the user said them

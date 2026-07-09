@@ -71,6 +71,17 @@ Fix, in order of leverage:
 Change one variable at a time. Swapping the image *and* the copy *and* the audience teaches you
 nothing about which one mattered.
 
+## Show the variants together
+
+Copy is judged by comparison. Fifteen headlines in a bulleted list all read the same; the same
+fifteen laid out as cards, grouped by angle, with character counts and the truncation point marked,
+are a decision the user can actually make.
+
+
+
+Either way, render each variant against its platform's **visible** limit, not the hard one. A Meta
+primary text that looks fine at 2,200 characters is worthless if the offer sits past 125.
+
 ## Applying it
 
 Update in place with `update_ad_headlines`, `update_ad_descriptions`, or `update_ad_content` on
@@ -79,3 +90,7 @@ gathers data — pausing the control before the challenger has proven itself is 
 backwards.
 
 Ads may need review before serving. Say so, rather than letting the user think it's live.
+
+Creative fatigue is a recurring problem, not a one-time fix. Rather than promising to check back,
+offer to schedule a fatigue check on this host — frequency and CTR, every couple of weeks — so the
+next refresh is prompted by the data instead of by someone remembering.

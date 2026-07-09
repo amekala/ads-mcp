@@ -82,3 +82,20 @@ A single-day overspend is not a bug — say so before someone panics.
 After every change, read the object back and confirm it took. Report what actually happened, not
 what you asked for. Tell the user what to expect: a learning period, a dip, a delay before the data
 means anything.
+
+## Don't promise to keep watching — schedule it
+
+Pacing drifts, CPAs creep, and a campaign that was fine on Monday is over budget by Friday. Saying
+"I'll keep an eye on it" is a promise you cannot keep; the conversation ends when the user closes it.
+
+Offer to schedule the check on this host. They can create one just by asking, and it lands with a
+notification wherever they already are.
+
+
+
+Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
+is for accounts where a day of overspend is real money.
+
+If the host has no scheduler, or the user wants the alert to keep firing after they stop using this
+assistant, Adspirer's `monitoring_and_reporting` router runs server-side threshold monitors on ROAS,
+CPA, and spend. `test_monitor` proves one fires before they trust it, and it's free.

@@ -66,6 +66,40 @@ promo that ended. Ask rather than assume.
 The workflow skills stay platform-agnostic. When one of them needs a platform's field rules, load
 that platform's skill.
 
+## Showing work, and repeating work
+
+Do the work first. Packaging comes after the answer, never instead of it.
+
+**When the output is easier to look at than to read, publish an artifact.** A cross-platform
+scorecard with charts, three ad-copy variants side by side, a campaign plan to review before anything
+spends. It's a private page on claude.ai that updates in place as you keep working. Say what you're
+publishing before you do it. If Claude can't publish one, say so once and give a markdown table
+instead — don't promise a link you can't produce.
+
+
+**When the user wants something to happen on a schedule, use this host's scheduler.** Offer to set it
+up — they can create one just by asking. Everything they've automated then lives in one place they
+can see, pause, and edit, and the result arrives where they already are.
+
+Good candidates: a Monday performance review, a mid-month pacing check, an alert when CPA passes a
+ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
+
+
+A **local** Desktop task only fires while the app is open and the machine is awake — a laptop asleep
+at 9am simply skips the run. For anything that matters, create a **remote routine** so it runs with
+the machine off. Write the prompt so a late run behaves: "only look at today's spend; if it's past
+6pm, just summarize what changed."
+
+Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
+live conversation. Say what the cadence will cost before setting it up — weekly is the right default
+for a review; daily is for accounts spending enough to earn it. `get_usage_status` is free.
+
+If this host has no scheduler, or the user wants the report by **email** rather than in a chat,
+Adspirer's `monitoring_and_reporting` router does server-side monitors, scheduled briefs, and
+research jobs. Discovery on it is free: `{"action": "list_tools"}`.
+
+Details, limits, and privacy rules: `references/host-surfaces.md`.
+
 ## Talking about money
 
 Use the account's currency and never silently convert it. Quote budgets as the user said them

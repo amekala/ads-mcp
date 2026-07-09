@@ -141,6 +141,49 @@ if grep -rEq "$FORBIDDEN" $TARGET_ROOTS 2>/dev/null; then
 else pass; fi
 
 # ---------------------------------------------------------------------------
+# Artifacts are Claude-only; Sites are ChatGPT-only. A skill that advertises the wrong
+# host's surface tells the user to use something that isn't there. references/ are exempt:
+# they ship verbatim to every target and describe all surfaces neutrally.
+echo ""; echo "--- Host surfaces gated to the right target ---"
+
+check "Artifact guidance appears only in the Claude build"
+bad=""
+for root in plugins/chatgpt/adspirer/skills plugins/cursor/adspirer/.cursor/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
+  [ -d "$root" ] || continue
+  hits=$(grep -rlio 'artifact' "$root"/*/SKILL.md 2>/dev/null || true)
+  [ -n "$hits" ] && bad="$bad $hits"
+done
+[ -z "$bad" ] && pass || fail "artifact guidance leaked to a non-Claude target:$bad"
+
+# Case-sensitive word match: the ChatGPT feature is "Site"/"Sites". Bold markers are not a
+# reliable anchor — the source bolds whole sentences, so `**Site**` may never appear.
+SITES_RE='\bSites?\b'
+
+check "Sites guidance appears only in the ChatGPT build"
+bad=""
+for root in skills plugins/cursor/adspirer/.cursor/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
+  [ -d "$root" ] || continue
+  hits=$(grep -rlE "$SITES_RE" "$root"/*/SKILL.md 2>/dev/null || true)
+  [ -n "$hits" ] && bad="$bad $hits"
+done
+[ -z "$bad" ] && pass || fail "Sites guidance leaked to a non-ChatGPT target:$bad"
+
+check "Claude build actually kept its artifact guidance"
+if grep -liq 'artifact' skills/adspirer-agent/SKILL.md 2>/dev/null; then pass; else fail "CLAUDE block was dropped from the claude target"; fi
+
+check "ChatGPT build actually kept its Sites guidance"
+if grep -qE "$SITES_RE" plugins/chatgpt/adspirer/skills/adspirer-agent/SKILL.md 2>/dev/null; then pass; else fail "CHATGPT block was dropped from the chatgpt target"; fi
+
+check "Every host-gated skill kept the right block for its target"
+bad=""
+for s in adspirer-agent adspirer-performance-review adspirer-optimize adspirer-creative adspirer-launch; do
+  f="plugins/chatgpt/adspirer/skills/$s/SKILL.md"
+  [ -f "$f" ] && grep -qi 'artifact' "$f" && bad="$bad chatgpt/$s(artifact)"
+  f="skills/$s/SKILL.md"
+  [ -f "$f" ] && grep -qE "$SITES_RE" "$f" && bad="$bad claude/$s(Sites)"
+done
+[ -z "$bad" ] && pass || fail "wrong host's surface survived:$bad"
+
 echo ""; echo "--- No hardcoded Adspirer pricing ---"
 # Plans and prices change; skills must point at the docs, never carry a number.
 # Ad *budget* examples ($50/day) are fine — this targets Adspirer's own plan prices.
