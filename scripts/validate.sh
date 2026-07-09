@@ -1,431 +1,213 @@
 #!/usr/bin/env bash
-set -euo pipefail
+set -uo pipefail
 
-# scripts/validate.sh
-# Validates skill consistency, frontmatter, install scripts, and optionally MCP endpoint.
-#
-# Usage:
-#   ./scripts/validate.sh          # Run all offline checks
-#   ./scripts/validate.sh --live   # Also test MCP endpoint connectivity
+# scripts/validate.sh — offline checks over the generated skill trees.
+#   ./scripts/validate.sh          all offline checks
+#   ./scripts/validate.sh --live   also probe the MCP endpoint
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-ERRORS=0
-CHECKS=0
-PASSED=0
+ERRORS=0; CHECKS=0; PASSED=0
+check() { CHECKS=$((CHECKS+1)); printf '  [%d] %s... ' "$CHECKS" "$1"; }
+pass()  { PASSED=$((PASSED+1)); echo "OK"; }
+fail()  { ERRORS=$((ERRORS+1)); echo "FAIL"; [ $# -gt 0 ] && echo "       $1"; }
 
-check() {
-    local name="$1"
-    CHECKS=$((CHECKS + 1))
-    echo -n "  [$CHECKS] $name... "
-}
+TARGET_ROOTS="
+plugins/cursor/adspirer/.cursor/skills
+plugins/codex/adspirer/skills
+skills
+plugins/gemini/skills
+plugins/chatgpt/adspirer/skills
+"
 
-pass() {
-    PASSED=$((PASSED + 1))
-    echo "OK"
-}
-
-fail() {
-    ERRORS=$((ERRORS + 1))
-    echo "FAIL"
-    if [ $# -gt 0 ]; then
-        echo "       $1"
-    fi
-}
+# The only tools callable by name. Everything else lives behind a router.
+DIRECT_TOOLS="start_here echo_test search_tools get_tool_schema get_campaign_performance get_usage_status get_meta_campaign_performance audit_conversion_tracking get_connections_status switch_primary_account"
 
 echo "=== Skill Validation ==="
-echo ""
 
-# --------------------------------------------------------------------------
-# Check 1: Sync consistency (templates generate files matching committed ones)
-# --------------------------------------------------------------------------
-echo "--- Sync Consistency ---"
-check "Templates generate files matching committed skills"
-if ./scripts/sync-skills.sh --check > /dev/null 2>&1; then
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Sync consistency ---"
+check "Generated files match committed files"
+if ./scripts/sync-skills.sh --check > /dev/null 2>&1; then pass; else fail "run ./scripts/sync-skills.sh --diff"; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Frontmatter ---"
+for root in $TARGET_ROOTS; do
+  for f in "$root"/*/SKILL.md; do
+    [ -f "$f" ] || continue
+    check "$f"
+    if [ "$(head -1 "$f")" != "---" ]; then fail "missing opening ---"; continue; fi
+    fm="$(sed -n '2,/^---$/p' "$f")"
+    if ! printf '%s' "$fm" | grep -q '^name:'; then fail "missing name:"; continue; fi
+    if ! printf '%s' "$fm" | grep -q '^description:'; then fail "missing description:"; continue; fi
     pass
-else
-    fail "Run './scripts/sync-skills.sh --diff' to see differences"
-fi
-
-# --------------------------------------------------------------------------
-# Check 2: Frontmatter validation
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Frontmatter Validation ---"
-
-for skill_file in \
-    plugins/cursor/adspirer/.cursor/skills/*/SKILL.md \
-    plugins/codex/adspirer/skills/*/SKILL.md \
-    skills/*/SKILL.md; do
-
-    rel_path="${skill_file#$REPO_ROOT/}"
-    check "Frontmatter in $rel_path"
-
-    # Check for --- delimiters
-    first_line=$(head -1 "$skill_file")
-    if [ "$first_line" != "---" ]; then
-        fail "Missing opening --- delimiter"
-        continue
-    fi
-
-    # Check for name: field
-    if ! sed -n '2,/^---$/p' "$skill_file" | grep -q '^name:'; then
-        fail "Missing 'name:' field"
-        continue
-    fi
-
-    # Check for description: field
-    if ! sed -n '2,/^---$/p' "$skill_file" | grep -q '^description:'; then
-        fail "Missing 'description:' field"
-        continue
-    fi
-
-    pass
+  done
 done
 
-# --------------------------------------------------------------------------
-# Check 3: Skill inventory (all expected skills exist)
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Skill Inventory ---"
-
-# Auto-discover skills from shared/skills/ (no hardcoded list)
-SHARED_SKILLS=""
-for skill_dir in shared/skills/adspirer-*/; do
-    [ -d "$skill_dir" ] || continue
-    SHARED_SKILLS="$SHARED_SKILLS $(basename "$skill_dir")"
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Discovery budget (name + description, per target) ---"
+for root in $TARGET_ROOTS; do
+  [ -d "$root" ] || continue
+  check "Budget: $root"
+  total=$(python3 - "$root" <<'PY'
+import sys, glob, re
+total = 0
+for f in glob.glob(f"{sys.argv[1]}/*/SKILL.md"):
+    m = re.match(r'^---\n(.*?)\n---\n', open(f).read(), re.S)
+    if not m: continue
+    fm = m.group(1)
+    n = re.search(r'^name:\s*(.+)$', fm, re.M)
+    d = re.search(r'^description:\s*(.+)$', fm, re.M)
+    total += len(n.group(1).strip() if n else "") + len(d.group(1).strip() if d else "")
+print(total)
+PY
+)
+  if [ "$total" -gt 8000 ]; then fail "$total chars exceeds the 8000 discovery budget"
+  elif [ "$total" -gt 6000 ]; then PASSED=$((PASSED+1)); echo "WARN ($total chars, ceiling 8000)"
+  else pass; fi
 done
 
-for skill in $SHARED_SKILLS; do
-    check "Cursor: $skill"
-    if [ -f "plugins/cursor/adspirer/.cursor/skills/$skill/SKILL.md" ]; then
-        pass
-    else
-        fail "File not found"
-    fi
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Tool-call contract ---"
+
+check "No skill claims a routed tool can be called directly"
+bad=""
+for root in $TARGET_ROOTS; do
+  for f in "$root"/*/SKILL.md; do
+    [ -f "$f" ] || continue
+    # "call `X` directly" / "X — call it directly" where X is not a direct tool
+    while IFS= read -r tool; do
+      case " $DIRECT_TOOLS " in *" $tool "*) ;; *) bad="$bad $f:$tool" ;; esac
+    done < <(grep -oE '`[a-z_]+`[^.]{0,40}call (it|them) directly|call `[a-z_]+` directly' "$f" 2>/dev/null \
+             | grep -oE '`[a-z_]+`' | tr -d '`' | sort -u)
+  done
+done
+[ -z "$bad" ] && pass || fail "routed tool advertised as direct:$bad"
+
+check "search_tools / get_tool_schema never wrapped in action:execute"
+if grep -rEq '"tool_name":\s*"(search_tools|get_tool_schema)"' $TARGET_ROOTS 2>/dev/null; then
+  fail "found a routed call to a top-level discovery tool"
+else pass; fi
+
+# The regression this guards against: the retired `adspirer-ads` skill named routed
+# tools (get_linkedin_campaign_performance, ...) as if they were callable, and never
+# mentioned a router at all. So key off the ROUTED TOOL NAMES, not the word "router" —
+# a file that names one must teach the two-step or defer to `adspirer-mcp`.
+ROUTED_SENTINELS="get_linkedin_campaign_performance get_tiktok_campaign_performance get_amazon_campaign_performance get_chatgpt_performance create_search_campaign add_meta_ad_set"
+
+check "Skills naming a routed tool teach list_tools or defer to adspirer-mcp"
+bad=""
+for root in $TARGET_ROOTS; do
+  for f in "$root"/*/SKILL.md; do
+    [ -f "$f" ] || continue
+    for sentinel in $ROUTED_SENTINELS; do
+      if grep -q "$sentinel" "$f" 2>/dev/null; then
+        grep -qE 'list_tools|`adspirer-mcp`' "$f" || bad="$bad $f"
+        break
+      fi
+    done
+  done
+done
+[ -z "$bad" ] && pass || fail "routed tool named without the two-step or a protocol reference:$bad"
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- URL allowlist ---"
+check "No forbidden URLs"
+# Only an actual linkable URL is a violation. Naming a forbidden path inside a
+# prohibition ("never link /billing") must not trip the lint.
+FORBIDDEN='https?://(adspirer\.ai/(billing|settings|pricing)([^a-z]|$)|adspirer\.ai/dashboard([^s]|$)|app\.adspirer\.com)'
+if grep -rEq "$FORBIDDEN" $TARGET_ROOTS 2>/dev/null; then
+  grep -rEn "$FORBIDDEN" $TARGET_ROOTS 2>/dev/null | head -5
+  fail "forbidden URL found"
+else pass; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- No hardcoded Adspirer pricing ---"
+# Plans and prices change; skills must point at the docs, never carry a number.
+# Ad *budget* examples ($50/day) are fine — this targets Adspirer's own plan prices.
+check "No plan prices baked into skills or references"
+if grep -rEqi '\$(49|99|199|485|999|2,?000)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null; then
+  grep -rEni '\$(49|99|199|485|999|2,?000)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null | head -5
+  fail "a plan price is hardcoded — point at /docs/knowledge-base/pricing instead"
+else pass; fi
+
+check "No per-plan tool-call allowances baked in"
+if grep -rEq '\b(15|150|600|3,?000|1,?800|7,?200|50,?000)\s+(tool )?calls?\b' $TARGET_ROOTS 2>/dev/null; then
+  grep -rEn '\b(15|150|600|3,?000|1,?800|7,?200|50,?000)\s+(tool )?calls?\b' $TARGET_ROOTS 2>/dev/null | head -5
+  fail "a quota allowance is hardcoded — use get_usage_status or link the docs"
+else pass; fi
+
+echo ""; echo "--- ChatGPT variant is sandbox-safe ---"
+CG="plugins/chatgpt/adspirer/skills"
+
+check "No filesystem/memory/web-tool instructions"
+if grep -rEq '\bGlob\b|MEMORY\.md|WebFetch|WebSearch|BRAND\.md|CLAUDE\.md|AGENTS\.md|GEMINI\.md' "$CG" --include=SKILL.md 2>/dev/null; then
+  grep -rEn '\bGlob\b|MEMORY\.md|WebFetch|WebSearch|BRAND\.md|CLAUDE\.md|AGENTS\.md|GEMINI\.md' "$CG" --include=SKILL.md | head -5
+  fail "harness-specific instruction leaked into the ChatGPT variant"
+else pass; fi
+
+check "No workspace skills shipped to ChatGPT"
+if [ -d "$CG/adspirer-setup" ]; then fail "adspirer-setup must not ship to ChatGPT"; else pass; fi
+
+check "No deprecation shim shipped to ChatGPT"
+if [ -d "$CG/ad-campaign-management" ]; then fail "shim must not ship to ChatGPT"; else pass; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Template markers ---"
+check "No {{...}} or <!-- BEGIN: markers survived"
+if grep -rq '{{' $TARGET_ROOTS --include=SKILL.md 2>/dev/null || grep -rq '<!-- BEGIN:' $TARGET_ROOTS --include=SKILL.md 2>/dev/null; then
+  fail "leaked template markers"
+else pass; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- references/ shipped ---"
+for skill in adspirer-mcp adspirer-google-ads adspirer-meta-ads adspirer-tiktok-ads adspirer-docs; do
+  check "references present: $skill"
+  missing=""
+  for root in $TARGET_ROOTS; do
+    [ -d "$root/$skill" ] || continue
+    [ -d "$root/$skill/references" ] || missing="$missing $root"
+  done
+  [ -z "$missing" ] && pass || fail "missing references in:$missing"
 done
 
-for skill in $SHARED_SKILLS; do
-    check "Codex: $skill"
-    if [ -f "plugins/codex/adspirer/skills/$skill/SKILL.md" ]; then
-        pass
-    else
-        fail "File not found"
-    fi
+check "Codex agents/openai.yaml preserved"
+if [ -f "plugins/codex/adspirer/skills/adspirer-agent/agents/openai.yaml" ]; then pass; else fail "not generated"; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Context file correctness ---"
+check "Cursor uses BRAND.md only"
+if grep -rlq 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/.cursor/skills/*/SKILL.md 2>/dev/null; then fail "wrong context file"; else pass; fi
+check "Codex uses AGENTS.md only"
+if grep -rlq 'BRAND\.md\|CLAUDE\.md' plugins/codex/adspirer/skills/*/SKILL.md 2>/dev/null; then fail "wrong context file"; else pass; fi
+
+# ---------------------------------------------------------------------------
+echo ""; echo "--- Agents + Gemini extension ---"
+for f in shared/agents/performance-marketing-agent/PROMPT.md agents/performance-marketing-agent.md \
+         plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md \
+         plugins/codex/adspirer/agents/performance-marketing-agent.toml gemini-extension.json GEMINI.md; do
+  check "exists: $f"; [ -f "$f" ] && pass || fail "not found"
 done
 
-check "Claude Code: ad-campaign-management"
-if [ -f "skills/ad-campaign-management/SKILL.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
+check "gemini-extension.json is valid JSON with production MCP URL"
+if jq -e '.name and .version' gemini-extension.json >/dev/null 2>&1 \
+   && [ "$(jq -r '.mcpServers.adspirer.url // .mcpServers.adspirer.httpUrl' gemini-extension.json 2>/dev/null)" = "https://mcp.adspirer.com/mcp" ]; then
+  pass
+else fail "bad name/version or MCP url"; fi
 
-# --------------------------------------------------------------------------
-# Check 4: Context file correctness
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Context File Correctness ---"
+check "OpenClaw claw.json + SKILL.md exist"
+if [ -f "plugins/openclaw/claw.json" ] && [ -f "plugins/openclaw/SKILL.md" ]; then pass; else fail "missing"; fi
 
-check "Cursor skills only reference BRAND.md (not AGENTS.md or CLAUDE.md)"
-cursor_bad=$(grep -rl 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/.cursor/skills/*/SKILL.md 2>/dev/null || true)
-if [ -z "$cursor_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $cursor_bad"
-fi
-
-check "Codex skills only reference AGENTS.md (not BRAND.md or CLAUDE.md)"
-codex_bad=$(grep -rl 'BRAND\.md\|CLAUDE\.md' plugins/codex/adspirer/skills/*/SKILL.md 2>/dev/null || true)
-if [ -z "$codex_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $codex_bad"
-fi
-
-check "Claude Code skill only references CLAUDE.md (not BRAND.md or AGENTS.md)"
-claude_bad=$(grep -l 'BRAND\.md\|AGENTS\.md' skills/ad-campaign-management/SKILL.md 2>/dev/null || true)
-if [ -z "$claude_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $claude_bad"
-fi
-
-# --------------------------------------------------------------------------
-# Check 5: No leaked template markers
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Template Marker Leak Check ---"
-
-check "No {{...}} markers in Cursor skills"
-cursor_leak=$(grep -rl '{{' plugins/cursor/adspirer/.cursor/skills/*/SKILL.md 2>/dev/null || true)
-if [ -z "$cursor_leak" ]; then
-    pass
-else
-    fail "Found leaked markers in: $cursor_leak"
-fi
-
-check "No {{...}} markers in Codex skills"
-codex_leak=$(grep -rl '{{' plugins/codex/adspirer/skills/*/SKILL.md 2>/dev/null || true)
-if [ -z "$codex_leak" ]; then
-    pass
-else
-    fail "Found leaked markers in: $codex_leak"
-fi
-
-check "No {{...}} markers in Claude Code skills"
-claude_leak=$(grep -l '{{' skills/ad-campaign-management/SKILL.md 2>/dev/null || true)
-if [ -z "$claude_leak" ]; then
-    pass
-else
-    fail "Found leaked markers in: $claude_leak"
-fi
-
-check "No <!-- BEGIN: markers in generated skills"
-begin_leak=$(grep -rl '<!-- BEGIN:' \
-    plugins/cursor/adspirer/.cursor/skills/*/SKILL.md \
-    plugins/codex/adspirer/skills/*/SKILL.md \
-    skills/ad-campaign-management/SKILL.md 2>/dev/null || true)
-if [ -z "$begin_leak" ]; then
-    pass
-else
-    fail "Found leaked markers in: $begin_leak"
-fi
-
-# --------------------------------------------------------------------------
-# Check 6: Codex extras preserved
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Codex Extras ---"
-
-check "Codex openai.yaml preserved"
-if [ -f "plugins/codex/adspirer/skills/adspirer-ads/agents/openai.yaml" ]; then
-    pass
-else
-    fail "File missing — sync may have deleted it"
-fi
-
-# --------------------------------------------------------------------------
-# Check 7: OpenClaw skill files
-# --------------------------------------------------------------------------
-echo ""
-echo "--- OpenClaw ---"
-
-check "OpenClaw claw.json exists"
-if [ -f "plugins/openclaw/claw.json" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "OpenClaw SKILL.md exists"
-if [ -f "plugins/openclaw/SKILL.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "OpenClaw claw.json has valid name field"
-if grep -q '"name"' plugins/openclaw/claw.json 2>/dev/null; then
-    pass
-else
-    fail "Missing 'name' field in claw.json"
-fi
-
-# --------------------------------------------------------------------------
-# Check 8: Shared templates exist
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Shared Templates ---"
-
-for skill_dir in shared/skills/adspirer-*/; do
-    [ -d "$skill_dir" ] || continue
-    skill="$(basename "$skill_dir")"
-    check "Template: shared/skills/$skill/SKILL.md"
-    if [ -f "shared/skills/$skill/SKILL.md" ]; then
-        pass
-    else
-        fail "Template not found"
-    fi
-done
-
-# --------------------------------------------------------------------------
-# Check 9: Agent files
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Agent Files ---"
-
-check "Shared agent template exists"
-if [ -f "shared/agents/performance-marketing-agent/PROMPT.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "Claude Code agent exists"
-if [ -f "agents/performance-marketing-agent.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "Cursor agent exists"
-if [ -f "plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "Codex agent exists"
-if [ -f "plugins/codex/adspirer/agents/performance-marketing-agent.toml" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "Claude Code agent only references CLAUDE.md"
-claude_agent_bad=$(grep -l 'BRAND\.md\|AGENTS\.md' agents/performance-marketing-agent.md 2>/dev/null || true)
-if [ -z "$claude_agent_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $claude_agent_bad"
-fi
-
-check "Cursor agent only references BRAND.md"
-cursor_agent_bad=$(grep -l 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md 2>/dev/null || true)
-if [ -z "$cursor_agent_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $cursor_agent_bad"
-fi
-
-check "Codex agent only references AGENTS.md"
-codex_agent_bad=$(grep -l 'BRAND\.md\|CLAUDE\.md' plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
-if [ -z "$codex_agent_bad" ]; then
-    pass
-else
-    fail "Found wrong context file in: $codex_agent_bad"
-fi
-
-check "No {{...}} markers in generated agents"
-agent_leak=$(grep -rl '{{' \
-    agents/performance-marketing-agent.md \
-    plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md \
-    plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
-if [ -z "$agent_leak" ]; then
-    pass
-else
-    fail "Found leaked markers in: $agent_leak"
-fi
-
-check "Codex agent has no mcp__adspirer__ prefix"
-codex_prefix=$(grep -l 'mcp__adspirer__' plugins/codex/adspirer/agents/performance-marketing-agent.toml 2>/dev/null || true)
-if [ -z "$codex_prefix" ]; then
-    pass
-else
-    fail "Found mcp__adspirer__ prefix in Codex agent (should be stripped)"
-fi
-
-# --------------------------------------------------------------------------
-# Check 10: Gemini CLI Extension
-# --------------------------------------------------------------------------
-echo ""
-echo "--- Gemini CLI Extension ---"
-
-check "gemini-extension.json exists"
-if [ -f "gemini-extension.json" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "gemini-extension.json is valid JSON"
-if jq empty gemini-extension.json 2>/dev/null; then
-    pass
-else
-    fail "Invalid JSON"
-fi
-
-check "gemini-extension.json has required fields (name, version)"
-if jq -e '.name and .version' gemini-extension.json > /dev/null 2>&1; then
-    pass
-else
-    fail "Missing name or version"
-fi
-
-check "gemini-extension.json name is lowercase with dashes"
-GEM_NAME=$(jq -r '.name' gemini-extension.json 2>/dev/null)
-if echo "$GEM_NAME" | grep -qE '^[a-z0-9-]+$'; then
-    pass
-else
-    fail "Name '$GEM_NAME' must be lowercase with dashes only"
-fi
-
-check "gemini-extension.json mcpServers.adspirer configured"
-if jq -e '.mcpServers.adspirer' gemini-extension.json > /dev/null 2>&1; then
-    pass
-else
-    fail "Missing mcpServers.adspirer"
-fi
-
-check "gemini-extension.json MCP URL points to production"
-GEM_URL=$(jq -r '.mcpServers.adspirer.url // .mcpServers.adspirer.httpUrl' gemini-extension.json 2>/dev/null)
-if [ "$GEM_URL" = "https://mcp.adspirer.com/mcp" ]; then
-    pass
-else
-    fail "URL is '$GEM_URL' (expected https://mcp.adspirer.com/mcp)"
-fi
-
-check "GEMINI.md context file exists"
-if [ -f "GEMINI.md" ]; then
-    pass
-else
-    fail "File not found"
-fi
-
-check "Gemini commands directory exists"
-if [ -d "commands/adspirer" ]; then
-    pass
-else
-    fail "Directory not found"
-fi
-
-for cmd in commands/adspirer/*.toml; do
-    [ -f "$cmd" ] || continue
-    check "$(basename "$cmd") contains prompt field"
-    if grep -q '^prompt' "$cmd"; then
-        pass
-    else
-        fail "Missing 'prompt' field"
-    fi
-done
-
-# --------------------------------------------------------------------------
-# Check 11 (optional): MCP endpoint connectivity
-# --------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then
-    echo ""
-    echo "--- MCP Endpoint ---"
-
-    check "https://mcp.adspirer.com/mcp responds"
-    HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 "https://mcp.adspirer.com/mcp" 2>/dev/null || echo "000")
-    if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "401" ] || [ "$HTTP_CODE" = "405" ]; then
-        pass
-        echo "       (HTTP $HTTP_CODE)"
-    else
-        fail "Got HTTP $HTTP_CODE (expected 200, 401, or 405)"
-    fi
+  echo ""; echo "--- MCP endpoint ---"
+  check "https://mcp.adspirer.com/mcp responds"
+  code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 10 https://mcp.adspirer.com/mcp 2>/dev/null || echo 000)
+  case "$code" in 200|401|405) pass; echo "       (HTTP $code)";; *) fail "HTTP $code";; esac
 fi
 
-# --------------------------------------------------------------------------
-# Summary
-# --------------------------------------------------------------------------
 echo ""
 echo "=== Results: $PASSED/$CHECKS passed, $ERRORS failed ==="
-if [ $ERRORS -eq 0 ]; then
-    echo "All checks passed."
-else
-    echo "$ERRORS check(s) failed."
-fi
-exit $ERRORS
+[ "$ERRORS" -eq 0 ] && echo "All checks passed." || echo "$ERRORS check(s) failed."
+exit "$ERRORS"

@@ -110,6 +110,19 @@ Always start here before any ad operation:
 
 ### Step 3: Execute Tools
 
+**How to call them.** Only a handful of tools are callable by name: `start_here`, `search_tools`,
+`get_tool_schema`, `get_connections_status`, `get_usage_status`, `switch_primary_account`,
+`get_campaign_performance`, `get_meta_campaign_performance`, `audit_conversion_tracking`,
+`echo_test`.
+
+Every other tool named in this document lives behind a **platform router** — `google_ads`,
+`meta_ads`, `linkedin_ads`, `tiktok_ads`, `amazon_ads`, `chatgpt_ads`. Call the router twice:
+`{"action": "list_tools"}` to discover the exact name, then
+`{"action": "execute", "tool_name": "...", "arguments": {...}}`. `list_tools` is free.
+
+Read the `adspirer-mcp` skill for the full contract, including per-platform account ids and the
+budget-unit differences (Meta budgets are in cents).
+
 Follow the workflow patterns below. Always read first (performance, status), then act (create, optimize).
 
 ### Step 4: Summarize and Recommend
@@ -118,10 +131,12 @@ Present results in tables with key metrics. Highlight top and underperforming it
 
 ## Performance Analysis
 
-- **Google Ads:** `get_campaign_performance` — params: `lookback_days` (7/30/60/90, default 30), optional `customer_id`
-- **Meta Ads:** `get_meta_campaign_performance` — params: `lookback_days`, optional `ad_account_id`
-- **LinkedIn Ads:** `get_linkedin_campaign_performance` — params: `lookback_days`
-- **TikTok Ads:** `get_tiktok_campaign_performance` — params: `lookback_days`
+- **Google Ads:** `get_campaign_performance` — direct call. Params: `lookback_days` (7/30/60/90, default 30), optional `customer_id`
+- **Meta Ads:** `get_meta_campaign_performance` — direct call. Params: `lookback_days`, optional `ad_account_id`
+- **LinkedIn Ads:** via the `linkedin_ads` router → `execute` → `get_linkedin_campaign_performance`
+- **TikTok Ads:** via the `tiktok_ads` router → `execute` → `get_tiktok_campaign_performance`
+- **Amazon Ads:** via the `amazon_ads` router → `execute` → `get_amazon_campaign_performance`
+- **ChatGPT Ads:** via the `chatgpt_ads` router → `execute` → `get_chatgpt_performance`
 
 Present: impressions, clicks, CTR, spend, conversions, cost/conversion, ROAS. Default to 30-day lookback.
 
@@ -470,11 +485,14 @@ Claude and ChatGPT web connectors may disconnect every 1–2 weeks — this is n
 
 ## Pricing
 
-| Plan | Price | Tool Calls |
-|------|-------|------------|
-| **Free Forever** | $0/mo | 15/month |
-| **Plus** | $49/mo | 150/month |
-| **Pro** | $99/mo | 600/month |
-| **Max** | $199/mo | 3,000/month |
+Adspirer bills per **tool call** — a task the assistant performs — not per dollar of ad spend.
+There is a free tier, three self-serve plans, and Enterprise.
 
-All plans include all 4 ad platforms. Sign up at https://adspirer.ai/settings?tab=billing
+Prices and included call counts change, so they are not reproduced here. See
+[the pricing page](https://www.adspirer.com/docs/knowledge-base/pricing).
+
+For the current user's own plan and remaining quota, call `get_usage_status` — it is free and it is
+authoritative for their account.
+
+Every plan includes all supported ad platforms: Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads,
+Amazon Ads, and ChatGPT Ads. Connect an ad account at https://adspirer.ai/connections

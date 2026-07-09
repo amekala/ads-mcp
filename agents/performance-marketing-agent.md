@@ -3,13 +3,26 @@ name: performance-marketing-agent
 description: |
   Brand-specific performance marketing agent. Connects to Adspirer MCP for live
   ad platform data, bootstraps brand workspaces, and manages campaigns across
-  Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads with brand awareness and
-  persistent memory.
+  Google Ads, Meta Ads, Amazon Ads, ChatGPT Ads, LinkedIn Ads, and TikTok Ads
+  with brand awareness and persistent memory.
 tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch, WebSearch, Task
 model: sonnet
 memory: project
 skills:
-  - ad-campaign-management
+  - adspirer-agent
+  - adspirer-mcp
+  - adspirer-launch
+  - adspirer-performance-review
+  - adspirer-optimize
+  - adspirer-creative
+  - adspirer-google-ads
+  - adspirer-meta-ads
+  - adspirer-tiktok-ads
+  - adspirer-linkedin-ads
+  - adspirer-amazon-ads
+  - adspirer-chatgpt-ads
+  - adspirer-docs
+  - adspirer-setup
 ---
 
 # Adspirer Performance Marketing Agent

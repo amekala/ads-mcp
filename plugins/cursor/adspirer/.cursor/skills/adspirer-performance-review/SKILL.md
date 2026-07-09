@@ -1,23 +1,79 @@
 ---
 name: adspirer-performance-review
-description: Run a cross-platform performance review for this brand. Use when the user asks for a performance report, weekly review, or wants to see how campaigns are doing across all platforms.
+description: Review ad performance across platforms with Adspirer — how are my ads doing, weekly or monthly reports, a cross-channel scorecard, CPA, ROAS, CTR, spend trends, and auditing whether conversion tracking is set up correctly. Read-only; changes nothing.
 ---
 
-Run a full cross-platform performance review:
+# Performance review
 
-1. Read `BRAND.md` for KPI targets (if it exists)
-1.5. Read STRATEGY.md (if it exists). Note where campaigns align or conflict with active
-     directives. Flag "Strategy Drift" items in the scorecard.
-2. Call `get_connections_status` to identify active platforms
-3. For each connected platform, pull last 30 days of performance data
-4. For each platform, pull wasted spend analysis
-5. Present a unified scorecard comparing actuals vs targets
-6. Highlight top performers, underperformers, and wasted spend
-7. Recommend top 3 actions across all platforms
-8. If the user asks for launch QA or campaign integrity, run a Campaign Integrity Audit:
-   - campaign status
-   - ad group count
-   - ads count
-   - keyword count and match-type mix
-   - extension counts
-   - bidding strategy requested vs actual
+Follow `adspirer-mcp` before any tool call. This skill only reads — it never changes a campaign.
+
+## Where the numbers come from
+
+The two big platforms have **direct, top-level** performance tools. The rest go through their router.
+
+| Platform | How |
+|---|---|
+| Google Ads | `get_campaign_performance` — call it directly |
+| Meta Ads | `get_meta_campaign_performance` — call it directly |
+| TikTok | `tiktok_ads` router → `execute` → `get_tiktok_campaign_performance` |
+| LinkedIn | `linkedin_ads` router → `execute` → `get_linkedin_campaign_performance` |
+| Amazon | `amazon_ads` router → `execute` → `get_amazon_campaign_performance` |
+| ChatGPT Ads | `chatgpt_ads` router → `execute` → `get_chatgpt_performance` |
+
+Calling the routed ones directly by name will fail — they aren't in the tool list. Pass
+`raw_data: true` when the user wants the numbers rather than the rendered summary.
+
+Only pull the platforms the user has actually connected. Check `get_connections_status` first
+instead of firing six calls and reporting five failures.
+
+## Before you trust a single number
+
+**Verify conversion tracking.** Run `audit_conversion_tracking`. It returns a health score and
+findings across Google, Meta, and LinkedIn — pixels, CAPI, dedup, conversion actions, enhanced
+conversions, attribution.
+
+If tracking is broken, every conversion metric below is fiction, and the honest answer to "how are
+my ads doing" is "I can't tell you yet, and here's why." Say that before presenting a CPA. This is
+the single most valuable thing this skill does.
+
+Also check the window. Amazon's last 48 hours are incomplete. Today is always partial. A "drop" that
+is really an unfinished day is the most common false alarm in this job.
+
+## The scorecard
+
+Report per platform, then in total:
+
+- **Spend** — and pace against the monthly budget
+- **Conversions** and **cost per conversion**
+- **ROAS**, where revenue is tracked
+- **CTR** and **CPC** — diagnostic, not goals
+- **Change vs the previous equivalent period**
+
+Compare like with like: last 7 days against the 7 before, not against a partial week.
+
+## Say what it means
+
+A table is not a review. Lead with the answer:
+
+> Google is doing the work — 34 leads at $41, under your $50 target. Meta spent $890 for 3 leads.
+> The Meta ad set has a frequency of 4.2 and its CTR halved over two weeks; that's creative fatigue,
+> not targeting.
+
+Name the biggest problem and the biggest opportunity. Give one recommendation, with the number
+attached. Offer to act — don't act. Changes belong to `adspirer-optimize`.
+
+## When something moved sharply
+
+Use the anomaly tools rather than speculating: `explain_performance_anomaly` (Google),
+`explain_meta_anomaly`, `explain_tiktok_anomaly`, `explain_linkedin_anomaly`. They compare windows
+and attribute the delta to a cause.
+
+Before blaming the algorithm, check the boring explanations: a campaign paused, a budget changed, a
+disapproved ad, a landing page that started 404ing, a conversion tag someone removed on deploy.
+
+## Don't
+
+- Don't average CPA across platforms with wildly different volumes and call it "blended performance"
+  without saying so.
+- Don't present a 3-day window as a trend.
+- Don't fabricate a number when a tool fails. Say the call failed and which one.
