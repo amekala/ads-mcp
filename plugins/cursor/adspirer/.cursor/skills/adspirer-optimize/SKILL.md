@@ -93,6 +93,7 @@ notification wherever they already are.
 
 
 
+
 Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
 is for accounts where a day of overspend is real money.
 

@@ -174,6 +174,17 @@ if grep -liq 'artifact' skills/adspirer-agent/SKILL.md 2>/dev/null; then pass; e
 check "ChatGPT build actually kept its Sites guidance"
 if grep -qE "$SITES_RE" plugins/chatgpt/adspirer/skills/adspirer-agent/SKILL.md 2>/dev/null; then pass; else fail "CHATGPT block was dropped from the chatgpt target"; fi
 
+check "Codex build kept its scheduled-tasks guidance"
+if grep -qi 'scheduled task' plugins/codex/adspirer/skills/adspirer-agent/SKILL.md 2>/dev/null; then pass; else fail "CODEX block was dropped from the codex target"; fi
+
+# Codex hooks are event handlers, not a scheduler. Flag a line that pairs them with recurring
+# work — unless the line is telling the agent NOT to (the skill says so explicitly).
+check "Codex build never offers hooks as a scheduler"
+if grep -hiE 'hook.{0,40}(recurring|schedule|report)' plugins/codex/adspirer/skills/*/SKILL.md 2>/dev/null \
+   | grep -qivE 'never|not a scheduler|do not|don.t'; then
+  fail "a hook is being offered as a scheduling mechanism"
+else pass; fi
+
 check "Every host-gated skill kept the right block for its target"
 bad=""
 for s in adspirer-agent adspirer-performance-review adspirer-optimize adspirer-creative adspirer-launch; do

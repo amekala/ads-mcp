@@ -98,4 +98,5 @@ Creative fatigue is a recurring problem, not a one-time fix. Rather than promisi
 offer to schedule a fatigue check on this host — frequency and CTR, every couple of weeks — so the
 next refresh is prompted by the data instead of by someone remembering.
 
-A **remote routine** beats a local Desktop task here; fatigue doesn't wait for the laptop to be open.
+A Cowork **scheduled task**, or a **remote routine** in Claude Code — not a local Desktop task.
+Fatigue doesn't wait for the laptop to be open.

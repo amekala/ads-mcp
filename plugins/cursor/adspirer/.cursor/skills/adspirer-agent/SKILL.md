@@ -81,6 +81,7 @@ ceiling, a watch on a competitor's landing page, a reminder before budgets reset
 
 
 
+
 Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
 live conversation. Say what the cadence will cost before setting it up — weekly is the right default
 for a review; daily is for accounts spending enough to earn it. `get_usage_status` is free.

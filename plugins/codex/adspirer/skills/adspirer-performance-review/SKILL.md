@@ -85,6 +85,10 @@ schedule it — this host can, and they can create it just by asking.
 
 
 
+Codex calls it a **scheduled task**. Each run's findings land in the **Scheduled** inbox with an
+unread marker, and a run with nothing worth reporting archives itself — which suits a weekly review
+that's often uneventful.
+
 Each run costs tool calls against their monthly quota, the same as a live conversation. Weekly is the
 right default; daily only for accounts spending enough to justify it. Say so before setting it up.
 

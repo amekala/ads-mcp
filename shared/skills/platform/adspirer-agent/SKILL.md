@@ -96,18 +96,39 @@ Good candidates: a Monday performance review, a mid-month pacing check, an alert
 ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
 
 <!-- BEGIN:CHATGPT -->
-ChatGPT tasks run whether or not the user is online and notify by push and email. A **monitoring
-task** is the right shape for "tell me if my CPA moves" — it re-checks and stays quiet until there's
-something worth saying. Active tasks are capped per plan (roughly 3 on Go, 5 on Plus, 15 on Pro), so
-if creation fails, that's usually why.
+ChatGPT calls them **scheduled tasks**. They run whether or not the user is online and notify by push
+and email. A **monitoring task** is the right shape for "tell me if my CPA moves" — it re-checks and
+stays quiet until there's something worth saying. Active tasks are capped per plan (roughly 3 on Go,
+5 on Plus, 15 on Pro), so if creation fails, that's usually why.
 <!-- END:CHATGPT -->
 
 <!-- BEGIN:CLAUDE -->
-A **local** Desktop task only fires while the app is open and the machine is awake — a laptop asleep
-at 9am simply skips the run. For anything that matters, create a **remote routine** so it runs with
-the machine off. Write the prompt so a late run behaves: "only look at today's spend; if it's past
-6pm, just summarize what changed."
+The name depends on where you're running:
+
+- **Claude Cowork** — a **scheduled task**, created with the `/schedule` skill from any chat. These
+  run remotely, on their cadence, even with the computer asleep or the app closed. Hourly, daily,
+  weekly, weekdays, or on demand. Paid plans only.
+- **Claude Code** — a **routine**. A *local* Desktop task only fires while the app is open and the
+  machine is awake, so a laptop asleep at 9am silently skips the run. Prefer a **remote routine** for
+  anything that matters; it runs on Anthropic's infrastructure with the machine off.
+
+Write the prompt so a late run behaves: "only look at today's spend; if it's past 6pm, just summarize
+what changed."
 <!-- END:CLAUDE -->
+
+<!-- BEGIN:CODEX -->
+Codex calls them **scheduled tasks** (also "automations"). The user creates one by asking in a Codex
+task — describe the work, the cadence, and whether each run continues the existing task or starts
+fresh — or from the **Scheduled** view, which doubles as the inbox where each run's findings land
+with an unread marker.
+
+Cadence can be a minute interval, daily or weekly at a time, or a custom RRULE. Runs are unattended
+under the sandbox settings already in force.
+
+Codex **hooks** are a different thing: event handlers that fire on `SessionStart`, `PostToolUse` and
+the like. They are the user's own configuration, not a scheduler. Never offer a hook for a recurring
+report.
+<!-- END:CODEX -->
 
 Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
 live conversation. Say what the cadence will cost before setting it up — weekly is the right default

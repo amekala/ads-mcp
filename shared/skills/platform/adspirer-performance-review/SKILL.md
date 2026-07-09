@@ -100,9 +100,17 @@ moves.
 <!-- END:CHATGPT -->
 
 <!-- BEGIN:CLAUDE -->
-Prefer a **remote routine** over a local Desktop task — a local one is skipped whenever the machine
-is asleep at the scheduled hour, which is exactly when a Monday-morning review would fire.
+In Cowork, that's a **scheduled task** via `/schedule` — it runs remotely, so a sleeping laptop
+doesn't matter. In Claude Code, it's a **routine**; prefer a *remote* one, because a local Desktop
+task is skipped whenever the machine is asleep at the scheduled hour — exactly when a Monday-morning
+review would fire.
 <!-- END:CLAUDE -->
+
+<!-- BEGIN:CODEX -->
+Codex calls it a **scheduled task**. Each run's findings land in the **Scheduled** inbox with an
+unread marker, and a run with nothing worth reporting archives itself — which suits a weekly review
+that's often uneventful.
+<!-- END:CODEX -->
 
 Each run costs tool calls against their monthly quota, the same as a live conversation. Weekly is the
 right default; daily only for accounts spending enough to justify it. Say so before setting it up.

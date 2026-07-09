@@ -84,8 +84,8 @@ first week is when it either finds its footing or quietly burns budget, and the 
 the second before the invoice does. Set it on the metric that defines success: CPA ceiling, ROAS
 floor, daily spend.
 
-Make it a **remote routine** rather than a local Desktop task, so a sleeping laptop doesn't skip the
-day the campaign went wrong.
+A Cowork **scheduled task** runs remotely; in Claude Code make it a **remote routine** rather than a
+local Desktop task, so a sleeping laptop doesn't skip the day the campaign went wrong.
 
 Each run costs tool calls, so match the cadence to the spend.
 

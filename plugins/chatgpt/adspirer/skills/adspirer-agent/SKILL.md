@@ -86,10 +86,11 @@ can see, pause, and edit, and the result arrives where they already are.
 Good candidates: a Monday performance review, a mid-month pacing check, an alert when CPA passes a
 ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
 
-ChatGPT tasks run whether or not the user is online and notify by push and email. A **monitoring
-task** is the right shape for "tell me if my CPA moves" — it re-checks and stays quiet until there's
-something worth saying. Active tasks are capped per plan (roughly 3 on Go, 5 on Plus, 15 on Pro), so
-if creation fails, that's usually why.
+ChatGPT calls them **scheduled tasks**. They run whether or not the user is online and notify by push
+and email. A **monitoring task** is the right shape for "tell me if my CPA moves" — it re-checks and
+stays quiet until there's something worth saying. Active tasks are capped per plan (roughly 3 on Go,
+5 on Plus, 15 on Pro), so if creation fails, that's usually why.
+
 
 
 Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a

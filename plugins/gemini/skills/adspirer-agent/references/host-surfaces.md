@@ -13,16 +13,24 @@ task just by asking.
 Use it for anything on a cadence: a Monday performance review, a mid-month pacing check, a watch on a
 competitor's landing page, a nudge before a budget resets.
 
-**Make it run when the user isn't there.** This is the one detail that decides whether a schedule is
-worth anything:
+### What each host calls it
 
-- **ChatGPT scheduled tasks** run whether or not the user is online, and notify by push and email.
-  Nothing to worry about.
-- **Claude Desktop local tasks** only fire while the app is open and the computer is awake. A machine
-  that sleeps through 9am skips the run; on wake, Desktop starts exactly one catch-up for the most
-  recently missed time. For anything that matters — spend, pacing, disapprovals — create a **remote
-  routine** instead, which runs on Anthropic's infrastructure with the machine off. Minimum interval
-  one hour.
+| Host | Feature | Runs when the machine is off? |
+|---|---|---|
+| ChatGPT | **Scheduled tasks** | Yes |
+| Codex | **Scheduled tasks** (automations) | Yes |
+| Claude Cowork | **Scheduled tasks**, via the `/schedule` skill | Yes — they run remotely |
+| Claude Code | **Routines** — *local* task or *remote* routine | Local: **no**. Remote: yes |
+
+**The one that bites: a Claude Code *local* Desktop task only fires while the app is open and the
+computer is awake.** A machine that sleeps through 9am skips the run; on wake, Desktop starts exactly
+one catch-up for the most recently missed time and discards anything older. For spend, pacing, or
+disapprovals, create a **remote routine** instead — Anthropic's infrastructure, machine off, minimum
+interval one hour.
+
+Cowork's scheduled tasks do *not* have this problem. They run remotely on their cadence even with the
+computer asleep or the app closed, and they can use connected tools, skills, and installed plugins —
+including this one. Available on Pro, Max, Team, and Enterprise.
 
 Write the prompt so a late run behaves. A task meant for 9am might fire at 11pm: "only look at
 today's spend; if it's past 6pm, just summarize what changed."
@@ -68,9 +76,9 @@ A styled page costs more output tokens than the same content as text. Prefer SVG
 embedded raster images, skip interactivity you don't need, and summarize large datasets rather than
 inlining every row.
 
-## Claude — scheduled tasks and routines
+## Claude Code — routines
 
-Claude Desktop's **Routines** page holds two kinds:
+Claude Code Desktop's **Routines** page holds two kinds:
 
 - **Local scheduled tasks** run on the user's machine. They only fire while the desktop app is open
   and the computer is awake; a machine that sleeps through 9am simply skips the run, and on wake
@@ -83,6 +91,37 @@ Monday at 9am" — so offer to set it up rather than describing the UI.
 
 **A local task can silently skip a day.** For anything that matters — budget pacing, spend spikes,
 disapproved ads — create a **remote routine** so it runs with the machine off.
+
+`/loop` is a third option, but it lives only inside the current session and dies with it. Fine for
+polling something for the next ten minutes; useless for a Monday report.
+
+## Claude Cowork — scheduled tasks
+
+Created with the `/schedule` skill from any chat, or from **Scheduled** in the sidebar. Cadences:
+hourly, daily, weekly, weekdays, or on demand.
+
+They **run remotely**, on their cadence, even when the computer is asleep or the Claude Desktop app is
+closed — so unlike a Claude Code local task, there's no reliability caveat. They have the same
+capabilities as a normal Cowork task, including connected tools, skills, and installed plugins.
+
+Available on Pro, Max, Team, and Enterprise.
+
+## Codex — scheduled tasks (automations)
+
+The user creates one by asking inside a Codex task — describing the work, the cadence, and whether
+each run continues the existing task or starts fresh — or from the **Scheduled** view.
+
+That view is also the **inbox**: each run's findings land there with an unread indicator, and a run
+with nothing to report can archive itself. Cadence can be a minute-based interval for a tight
+follow-up loop, a daily or weekly time, or a custom RRULE.
+
+Runs are unattended and inherit the sandbox settings already in force, so they execute without
+approval prompts where policy allows. Be conservative about what you schedule: an unattended run that
+writes to an ad account spends real money without anyone watching.
+
+**Codex hooks are not a scheduler.** They are event handlers — `SessionStart`, `PreToolUse`,
+`PostToolUse`, `Stop` — configured by the user for their own environment. Never offer a hook as a way
+to run a recurring report.
 
 ## ChatGPT — sites
 
