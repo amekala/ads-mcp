@@ -85,10 +85,18 @@ Good candidates: a Monday performance review, a mid-month pacing check, an alert
 ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
 
 
-A **local** Desktop task only fires while the app is open and the machine is awake — a laptop asleep
-at 9am simply skips the run. For anything that matters, create a **remote routine** so it runs with
-the machine off. Write the prompt so a late run behaves: "only look at today's spend; if it's past
-6pm, just summarize what changed."
+The name depends on where you're running:
+
+- **Claude Cowork** — a **scheduled task**, created with the `/schedule` skill from any chat. These
+  run remotely, on their cadence, even with the computer asleep or the app closed. Hourly, daily,
+  weekly, weekdays, or on demand. Paid plans only.
+- **Claude Code** — a **routine**. A *local* Desktop task only fires while the app is open and the
+  machine is awake, so a laptop asleep at 9am silently skips the run. Prefer a **remote routine** for
+  anything that matters; it runs on Anthropic's infrastructure with the machine off.
+
+Write the prompt so a late run behaves: "only look at today's spend; if it's past 6pm, just summarize
+what changed."
+
 
 Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
 live conversation. Say what the cadence will cost before setting it up — weekly is the right default

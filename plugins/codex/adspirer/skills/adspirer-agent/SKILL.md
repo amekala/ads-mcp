@@ -81,6 +81,18 @@ ceiling, a watch on a competitor's landing page, a reminder before budgets reset
 
 
 
+Codex calls them **scheduled tasks** (also "automations"). The user creates one by asking in a Codex
+task — describe the work, the cadence, and whether each run continues the existing task or starts
+fresh — or from the **Scheduled** view, which doubles as the inbox where each run's findings land
+with an unread marker.
+
+Cadence can be a minute interval, daily or weekly at a time, or a custom RRULE. Runs are unattended
+under the sandbox settings already in force.
+
+Codex **hooks** are a different thing: event handlers that fire on `SessionStart`, `PostToolUse` and
+the like. They are the user's own configuration, not a scheduler. Never offer a hook for a recurring
+report.
+
 Every scheduled run calls Adspirer tools again, drawing on the user's monthly quota exactly like a
 live conversation. Say what the cadence will cost before setting it up — weekly is the right default
 for a review; daily is for accounts spending enough to earn it. `get_usage_status` is free.

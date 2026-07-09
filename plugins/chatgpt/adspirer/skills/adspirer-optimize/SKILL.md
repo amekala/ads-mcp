@@ -95,6 +95,7 @@ Use a **monitoring task** rather than a plain recurring one: it re-checks pacing
 quiet unless something crosses the line, so the user isn't trained to ignore it.
 
 
+
 Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
 is for accounts where a day of overspend is real money.
 

@@ -93,6 +93,10 @@ notification wherever they already are.
 
 
 
+A Codex **scheduled task** works here, and a run that finds nothing archives itself — so the user only
+hears from it when pacing has actually drifted. Keep it read-only: an unattended run that changes
+budgets spends real money with nobody watching.
+
 Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
 is for accounts where a day of overspend is real money.
 

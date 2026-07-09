@@ -85,6 +85,7 @@ schedule it — this host can, and they can create it just by asking.
 
 
 
+
 Each run costs tool calls against their monthly quota, the same as a live conversation. Weekly is the
 right default; daily only for accounts spending enough to justify it. Say so before setting it up.
 

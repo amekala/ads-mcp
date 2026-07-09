@@ -92,8 +92,10 @@ Offer to schedule the check on this host. They can create one just by asking, an
 notification wherever they already are.
 
 
-Use a **remote routine**, not a local Desktop task. A local task is skipped whenever the machine is
-asleep — and the overspend you're watching for does not wait for the laptop to open.
+In Cowork, a **scheduled task** (`/schedule`) — it runs remotely. In Claude Code, a **remote
+routine**, not a local Desktop task: a local one is skipped whenever the machine is asleep, and the
+overspend you're watching for does not wait for the laptop to open.
+
 
 Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
 is for accounts where a day of overspend is real money.

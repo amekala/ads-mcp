@@ -97,9 +97,16 @@ quiet unless something crosses the line, so the user isn't trained to ignore it.
 <!-- END:CHATGPT -->
 
 <!-- BEGIN:CLAUDE -->
-Use a **remote routine**, not a local Desktop task. A local task is skipped whenever the machine is
-asleep — and the overspend you're watching for does not wait for the laptop to open.
+In Cowork, a **scheduled task** (`/schedule`) — it runs remotely. In Claude Code, a **remote
+routine**, not a local Desktop task: a local one is skipped whenever the machine is asleep, and the
+overspend you're watching for does not wait for the laptop to open.
 <!-- END:CLAUDE -->
+
+<!-- BEGIN:CODEX -->
+A Codex **scheduled task** works here, and a run that finds nothing archives itself — so the user only
+hears from it when pacing has actually drifted. Keep it read-only: an unattended run that changes
+budgets spends real money with nobody watching.
+<!-- END:CODEX -->
 
 Each run costs tool calls against their quota. Mid-month and month-end beats daily for pacing; daily
 is for accounts where a day of overspend is real money.

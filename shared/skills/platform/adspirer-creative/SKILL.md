@@ -106,5 +106,6 @@ offer to schedule a fatigue check on this host — frequency and CTR, every coup
 next refresh is prompted by the data instead of by someone remembering.
 
 <!-- BEGIN:CLAUDE -->
-A **remote routine** beats a local Desktop task here; fatigue doesn't wait for the laptop to be open.
+A Cowork **scheduled task**, or a **remote routine** in Claude Code — not a local Desktop task.
+Fatigue doesn't wait for the laptop to be open.
 <!-- END:CLAUDE -->
