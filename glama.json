@@ -1,0 +1,46 @@
+{
+  "$schema": "https://glama.ai/schemas/glama.json",
+  "maintainers": ["amekala"],
+  "name": "Adspirer",
+  "description": "Manage ad campaigns across Google, Meta, Amazon, TikTok, LinkedIn, and ChatGPT Ads from one MCP server. 430 tools for campaign creation, keyword research, performance analysis, and budget optimization via natural language — in Claude, ChatGPT, Cursor, Codex, and Gemini.",
+  "author": {
+    "name": "Adspirer",
+    "url": "https://www.adspirer.com"
+  },
+  "repository": {
+    "url": "https://github.com/amekala/ads-mcp",
+    "type": "git"
+  },
+  "homepage": "https://www.adspirer.com",
+  "license": "MIT",
+  "tags": [
+    "advertising",
+    "google-ads",
+    "meta-ads",
+    "amazon-ads",
+    "tiktok-ads",
+    "linkedin-ads",
+    "chatgpt-ads",
+    "ppc",
+    "marketing",
+    "campaign-management",
+    "keyword-research",
+    "mcp-server"
+  ],
+  "categories": ["advertising", "marketing"],
+  "features": {
+    "tools": true,
+    "resources": true,
+    "prompts": true
+  },
+  "tools": {
+    "count": 430
+  },
+  "transport": {
+    "type": "streamable-http",
+    "endpoint": "https://mcp.adspirer.com/mcp",
+    "auth_required": true,
+    "auth_type": "oauth2"
+  },
+  "client_compatibility": ["Claude", "Claude Code", "ChatGPT", "Cursor", "OpenAI Codex", "Gemini CLI", "Windsurf"]
+}
