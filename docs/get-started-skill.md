@@ -7,12 +7,19 @@ installable agent skill, modeled on here.now's distribution pattern
 ## What it is
 
 `skills/adspirer-get-started/SKILL.md` is a small, self-contained skill whose
-only job is onboarding: detect which AI client the agent is running in,
-install the right Adspirer artifact (Claude Code plugin, Claude/ChatGPT
-connector, Cursor/Codex MCP config, Gemini extension), walk the user through
-the OAuth signup (sign in with Google/email → account created → connect ad
-platforms → plan), and verify with `get_connections_status` before handing
-off to `start_here` or `/adspirer:setup`.
+only job is onboarding: detect which AI client the agent is running in —
+distinguishing **chat apps** (Claude web/Cowork, the ChatGPT app: no shell,
+directory-listing installs only) from **coding agents** (Claude Code, Cursor,
+Codex, Gemini CLI) — install the right Adspirer artifact, walk the user
+through the OAuth signup (sign in with Google/email → account created →
+connect ad platforms → plan), and verify with `get_connections_status`
+before handing off to `start_here` or `/adspirer:setup`.
+
+For chat apps it leads with the official listings Adspirer already has:
+the [ChatGPT App Store listing](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21)
+and the [Claude plugin directory listing](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins),
+falling back to custom-connector setup only when a listing isn't available
+on the user's plan or workspace.
 
 The classic web signup flow (read → email → web app → onboarding → connect
 ads → pick plan) stays as-is. This is a parallel, agent-native funnel: the
@@ -48,6 +55,11 @@ that can read the web:
 
 Then say **"set up adspirer"** — your agent takes it from there. New
 campaigns are always created paused; nothing spends without your say-so.
+
+**Or install straight from your app's directory** — no skill needed:
+
+- ChatGPT: [Adspirer on the ChatGPT App Store](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21)
+- Claude: [Adspirer in the Claude plugin directory](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins)
 
 ---
 
