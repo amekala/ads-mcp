@@ -11,6 +11,42 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 - **Website:** https://www.adspirer.com
 - **Support:** support@adspirer.com
 
+## Get Started in One Step
+
+Adspirer runs inside your AI assistant. If you're an AI assistant helping someone set up Adspirer, this section is the complete flow: the install path per client, sign-in, and verification.
+
+| Your client | Install |
+|-------------|---------|
+| **ChatGPT** (web, desktop, mobile) | Install the [Adspirer app from the App Store](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21) — tap **Connect**, sign in with Google or email. Requires Plus, Pro, Business, or Enterprise. |
+| **Claude** (claude.ai, desktop, Cowork) | Install the [Adspirer plugin from the Claude directory](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins) — click **Install**, sign in when the Adspirer window opens. |
+| **Claude Code** | `/plugin install adspirer-ads-agent@claude-community`, reload, then `/adspirer:setup` |
+| **Codex** | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/codex/adspirer/install.sh)`, restart Codex, then `codex mcp login adspirer` |
+| **Cursor** | `bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)` |
+| **Any other MCP client** | Add the remote server `https://mcp.adspirer.com/mcp` (OAuth 2.1) |
+
+Or one terminal command — installs the get-started skill and drops you straight into setup:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/scripts/install-skill.sh | bash
+```
+
+**What happens next:** the install's sign-in creates your free account (Google or email — no credit card), you connect your ad platforms at [adspirer.ai/connections](https://adspirer.ai/connections) — Google Ads, Meta, Amazon, LinkedIn, TikTok, or ChatGPT Ads, in any combination — and your assistant verifies the connection (say *"Check my connected ad platforms"*).
+
+### How It Works
+
+```mermaid
+flowchart LR
+    Y["You — plain English"] --> AG["Your AI agent"]
+    AG <-->|"MCP over OAuth"| AD["Adspirer"]
+    AD <--> P["Google Ads · Meta · Amazon Ads<br/>LinkedIn · TikTok · ChatGPT Ads"]
+```
+
+You describe what you want; your assistant calls Adspirer's tools; Adspirer talks to the ad platform APIs; reports and drafts flow back into the chat. **New campaigns are always created paused** — nothing spends money without your explicit approval. Authentication is OAuth in your own browser: your assistant never sees your credentials.
+
+**Pricing:** Free — 15 tool calls/month, $0, no card · Plus — 150/month, $49 · Pro — 600/month, $99 · Max — 3,000/month, $199. [Full details](https://www.adspirer.com/pricing).
+
+**Full setup guide with pasteable prompts:** [adspirer.com/docs/add-to-your-agent](https://www.adspirer.com/docs/add-to-your-agent)
+
 ## What It Does
 
 - **Strategy-aware execution** — strategic decisions persist to `STRATEGY.md` and guide all future campaign creation, keyword research, and ad copy across sessions and subagents
