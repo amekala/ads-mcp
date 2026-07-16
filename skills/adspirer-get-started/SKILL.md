@@ -14,7 +14,7 @@ description: >
 
 # Get started with Adspirer
 
-**Skill version: 1.0.0**
+**Skill version: 1.1.0**
 
 Adspirer connects AI assistants to the user's real ad accounts — 400+ tools
 across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and
@@ -42,13 +42,22 @@ answering, and trust them over this file:
 
 ## Step 1 — Detect the environment
 
-Pick the install path for where you are running right now:
+First decide which KIND of client this is, because the install paths are
+completely different:
+
+- **Chat app** (Claude web/desktop/mobile, Claude Cowork, ChatGPT app): no
+  shell, no filesystem. NEVER give these users terminal commands — give them
+  the official directory listing to click and in-app steps.
+- **Coding agent** (Claude Code, Cursor, Codex, Gemini CLI): has a shell
+  and config files; use the plugin/config installs.
+
+Then identify the specific client:
 
 | Signal | Environment |
 |---|---|
 | You can run shell commands and `CLAUDECODE=1` is set | **Claude Code** |
-| You are Claude with connectors/apps but no local shell | **Claude web/desktop or Cowork** |
-| You are ChatGPT | **ChatGPT** |
+| You are Claude with connectors/apps but no local shell | **Claude web/desktop or Cowork** (chat app) |
+| You are ChatGPT | **ChatGPT app** (chat app) |
 | Cursor (rules, `~/.cursor/`) | **Cursor** |
 | Codex (`~/.codex/config.toml`) | **Codex** |
 | Gemini CLI | **Gemini CLI** |
@@ -60,6 +69,10 @@ Before installing anything, check whether Adspirer is already connected: if an
 `start_here`) are available, skip to Step 3.
 
 ## Step 2 — Install (per environment)
+
+Adspirer is already published in the official directories — for chat apps,
+always send the user to the listing first; only fall back to manual custom
+connectors when the listing isn't available on their plan or workspace.
 
 ### Claude Code — full plugin (recommended)
 
@@ -76,22 +89,37 @@ exactly one adspirer entry.
 MCP-only alternative (raw tools, no agent/skills/commands):
 `claude mcp add --transport http adspirer https://mcp.adspirer.com/mcp`
 
-### Claude web/desktop and Claude Cowork
+### Claude web/desktop and Claude Cowork (chat app)
 
-1. Directory (if listed for the user's plan): have them search "Adspirer" in
-   **Settings → Connectors → Browse connectors** and click **Connect**.
-2. Otherwise add a custom connector: **Settings → Connectors → Add custom
+Adspirer is in the Claude plugin directory. In order of preference:
+
+1. **Directory listing (send this link):**
+   https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins
+   — the user clicks **Install**, then connects and completes OAuth when
+   prompted. They can also reach it in-app: **Browse plugins / Directory →
+   search "Adspirer"**.
+2. **Connector directory:** **Settings → Connectors → Browse connectors** →
+   search "Adspirer" → **Connect** (if listed for their plan).
+3. **Fallback — custom connector:** **Settings → Connectors → Add custom
    connector** → Name `Adspirer`, URL `https://mcp.adspirer.com/mcp`,
    Authentication **OAuth**.
-3. On Team/Enterprise plans only an Owner can add org connectors
+4. On Team/Enterprise plans only an Owner can add org connectors
    (**Customize → Connectors → Organization connectors → Add custom
    connector**); members then connect individually in their own settings.
 
-### ChatGPT (desktop, web, or work)
+### ChatGPT (chat app — desktop, web, mobile, or work)
 
-Requires Plus/Pro (or a workspace admin on Business/Enterprise):
-**Settings → Connectors → Add custom connector** → Name `Adspirer`, URL
-`https://mcp.adspirer.com/mcp`, Authentication **OAuth 2.1**.
+Adspirer is a published ChatGPT App. In order of preference:
+
+1. **App listing (send this link):**
+   https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21
+   — the user clicks **Install / Connect** and completes the OAuth sign-in.
+   They can also find it in-app: **Settings → Apps → search "Adspirer"**, or
+   just by asking ChatGPT to use the Adspirer app.
+2. **Fallback — custom connector** (Plus/Pro, or a workspace admin on
+   Business/Enterprise, and only if apps are restricted): **Settings →
+   Connectors → Add custom connector** → Name `Adspirer`, URL
+   `https://mcp.adspirer.com/mcp`, Authentication **OAuth 2.1**.
 
 ### Cursor
 
