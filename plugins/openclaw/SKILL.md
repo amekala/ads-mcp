@@ -1,6 +1,6 @@
 ---
 name: adspirer-ads-agent
-description: "Adspirer — AI-powered advertising and performance marketing agent. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads via natural language. 175+ tools for paid media campaign creation, live performance analysis, PPC keyword research with real CPC data, budget optimization, ad creative management, and cross-platform reporting. Create Google Search, Performance Max, Display (Standard + Smart), Demand Gen, and YouTube campaigns; Meta image/video/carousel/lead-gen campaigns; LinkedIn sponsored content/carousel/lead-gen with campaign groups; and TikTok in-feed/Spark Ads/Carousel/App Promotion campaigns. Analyze wasted ad spend, research keywords, optimize bids and ROAS, automate monitoring, detect creative fatigue, and track CPA across channels. Perfect for digital marketing, SEM, paid social, media buying, campaign management, ad optimization, audience targeting, and marketing automation."
+description: "Adspirer — AI-powered advertising and performance marketing agent. Manage Google Ads, Meta Ads (Facebook & Instagram), LinkedIn Ads, and TikTok Ads via natural language. 400+ tools for paid media campaign creation, live performance analysis, PPC keyword research with real CPC data, budget optimization, ad creative management, and cross-platform reporting. Create Google Search, Performance Max, Display (Standard + Smart), Demand Gen, and YouTube campaigns; Meta image/video/carousel/lead-gen campaigns; LinkedIn sponsored content/carousel/lead-gen with campaign groups; and TikTok in-feed/Spark Ads/Carousel/App Promotion campaigns. Analyze wasted ad spend, research keywords, optimize bids and ROAS, automate monitoring, detect creative fatigue, and track CPA across channels. Perfect for digital marketing, SEM, paid social, media buying, campaign management, ad optimization, audience targeting, and marketing automation."
 homepage: https://www.adspirer.com
 author: Adspirer
 license: MIT
@@ -414,7 +414,7 @@ Connect ad accounts at https://adspirer.ai/connections
 
 ---
 
-## Complete Tool Reference (175+ Tools)
+## Complete Tool Reference (400+ Tools)
 
 | Platform | Count | Categories |
 |----------|-------|------------|

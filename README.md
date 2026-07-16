@@ -14,7 +14,7 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 ## What It Does
 
 - **Strategy-aware execution** — strategic decisions persist to `STRATEGY.md` and guide all future campaign creation, keyword research, and ad copy across sessions and subagents
-- **175+ tools** across 4 ad platforms for campaign creation, performance analysis, and optimization
+- **400+ tools** across 6 ad platforms for campaign creation, performance analysis, and optimization
 - Plan and validate campaigns using structured prompts
 - Research keywords with real CPC data and competitive analysis
 - Create Google Ads Search, Performance Max (with search themes + audience signals), **Display** (Standard + Smart), **Demand Gen**, and YouTube campaigns end-to-end
@@ -22,17 +22,19 @@ Remote Model Context Protocol (MCP) server for cross-platform ad management. Cre
 - Analyze performance with actionable optimization recommendations — wasted spend, anomaly detection, audience insights, creative fatigue
 - **Raw data mode** (`raw_data=true`) on all 29 performance/analytics tools — JSON-only output for your own attribution, dashboards, or token-efficient pipelines
 - Multi-account, multi-platform — agencies can manage many ad accounts per platform from one workspace
-- Automation — scheduled briefs, performance monitors, on-demand cross-platform reports across all four platforms
+- Automation — scheduled briefs, performance monitors, on-demand cross-platform reports across all platforms
 
 ## Platforms & Tools
 
 | Platform | Tools | Capabilities |
 |----------|-------|-------------|
-| Google Ads | 75+ | Search, Performance Max (with search themes + audience signals), Display (Standard + Smart), Demand Gen, YouTube; keyword research, performance analysis, wasted-spend, asset management, ad extensions (sitelinks / callouts / structured snippets), bidding strategy management |
-| LinkedIn Ads | 45 | Sponsored content (single-image, video, carousel), lead-gen forms, campaign groups, 14 targeting facets, audience insights, creative fatigue analysis, conversion tracking, organizations |
-| Meta Ads | 36 | Image / video / carousel campaigns, OUTCOME_LEADS lead-gen forms, lifetime budgets, granular placements (Feed / Stories / Reels), city-level targeting, custom audiences, custom conversions, Advantage+ controls |
-| TikTok Ads | 31 | In-feed video / image / Spark Ads / Carousel / App Promotion campaigns, full lifecycle (list / get / pause / resume / update for campaigns, ad groups, ads), 8 analytics tools (performance, wasted spend, audience insights, creative fatigue, anomaly detection, geo) |
-| **Total** | **175+** | Plus monitoring, automation (scheduled briefs / monitors / reports), and account management tools — all available over MCP and as REST endpoints at `api.adspirer.ai` |
+| Google Ads | 151 | Search, Performance Max (with search themes + audience signals), Display (Standard + Smart), Demand Gen, YouTube, Shopping, App campaigns; keyword research, performance analysis, wasted-spend, asset management, ad extensions (sitelinks / callouts / structured snippets), bidding strategy management |
+| Amazon Ads | 61 | Sponsored Products / Brands / Display campaigns, keywords + negative keywords, product / category targeting, Amazon's own bid / budget / keyword recommendations, search-term reports, ACOS / ROAS performance |
+| Meta Ads | 58 | Image / video / carousel / catalog (Advantage+ / DPA) campaigns, OUTCOME_LEADS lead-gen forms, lifetime budgets, granular placements (Feed / Stories / Reels), city-level targeting, custom audiences, custom conversions, app-promotion (AEO) analytics |
+| LinkedIn Ads | 54 | Sponsored content (single-image, video, carousel, text), lead-gen forms, campaign groups, 19 targeting facets, audience insights, creative fatigue analysis, conversion tracking, organizations |
+| TikTok Ads | 37 | In-feed video / image / Spark Ads / Carousel / App Promotion campaigns, full lifecycle (list / get / pause / resume / update for campaigns, ad groups, ads), analytics (performance, wasted spend, audience insights, creative fatigue, anomaly detection, geo) |
+| ChatGPT Ads | 31 | chat_card ads inside ChatGPT responses — one-shot launch (campaign → ad group → image → ad), geo targeting, pause / activate / archive, performance (impressions, clicks, CTR, CPC), conversion tracking (Pixel + Conversions API) |
+| **Total** | **400+** | Plus monitoring & automation (scheduled briefs / monitors / reports), Google Analytics 4 and Klaviyo integrations, and account management tools — all available over MCP and as REST endpoints at `api.adspirer.ai` |
 
 ## How to Connect
 

@@ -1,0 +1,48 @@
+name: Validate Plugin
+
+# Two gates, mirroring what Anthropic's marketplace pipeline runs on us:
+#  1. `claude plugin validate --strict` — manifest + marketplace schema
+#  2. frontmatter YAML parse across all .md files — the check whose failure
+#     silently froze our community-marketplace SHA pin for three months
+#     (anthropics/claude-plugins-community#964)
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Claude Code CLI
+        run: npm install -g @anthropic-ai/claude-code
+
+      # Plain (non-strict) validate: --strict turns the *absence* of a version
+      # field into an error, but we deliberately omit version so updates
+      # version-resolve by commit SHA (docs/plugin-update-playbook.md §2).
+      - name: Validate plugin manifest
+        run: claude plugin validate .
+
+      # Guard the SHA-versioning decision: a "version" field in plugin.json or
+      # a marketplace entry silently pins users until it is manually bumped.
+      # It has been accidentally re-added once already (76b05ab).
+      - name: Enforce SHA-based versioning (no version field)
+        run: |
+          for f in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+            if ! jq -e '[.. | objects | select(has("version"))] | length == 0' "$f" >/dev/null; then
+              echo "::error file=$f::contains a \"version\" field — we version by commit SHA; see docs/plugin-update-playbook.md §2"
+              exit 1
+            fi
+          done
+
+      - name: Validate YAML frontmatter in all .md files
+        run: |
+          npm install --no-save js-yaml
+          node scripts/validate-frontmatter.mjs

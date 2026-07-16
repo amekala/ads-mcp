@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Adspirer Ads Agent",
     "shortDescription": "Brand-aware paid media management across Google, Meta, LinkedIn & TikTok",
-    "longDescription": "Adspirer turns Codex into a brand-specific performance marketing agent with 175+ ad platform tools. It reads your brand docs (guidelines, media plans, creative briefs) to learn your voice and audiences, connects to your live ad accounts via the Adspirer MCP server, and manages campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Features include campaign creation with keyword research, wasted spend analysis, creative fatigue detection, ad copy generation, budget optimization, and persistent brand memory across sessions. On first use it bootstraps a full brand workspace automatically.",
+    "longDescription": "Adspirer turns Codex into a brand-specific performance marketing agent with 400+ ad platform tools. It reads your brand docs (guidelines, media plans, creative briefs) to learn your voice and audiences, connects to your live ad accounts via the Adspirer MCP server, and manages campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads. Features include campaign creation with keyword research, wasted spend analysis, creative fatigue detection, ad copy generation, budget optimization, and persistent brand memory across sessions. On first use it bootstraps a full brand workspace automatically.",
     "developerName": "Adspirer",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
