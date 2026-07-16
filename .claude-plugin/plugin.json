@@ -1,7 +1,6 @@
 {
   "name": "adspirer-advertising-agent",
   "displayName": "Adspirer Advertising Agent",
-  "version": "2.0.0",
   "description": "Advertising agent for paid media: create, analyze, and optimize ad campaigns across Google Ads, Meta Ads (Facebook & Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads. PPC keyword research with live CPC data, campaign creation, performance analysis, wasted-spend and creative-fatigue detection, and budget optimization — with brand awareness and persistent memory.",
   "author": {
     "name": "Adspirer"

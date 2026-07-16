@@ -1,6 +1,6 @@
 # Adspirer — Ad Campaign Management
 
-Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (175+ tools across Google Search/PMax/Display/Demand Gen/YouTube, Meta image/video/carousel/lead-gen, LinkedIn sponsored content/carousel/lead-gen with campaign groups, and TikTok in-feed/Spark/Carousel/App Promotion).
+Manage advertising campaigns across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads using the Adspirer MCP server (400+ tools across Google Search/PMax/Display/Demand Gen/YouTube, Meta image/video/carousel/lead-gen, LinkedIn sponsored content/carousel/lead-gen with campaign groups, and TikTok in-feed/Spark/Carousel/App Promotion).
 
 ## Quick Start
 

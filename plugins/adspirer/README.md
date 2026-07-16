@@ -1,6 +1,6 @@
 # Adspirer Performance Marketing Agent for OpenAI Codex
 
-Brand-aware paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — powered by the Adspirer MCP server (175+ tools).
+Brand-aware paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — powered by the Adspirer MCP server (400+ tools).
 
 ## What This Does
 
@@ -190,7 +190,7 @@ More docs = better brand context = better ad copy and recommendations. No docs? 
 
 | Skill | Invocation | What it does |
 |-------|-----------|--------------|
-| **Adspirer Ads** | `$adspirer-ads` or just ask naturally | Full campaign management — 175+ tools, all workflows, all platforms |
+| **Adspirer Ads** | `$adspirer-ads` or just ask naturally | Full campaign management — 400+ tools, all workflows, all platforms |
 | **Setup** | `$adspirer-setup` | Bootstrap a brand workspace (first-time or refresh) |
 | **Performance Review** | `$adspirer-performance-review` | Cross-platform performance scorecard |
 | **Write Ad Copy** | `$adspirer-write-ad-copy Google Search` | Brand-voice ad copy from real data |
@@ -208,7 +208,7 @@ Codex (CLI / IDE)
 ├── Performance Marketing Agent (brain)
 │   ├── Reads: AGENTS.md (brand context), STRATEGY.md (directives), local docs
 │   ├── Writes: STRATEGY.md (confirmed directives)
-│   ├── Uses: Adspirer MCP (175+ tools)
+│   ├── Uses: Adspirer MCP (400+ tools)
 │   └── Workflows: campaign creation, performance analysis,
 │       keyword research, optimization, ad copy, competitive intel
 │
@@ -218,10 +218,10 @@ Codex (CLI / IDE)
 │   └── Quick skills — performance-review, write-ad-copy, wasted-spend
 │
 └── Adspirer MCP Server (hands)
-    ├── Google Ads (75+ tools — Search, PMax, Display, Demand Gen, YouTube)
-    ├── LinkedIn Ads (45 tools — image, video, carousel, lead-gen, campaign groups)
-    ├── Meta Ads (36 tools — image, video, carousel, OUTCOME_LEADS, app)
-    ├── TikTok Ads (31 tools — in-feed video, Spark Ads, Carousel, App Promotion + analytics)
+    ├── Google Ads (151 tools — Search, PMax, Display, Demand Gen, YouTube)
+    ├── LinkedIn Ads (54 tools — image, video, carousel, lead-gen, campaign groups)
+    ├── Meta Ads (58 tools — image, video, carousel, OUTCOME_LEADS, app)
+    ├── TikTok Ads (37 tools — in-feed video, Spark Ads, Carousel, App Promotion + analytics)
     └── Account + monitoring tools
 ```
 
