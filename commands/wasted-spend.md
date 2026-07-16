@@ -1,6 +1,6 @@
 ---
 description: Find and fix wasted ad spend across all platforms
-argument-hint: <optional: specific platform>
+argument-hint: "<optional: specific platform>"
 ---
 Run a wasted spend analysis across $ARGUMENTS (default: all connected platforms).
 
