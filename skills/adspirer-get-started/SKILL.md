@@ -14,7 +14,13 @@ description: >
 
 # Get started with Adspirer
 
-**Skill version: 1.1.0**
+**Skill version: 1.2.0**
+
+**Act immediately.** When this skill loads — whether installed, fetched from
+a URL, or pasted into the chat — start the flow now: detect the environment,
+present the single next action, and guide the user through it. Do not
+summarize these instructions, list the options, or ask what they'd like to
+do first.
 
 Adspirer connects AI assistants to the user's real ad accounts — 400+ tools
 across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and
@@ -91,35 +97,36 @@ MCP-only alternative (raw tools, no agent/skills/commands):
 
 ### Claude web/desktop and Claude Cowork (chat app)
 
-Adspirer is in the Claude plugin directory. In order of preference:
+Adspirer is in the Claude plugin directory. Don't explain the options — give
+the user this one action:
 
-1. **Directory listing (send this link):**
-   https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins
-   — the user clicks **Install**, then connects and completes OAuth when
-   prompted. They can also reach it in-app: **Browse plugins / Directory →
-   search "Adspirer"**.
-2. **Connector directory:** **Settings → Connectors → Browse connectors** →
-   search "Adspirer" → **Connect** (if listed for their plan).
-3. **Fallback — custom connector:** **Settings → Connectors → Add custom
-   connector** → Name `Adspirer`, URL `https://mcp.adspirer.com/mcp`,
-   Authentication **OAuth**.
-4. On Team/Enterprise plans only an Owner can add org connectors
-   (**Customize → Connectors → Organization connectors → Add custom
-   connector**); members then connect individually in their own settings.
+> Install Adspirer from the Claude directory:
+> https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins
+> Click **Install**, sign in with Google or email when the Adspirer window
+> opens, and tell me when you're done.
+
+If you can open links for the user, open that listing directly. Then go to
+Step 4 (verify). Fallbacks only if the listing doesn't work for them:
+**Settings → Connectors → Browse connectors → "Adspirer" → Connect**, or
+**Add custom connector** (Name `Adspirer`, URL `https://mcp.adspirer.com/mcp`,
+OAuth). On Team/Enterprise, org connectors are added by an Owner under
+**Customize → Connectors → Organization connectors**.
 
 ### ChatGPT (chat app — desktop, web, mobile, or work)
 
-Adspirer is a published ChatGPT App. In order of preference:
+Adspirer is a published ChatGPT App. Don't explain the options — give the
+user this one action:
 
-1. **App listing (send this link):**
-   https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21
-   — the user clicks **Install / Connect** and completes the OAuth sign-in.
-   They can also find it in-app: **Settings → Apps → search "Adspirer"**, or
-   just by asking ChatGPT to use the Adspirer app.
-2. **Fallback — custom connector** (Plus/Pro, or a workspace admin on
-   Business/Enterprise, and only if apps are restricted): **Settings →
-   Connectors → Add custom connector** → Name `Adspirer`, URL
-   `https://mcp.adspirer.com/mcp`, Authentication **OAuth 2.1**.
+> Install the Adspirer app:
+> https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21
+> Tap **Install / Connect**, sign in with Google or email, and tell me when
+> you're done.
+
+If you can open links for the user, open that listing directly. (In-app
+alternative: **Settings → Apps → search "Adspirer"**.) Then go to Step 4
+(verify). Fallback only if apps are restricted in their workspace:
+**Settings → Connectors → Add custom connector** (Name `Adspirer`, URL
+`https://mcp.adspirer.com/mcp`, OAuth 2.1).
 
 ### Cursor
 

@@ -30,36 +30,37 @@ the signup.
 
 ---
 
-### Add Adspirer to your AI agent
+### Add Adspirer to your AI
 
-Have your agent set Adspirer up for you — installation, account, ad platform
-connections, first campaign review.
+One command (or one tap) — your agent handles the rest: installation,
+account sign-in, connecting your ad platforms.
 
-**If you have npm** (installs for Claude Code, Cursor, Codex, and more):
+**Using the ChatGPT or Claude app?** Install with one tap:
 
-```bash
-npx skills add amekala/ads-mcp --skill adspirer-get-started -g
-```
+- ChatGPT: [Adspirer on the ChatGPT App Store](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21)
+- Claude: [Adspirer in the Claude plugin directory](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins)
 
-**If not** (Claude Code / Claude Cowork):
+Or paste this into the chat — setup starts immediately:
+
+> Fetch https://raw.githubusercontent.com/amekala/ads-mcp/main/skills/adspirer-get-started/SKILL.md
+> and follow it to set up Adspirer for me.
+
+**In a terminal?** One command installs the skill and drops you straight
+into setup (launches Claude Code automatically when it's installed):
 
 ```bash
 curl -fsSL https://www.adspirer.com/install.sh | bash
 ```
 
-**No terminal at all?** Paste this into Claude, ChatGPT, or any assistant
-that can read the web:
+With npm instead (installs the skill for Claude Code, Cursor, Codex, and
+more, then starts setup):
 
-> Fetch https://raw.githubusercontent.com/amekala/ads-mcp/main/skills/adspirer-get-started/SKILL.md
-> and follow it to set up Adspirer for me.
+```bash
+npx skills add amekala/ads-mcp --skill adspirer-get-started -g && claude "set up adspirer"
+```
 
-Then say **"set up adspirer"** — your agent takes it from there. New
-campaigns are always created paused; nothing spends without your say-so.
-
-**Or install straight from your app's directory** — no skill needed:
-
-- ChatGPT: [Adspirer on the ChatGPT App Store](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21)
-- Claude: [Adspirer in the Claude plugin directory](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins)
+New campaigns are always created paused; nothing spends without your
+say-so.
 
 ---
 

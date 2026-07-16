@@ -39,9 +39,16 @@ atomic_download "${REPO_BASE}/SKILL.md" "${SKILL_DIR}/SKILL.md"
 echo ""
 echo "done — installed to ${SKILL_DIR}"
 echo ""
-echo "Next: restart Claude Code (or Cowork), then say:"
-echo "  \"set up adspirer\""
-echo ""
-echo "The skill walks your agent through installing the full Adspirer"
-echo "plugin/connector for your environment, creating your account, and"
+
+# Hand off straight into setup: if Claude Code is installed and we can attach
+# a terminal, launch it with the setup prompt so the skill takes over
+# immediately. Set ADSPIRER_NO_LAUNCH=1 to install the skill only.
+if [[ -z "${ADSPIRER_NO_LAUNCH:-}" ]] && command -v claude >/dev/null 2>&1 && [[ -t 1 && -r /dev/tty ]]; then
+  echo "Launching Claude Code to finish setup..."
+  echo ""
+  exec claude "Set up Adspirer for me — use the adspirer-get-started skill." </dev/tty
+fi
+
+echo "Next: open Claude Code (or Cowork) and say: \"set up adspirer\""
+echo "Your agent handles the rest — plugin install, account sign-in, and"
 echo "connecting your ad platforms."
