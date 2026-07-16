@@ -40,10 +40,16 @@ account sign-in, connecting your ad platforms.
 - ChatGPT: [Adspirer on the ChatGPT App Store](https://chatgpt.com/apps/adspirer/asdk_app_69461dc91ee48191ae4a14eb9bde1c21)
 - Claude: [Adspirer in the Claude plugin directory](https://claude.ai/directory/plugins/adspirer-ads-agent%40knowledge-work-plugins)
 
-Or paste this into the chat — setup starts immediately:
+Or paste a prompt instead. **In Claude:**
 
 > Fetch https://raw.githubusercontent.com/amekala/ads-mcp/main/skills/adspirer-get-started/SKILL.md
 > and follow it to set up Adspirer for me.
+
+**In ChatGPT** (which won't follow fetched files, by design — ask it to act
+for you instead):
+
+> Find the Adspirer app in the app store and help me install and connect it
+> so I can manage my ad campaigns from this chat.
 
 **In a terminal?** One command installs the skill and drops you straight
 into setup (launches Claude Code automatically when it's installed):
@@ -80,7 +86,7 @@ say-so.
 |---|---|---|
 | `npx skills add amekala/ads-mcp --skill adspirer-get-started -g` | Vercel `skills` CLI reads this repo's `skills/` dir, installs to every detected agent's global skills location | Claude Code, Cursor, Codex, other CLI agents |
 | `curl … install.sh \| bash` | Downloads SKILL.md into `~/.claude/skills/adspirer-get-started/` (auto-discovered, no install step) | Claude Code, Claude Cowork |
-| Paste-a-prompt | Agent fetches the SKILL.md from raw GitHub and follows it as instructions | claude.ai, ChatGPT web/desktop — anything with web fetch |
+| Paste-a-prompt (fetch-style) | Agent fetches the SKILL.md from raw GitHub and follows it as instructions | Claude (claude.ai / desktop). **Not ChatGPT** — it refuses to follow fetched files (verified 2026-07-16); give ChatGPT users the intent-framed prompt or the App Store link instead |
 | Plugin (existing) | The same skill ships inside the plugin, so plugin users get onboarding help for teammates/other machines | Claude Code / Cowork plugin installs |
 
 ## Maintenance

@@ -14,7 +14,7 @@ description: >
 
 # Get started with Adspirer
 
-**Skill version: 1.2.0**
+**Skill version: 1.2.1**
 
 **Act immediately.** When this skill loads — whether installed, fetched from
 a URL, or pasted into the chat — start the flow now: detect the environment,
@@ -197,6 +197,10 @@ The browser redirects back to the AI client automatically when done.
 
 ## Troubleshooting (quick hits)
 
+- **ChatGPT: connection check returns "Link not found":** the app's
+  authorization link is stale or incomplete. Have the user open **Settings →
+  Apps → Adspirer → Connect / Reconnect**, complete the Google/email
+  sign-in, and connect at least one ad platform — then verify again.
 - **Nothing works at all:** disconnect and reconnect the connector, complete
   OAuth again. Web clients (Claude/ChatGPT) drop connectors every week or
   two; this is normal.
