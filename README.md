@@ -91,7 +91,7 @@ Install the full Adspirer plugin (agent + skills + commands + MCP server):
 1. Open Claude Code
 2. Run `/plugin marketplace add amekala/ads-mcp`
 3. Run `/plugin install adspirer-advertising-agent`
-4. Run `/mcp` — find **plugin:adspirer:adspirer** and click to authenticate
+4. Run `/mcp` — find the **adspirer** server (e.g. **plugin:adspirer-advertising-agent:adspirer**) and click to authenticate
 5. Run `/adspirer:setup` to pull your campaign data and create your brand workspace
 
 This gives you a brand-aware performance marketing agent with persistent memory, competitive research via web search, campaign creation with ad extensions, and slash commands for common workflows.
