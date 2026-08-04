@@ -257,7 +257,7 @@ Edit once (source of truth)
         ./scripts/sync-skills.sh
                 |
                 +--> Claude Code outputs
-                |     ├─ skills/ad-campaign-management/SKILL.md
+                |     ├─ skills/<name>/SKILL.md
                 |     └─ agents/performance-marketing-agent.md
                 |
                 +--> Cursor outputs

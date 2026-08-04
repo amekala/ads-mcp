@@ -18,7 +18,7 @@ ads-mcp/
 │
 ├── plugins/cursor/.../skills/              ← GENERATED (don't edit directly)
 ├── plugins/codex/.../skills/               ← GENERATED (don't edit directly)
-├── skills/ad-campaign-management/          ← GENERATED (don't edit directly)
+├── skills/                                 ← GENERATED (don't edit directly)
 ├── shared/agents/                          ← EDIT HERE (agent prompt source of truth)
 │   └── performance-marketing-agent/PROMPT.md
 ├── agents/performance-marketing-agent.md   ← GENERATED (don't edit directly)

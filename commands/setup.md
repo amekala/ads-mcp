@@ -21,5 +21,5 @@ Run the full brand workspace setup. Follow these steps in order:
    Through a router, with `{"action": "execute", "tool_name": "...", "arguments": {...}}`:
    - `google_ads` → `list_campaigns`, `get_business_profile`, `get_benchmark_context`
    - `linkedin_ads` → `list_linkedin_campaigns`, `get_linkedin_campaign_performance` (lookback_days: 30)
-4. **Create CLAUDE.md** at the project root with: brand context from scanned docs, connected platforms and account info, performance snapshot with key metrics, KPI targets
+4. **Create CLAUDE.md** at the project root with: brand context from scanned docs, connected platforms and account info, performance snapshot with key metrics, KPI targets. **Existing-file guard:** if a CLAUDE.md already exists and is not an Adspirer brand workspace (e.g. it's a software project's instructions), never overwrite or restructure it — ask the user whether to append a clearly-marked `## Adspirer Brand Context` section instead, and don't touch the file until they answer. If it's already a brand workspace, update it in place preserving user edits.
 5. **Present a summary** of everything found — accounts connected, campaigns discovered, key metrics, and what you can help with

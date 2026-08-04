@@ -59,7 +59,12 @@ If any tool errors (platform not connected), skip it and note the gap.
 
 ## Step 4: Create CLAUDE.md
 
-Generate `CLAUDE.md` at the project root. Combine local files + Adspirer data:
+**Existing-file guard — check before writing:**
+- No `CLAUDE.md` in the project root: create it (the user explicitly asked for setup, which covers this).
+- `CLAUDE.md` exists and is already an Adspirer brand workspace: update it in place, preserving any edits the user made.
+- `CLAUDE.md` exists and is anything else (e.g. a software project's instructions): NEVER overwrite, restructure, or delete it. Ask the user whether to append a clearly-marked `## Adspirer Brand Context` section at the end, or to skip the file and keep brand context in the conversation only. Do not touch the file until they answer.
+
+Generate the brand workspace by combining local files + Adspirer data:
 
 ```markdown
 # [Brand Name] — Paid Media Workspace
