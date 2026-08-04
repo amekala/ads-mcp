@@ -40,7 +40,7 @@ The pattern: **strategy stays human, execution becomes instant.**
 |--------|-------|
 | **ChatGPT** | Settings → Connectors → Add Connector → URL: `https://mcp.adspirer.com/mcp` |
 | **Claude** | Settings → Connectors → Add Custom Connector → URL: `https://mcp.adspirer.com/mcp` |
-| **Claude Code** | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer` |
+| **Claude Code** | `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer-advertising-agent` |
 | **Gemini CLI** | `gemini extensions install github.com/amekala/ads-mcp` |
 | **Cursor** | Add `"adspirer": {"url": "https://mcp.adspirer.com/mcp"}` to `mcp.json` |
 

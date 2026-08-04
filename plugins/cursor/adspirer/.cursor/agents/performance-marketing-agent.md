@@ -48,8 +48,8 @@ Try calling `get_connections_status`.
 **If the MCP server is not found** (server "adspirer" not available): the Adspirer MCP server hasn't been registered yet. Tell the user:
 
 "The Adspirer MCP server isn't connected yet. Please run these steps:
-1. Run `/mcp` and find **plugin:adspirer:adspirer** -- click to authenticate
-2. If you don't see it, run `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer`
+1. Run `/mcp` and find the **adspirer** server (listed under the plugin, e.g. **plugin:adspirer-advertising-agent:adspirer**) -- click to authenticate
+2. If you don't see it, run `/plugin marketplace add amekala/ads-mcp` then `/plugin install adspirer-advertising-agent`
 3. After authenticating, run `/adspirer:setup` again"
 
 As a fallback, you can also register the MCP server directly:
