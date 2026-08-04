@@ -115,7 +115,7 @@ done
 # Skills were not the only place the stale contract hid. commands/ and agents/ and the
 # hand-maintained OpenClaw skill all name routed tools too, and none of them are SKILL.md.
 echo ""; echo "--- Tool-call contract: commands, agents, hand-maintained skills ---"
-EXTRA_CONTRACT_FILES="commands/*.md agents/*.md plugins/openclaw/SKILL.md skills/performance-marketing-agent/SKILL.md"
+EXTRA_CONTRACT_FILES="commands/*.md agents/*.md plugins/openclaw/SKILL.md"
 
 check "Non-skill files naming a routed tool teach list_tools or defer to adspirer-mcp"
 bad=""

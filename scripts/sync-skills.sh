@@ -129,35 +129,6 @@ emit_skill() {
   done
 }
 
-# The published plugin shipped `ad-campaign-management`. That skill is gone; leave a
-# pointer for one release so existing installs don't silently emit broken tool calls.
-emit_deprecation_shim() {
-  local dest_dir="$1"
-  mkdir -p "$dest_dir"
-  cat > "$dest_dir/SKILL.md" <<'EOF'
----
-name: ad-campaign-management
-description: Deprecated. Adspirer's ad-campaign skills were split by platform. Use adspirer-agent, adspirer-mcp, and the per-platform skills instead.
----
-
-# Deprecated
-
-This skill has been replaced. It described a tool surface that no longer exists — Adspirer's
-platform tools now sit behind router tools, so the direct tool calls this skill taught will fail.
-
-Use these instead:
-
-- **`adspirer-mcp`** — how to call the hub. Read this before any tool call.
-- **`adspirer-agent`** — how a paid media agent should behave.
-- **`adspirer-google-ads`**, **`adspirer-meta-ads`**, **`adspirer-tiktok-ads`**,
-  **`adspirer-linkedin-ads`**, **`adspirer-amazon-ads`**, **`adspirer-chatgpt-ads`** — per-platform rules.
-- **`adspirer-launch`**, **`adspirer-performance-review`**, **`adspirer-optimize`**,
-  **`adspirer-creative`** — cross-platform workflows.
-
-If you are seeing this, update the Adspirer plugin.
-EOF
-}
-
 process_agent_prompt() {
   sed "s|{{CONTEXT_FILE}}|$2|g" "$1"
 }
@@ -191,21 +162,12 @@ description: |
 # prefix, so no allowlist entry can name them reliably). Omitted = inherit everything.
 maxTurns: 25
 memory: project
+# Preload only the two skills every session needs: agent behavior + the MCP call
+# contract. `skills:` injects FULL content at startup (~1k tokens each) — the 12
+# platform/workflow skills load on demand via the Skill tool when relevant.
 skills:
   - adspirer-agent
   - adspirer-mcp
-  - adspirer-launch
-  - adspirer-performance-review
-  - adspirer-optimize
-  - adspirer-creative
-  - adspirer-google-ads
-  - adspirer-meta-ads
-  - adspirer-tiktok-ads
-  - adspirer-linkedin-ads
-  - adspirer-amazon-ads
-  - adspirer-chatgpt-ads
-  - adspirer-docs
-  - adspirer-setup
 ---
 
 EOF
@@ -279,10 +241,6 @@ generate_all() {
       done
     fi
 
-    # Deprecation shim: harnesses that shipped the old name. Not ChatGPT (new surface).
-    if [ "$target" != "chatgpt" ]; then
-      emit_deprecation_shim "$dest_root/ad-campaign-management"
-    fi
   done
 
   generate_agents "$out_root"
