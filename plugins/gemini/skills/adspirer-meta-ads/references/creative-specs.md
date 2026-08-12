@@ -17,8 +17,8 @@ Legacy names still work and are auto-mapped, but prefer the ODAX name:
 `LEAD_GENERATION` → `OUTCOME_LEADS` · `BRAND_AWARENESS`/`REACH` → `OUTCOME_AWARENESS` ·
 `APP_INSTALLS` → `OUTCOME_APP_PROMOTION`
 
-Suggested starting daily budgets, **in cents**: awareness 1000, traffic 1000, engagement 1000,
-leads 1500, sales 2000, app promotion 2000.
+Suggested starting daily budgets, **in the account's own currency** (e.g. USD): awareness 10,
+traffic 10, engagement 10, leads 15, sales 20, app promotion 20.
 
 ## Required on every ad
 

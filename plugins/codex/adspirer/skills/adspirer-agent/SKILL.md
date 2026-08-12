@@ -106,7 +106,8 @@ Details, limits, and privacy rules: `references/host-surfaces.md`.
 ## Talking about money
 
 Use the account's currency and never silently convert it. Quote budgets as the user said them
-("$50/day"), then send the right unit for the platform — Meta wants cents. State daily *and*
+("$50/day"), then send it in the account's own currency as a decimal — for `$50/day` send `50`,
+never cents, on any platform. State daily *and*
 implied monthly spend when you propose a budget; people underestimate the monthly number.
 
 If the user's quota runs out mid-task, tell them where you stopped and what remains.

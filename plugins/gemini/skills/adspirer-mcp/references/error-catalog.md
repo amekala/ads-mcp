@@ -36,10 +36,11 @@ Nothing is connected for that platform, or the token expired. Point the user at
 ## Budget errors
 
 **Meta campaign booked at 100× the intended budget**
-You sent dollars where Meta expects cents. `daily_budget` is an integer in cents: `$50/day` is
-`5000`. Worse, any value **below 100** is treated as dollars and multiplied by 100, so `50` books
-$50/day and looks correct until you compare it with `500`, which also books $5.00/day. Always send
-cents, always ≥ 100.
+You sent cents where the tool expects the account's own currency as a decimal. `daily_budget` and
+`lifetime_budget` take the plain currency amount: `$50/day` is `50`, `$20/day` is `20`. The tool
+converts to Meta's internal unit for you, so a value you meant as cents gets multiplied again —
+sending `2000` for an intended `$20/day` books **`$2,000/day`**. Send the currency amount, never
+cents, and never multiply by 100.
 
 **TikTok: "Your budget setting must not be less than X"**
 Below TikTok's per-currency daily floor. USD 20, EUR 20, GBP 15, CAD 25, AUD 30, SGD 25, BRL 100,

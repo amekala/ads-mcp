@@ -1,6 +1,6 @@
 ---
 name: adspirer-mcp
-description: How to call the Adspirer MCP hub correctly — the router two-step (action "list_tools" then action "execute" with tool_name), the direct tools search_tools and get_tool_schema, per-platform account IDs, quota rules, and the budget-unit trap (Meta budgets are in cents). Load this before making any Adspirer tool call.
+description: How to call the Adspirer MCP hub correctly — the router two-step (action "list_tools" then action "execute" with tool_name), the direct tools search_tools and get_tool_schema, per-platform account IDs, quota rules, and the budget unit (every platform takes the account's own currency as a decimal — never cents). Load this before making any Adspirer tool call.
 ---
 
 # Calling the Adspirer MCP hub
@@ -79,16 +79,17 @@ This is the single most common error. **Read the row before you send a budget.**
 
 | Platform | Unit | `$50/day` becomes |
 |---|---|---|
-| Google Ads | dollars (decimal) | `50.0` |
-| **Meta Ads** | **cents (integer)** | **`5000`** |
+| Google Ads | account currency (decimal) | `50.0` |
+| Meta Ads | account currency (decimal) | `50.0` |
 | TikTok Ads | account currency (decimal) | `50.0` |
 | LinkedIn Ads | account currency (decimal) | `50.0` |
 | Amazon Ads | account currency (decimal) | `50.0` |
-| ChatGPT Ads | dollars (decimal) | `50.0` |
+| ChatGPT Ads | account currency (decimal) | `50.0` |
 
-Meta has a second trap: a `daily_budget` **below 100** is interpreted as dollars and silently
-multiplied by 100. So `daily_budget: 50` books **$50/day**, not $0.50. Always send Meta budgets in
-cents and always ≥ 100.
+**Every platform takes the budget in the account's own currency as a plain decimal — never
+cents, never multiplied by anything.** For a `$20/day` budget send `20`, not `2000`. For
+`$50/day` send `50`. The tools convert to each platform's internal unit for you; if you send
+`2000` meaning `$20` you will book **`$2,000/day`** — a 100× overspend.
 
 Never convert the user's currency to USD. Send the number in the account's own currency.
 

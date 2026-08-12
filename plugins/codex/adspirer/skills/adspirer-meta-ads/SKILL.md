@@ -1,6 +1,6 @@
 ---
 name: adspirer-meta-ads
-description: Create and manage Meta Ads (Facebook and Instagram) through Adspirer — image, video, carousel, and lead-gen campaigns, ad sets, audiences, pixels, and creative fatigue. Use for anything on Facebook, Instagram, Meta, or FB ads. Covers the cents-not-dollars budget trap and the required Facebook page id.
+description: Create and manage Meta Ads (Facebook and Instagram) through Adspirer — image, video, carousel, and lead-gen campaigns, ad sets, audiences, pixels, and creative fatigue. Use for anything on Facebook, Instagram, Meta, or FB ads. Covers the account-currency budget unit (never cents) and the required Facebook page id.
 ---
 
 # Meta Ads (Facebook and Instagram)
@@ -9,13 +9,13 @@ Everything on Meta goes through the `meta_ads` router. Follow `adspirer-mcp` for
 
 Account parameter: `ad_account_id`, as a **string**. An `act_` prefix is stripped for you.
 
-## Budgets are in cents
+## Budgets are in the account's own currency
 
-`daily_budget` and `lifetime_budget` are **integers in cents**. `$50/day` is `5000`.
+`daily_budget` and `lifetime_budget` are **decimals in the ad account's own currency — not
+cents, and not converted to USD.** For `$50/day` send `50`. For `$20/day` send `20`.
 
-There is a second trap on top of that: any value **below 100** is read as dollars and multiplied by
-100. So `50` books $50/day, and `500` books $5.00/day. Two values that look similar differ by 10×.
-Always send cents, always ≥ 100, and read the created campaign back to confirm the number.
+Do **not** multiply by 100 or send cents. If you send `2000` meaning `$20`, you will book
+**`$2,000/day`** — a 100× overspend. Read the created campaign back to confirm the number.
 
 ## Objectives
 

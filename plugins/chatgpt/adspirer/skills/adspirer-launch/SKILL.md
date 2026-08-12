@@ -50,7 +50,7 @@ the rest as a test with a stated review date.
 Load the platform skill and follow its order. Universally:
 
 - Resolve locations, audiences, and pixel ids with the platform's lookup tools. Never guess an id.
-- Send the budget in the platform's unit. **Meta is cents.** Check `adspirer-mcp`.
+- Send the budget in the account's own currency as a decimal — never cents, on any platform. For `$20/day` send `20`. Check `adspirer-mcp`.
 - The campaign is created **paused**, on every platform.
 
 ## After you build — verify, then hand over
