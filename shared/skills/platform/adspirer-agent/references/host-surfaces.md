@@ -1,4 +1,9 @@
+<!-- BEGIN:MULTIHOST -->
 # Host surfaces: artifacts, sites, and scheduled tasks
+<!-- END:MULTIHOST -->
+<!-- BEGIN:GROK -->
+# Host surfaces: what repeats after the session ends
+<!-- END:GROK -->
 
 Your host may offer ways to show work and repeat work that the terminal or the chat transcript
 can't. Use them when they genuinely fit. Don't announce a capability the host doesn't have.
@@ -13,6 +18,7 @@ task just by asking.
 Use it for anything on a cadence: a Monday performance review, a mid-month pacing check, a watch on a
 competitor's landing page, a nudge before a budget resets.
 
+<!-- BEGIN:MULTIHOST -->
 ### What each host calls it
 
 | Host | Feature | Runs when the machine is off? |
@@ -34,6 +40,12 @@ including this one. Available on Pro, Max, Team, and Enterprise.
 
 Write the prompt so a late run behaves. A task meant for 9am might fire at 11pm: "only look at
 today's spend; if it's past 6pm, just summarize what changed."
+<!-- END:MULTIHOST -->
+<!-- BEGIN:GROK -->
+Grok Build has no scheduler of its own and no publish surface — nothing here runs after the session
+ends. Everything recurring goes to Adspirer's server side, described below. Don't offer the user a
+scheduled task, a routine, or a published page; they don't exist on this host.
+<!-- END:GROK -->
 
 Adspirer also has its own server-side monitors and email briefs, under the
 `monitoring_and_reporting` router — threshold alerts on ROAS, CPA, spend and CTR, scheduled reports,
@@ -44,6 +56,7 @@ keep firing after they stop using this assistant. Otherwise prefer the host.
 Discovery on that router is free — `{"action": "list_tools"}` — as are `list_monitors`,
 `list_scheduled_tasks`, `get_monitor_history`, and `test_monitor`.
 
+<!-- BEGIN:MULTIHOST -->
 ---
 
 ## Claude — artifacts
@@ -157,6 +170,7 @@ CPA moves" — it re-checks the account and stays quiet until something is worth
 **Active-task limits are per plan** — roughly 3 on Go, 5 on Plus, 10 on Business and Edu, 15 on Pro
 and Enterprise. At the limit, a new task can't be created until one is paused, deleted, or completes.
 If creation fails, that's usually why; say so rather than retrying.
+<!-- END:MULTIHOST -->
 
 ## What a scheduled run costs
 

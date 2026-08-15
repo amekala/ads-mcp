@@ -1,6 +1,6 @@
 ---
 name: adspirer-setup
-description: Set up your brand workspace — connect to Adspirer, scan brand docs, pull campaign data, and create {{CONTEXT_FILE}}. Use on first time in a new brand folder, or when the user wants to refresh brand context.
+description: Set up your brand workspace — connect to Adspirer, scan brand docs, pull campaign data, and create AGENTS.md. Use on first time in a new brand folder, or when the user wants to refresh brand context.
 ---
 
 Run the full brand workspace setup. Follow these steps in order:
@@ -11,26 +11,9 @@ Call `get_connections_status` directly.
 
 - **If it works**: continue to step 2.
 - **If the MCP server is not found**: tell the user:
-<!-- BEGIN:CURSOR_CLAUDE -->
-  "The Adspirer MCP server isn't connected. Add it to your Cursor MCP config:
-  1. Open Cursor Settings > MCP
-  2. Add server with URL: `https://mcp.adspirer.com/mcp`
-  3. Or add to `~/.cursor/mcp.json`:
-     ```json
-     {"mcpServers": {"adspirer": {"url": "https://mcp.adspirer.com/mcp"}}}
-     ```
-  4. Restart Cursor and run `/adspirer-setup` again."
-<!-- END:CURSOR_CLAUDE -->
-<!-- BEGIN:CODEX -->
-  "The Adspirer MCP server isn't connected. Run:
-  `codex mcp add adspirer --url https://mcp.adspirer.com/mcp`
-  Then restart Codex, authenticate via `/mcp`, and run `$adspirer-setup` again."
-<!-- END:CODEX -->
-<!-- BEGIN:GROK -->
   "The Adspirer MCP server isn't connected. Open `/mcp`, select **adspirer**, and
   authenticate in the browser. If it isn't listed, install the plugin from the xAI
   marketplace with `/plugin`, then run `/adspirer-setup` again."
-<!-- END:GROK -->
 - **If OAuth is triggered**: tell the user a browser window is opening for authentication. Wait for them to confirm, then retry.
 - **If no platforms are connected**: tell the user to connect ad accounts at https://adspirer.ai/connections, then run setup again.
 
@@ -69,12 +52,12 @@ Through the router (`action: "execute"`):
 
 If any tool errors (platform not connected), skip it and note the gap.
 
-## Step 4: Create {{CONTEXT_FILE}}
+## Step 4: Create AGENTS.md
 
 **Existing-file guard — check before writing:**
-- No `{{CONTEXT_FILE}}` in the project root: create it (the user explicitly asked for setup, which covers this).
-- `{{CONTEXT_FILE}}` exists and is already an Adspirer brand workspace: update it in place, preserving any edits the user made.
-- `{{CONTEXT_FILE}}` exists and is anything else (e.g. a software project's instructions): NEVER overwrite, restructure, or delete it. Ask the user whether to append a clearly-marked `## Adspirer Brand Context` section at the end, or to skip the file and keep brand context in the conversation only. Do not touch the file until they answer.
+- No `AGENTS.md` in the project root: create it (the user explicitly asked for setup, which covers this).
+- `AGENTS.md` exists and is already an Adspirer brand workspace: update it in place, preserving any edits the user made.
+- `AGENTS.md` exists and is anything else (e.g. a software project's instructions): NEVER overwrite, restructure, or delete it. Ask the user whether to append a clearly-marked `## Adspirer Brand Context` section at the end, or to skip the file and keep brand context in the conversation only. Do not touch the file until they answer.
 
 Generate the brand workspace by combining local files + Adspirer data:
 
@@ -147,7 +130,7 @@ Fill in every section with real data. Leave placeholders only for sections where
 
 ### Step 4.5: Create STRATEGY.md
 
-Create `STRATEGY.md` at the project root alongside {{CONTEXT_FILE}}:
+Create `STRATEGY.md` at the project root alongside AGENTS.md:
 
 ```markdown
 # [Brand Name] — Strategy Playbook
@@ -188,29 +171,7 @@ Create `STRATEGY.md` at the project root alongside {{CONTEXT_FILE}}:
 [No archived directives]
 ```
 
-<!-- BEGIN:HAS_MEMORY -->
-## Step 5: Create memory file
-
-Create `.cursor/memory/performance-marketing-agent/MEMORY.md` with initial template:
-
-```markdown
-# Performance Marketing Agent — Memory
-
-## Brand Learnings
-[No learnings yet — will be populated as campaigns are managed]
-
-## User Preferences
-[Not yet determined — will learn from interactions]
-
-## Decision Log
-[No decisions yet]
-```
-
-## Step 6: Present summary
-<!-- END:HAS_MEMORY -->
-<!-- BEGIN:NO_MEMORY -->
 ## Step 5: Present summary
-<!-- END:NO_MEMORY -->
 
 Tell the user:
 - Which platforms are connected and how many campaigns are active
@@ -219,7 +180,7 @@ Tell the user:
 - Any gaps ("No brand voice docs found — drop guidelines in this folder anytime")
 
 End with:
-"Your brand workspace is set up! I've saved everything to {{CONTEXT_FILE}}.
+"Your brand workspace is set up! I've saved everything to AGENTS.md.
 Here's what I can help with:
 - Review campaign performance across all platforms
 - Find and fix wasted ad spend
