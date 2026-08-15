@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "adspirer": {
+      "type": "http",
+      "url": "https://mcp.adspirer.com/mcp",
+      "note": "Adspirer's hosted MCP server for cross-platform ad management. Sign in with OAuth 2.1 (PKCE, dynamic client registration) on first connection — no API key, no credentials stored locally. Ad-platform access is scoped to the accounts the user connects at https://adspirer.com/connections."
+    }
+  }
+}

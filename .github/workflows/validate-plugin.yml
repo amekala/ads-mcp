@@ -35,7 +35,8 @@ jobs:
       # It has been accidentally re-added once already (76b05ab).
       - name: Enforce SHA-based versioning (no version field)
         run: |
-          for f in .claude-plugin/plugin.json .claude-plugin/marketplace.json; do
+          for f in .claude-plugin/plugin.json .claude-plugin/marketplace.json \
+                   plugins/grok/.grok-plugin/plugin.json; do
             if ! jq -e '[.. | objects | select(has("version"))] | length == 0' "$f" >/dev/null; then
               echo "::error file=$f::contains a \"version\" field — we version by commit SHA; see docs/plugin-update-playbook.md §2"
               exit 1

@@ -1,0 +1,109 @@
+# DEPLOYED FILE — this is the canonical copy, but it does not run from this repo.
+#
+# It lives at .github/workflows/sync-from-ads-mcp.yml inside
+# Adspirer/adspirer-grok-plugin, the repo the xAI marketplace catalog pins.
+#
+# Why the mirror pulls instead of ads-mcp pushing: a cross-repo push needs a stored
+# credential, and every credential that can do it either expires (fine-grained PAT,
+# 1 year max) or has to be rotated. ads-mcp is public, so the mirror can just read it
+# with the GITHUB_TOKEN it already has. Nothing to create, nothing to rotate, nothing
+# that goes quietly stale — which is the exact failure that froze our Claude pin.
+#
+# Why it isn't auto-synced like the rest of the tree: GITHUB_TOKEN cannot write files
+# under .github/workflows/ (there is no `workflows` permission for it — that scope
+# exists only for PATs). So the sync step deliberately skips .github, and this file is
+# updated by hand. Edit it here, then copy it over.
+
+name: Sync from ads-mcp
+
+on:
+  schedule:
+    # 6am Pacific (13:00 UTC) — an hour ahead of xAI's 7am Pacific pin bump, so a
+    # change landing here is visible to their nightly sweep the same morning.
+    #
+    # This repo carries no version field, so xAI's bump advances the pin whenever this
+    # HEAD moves. That is the intent: the sync only commits when plugins/grok/ actually
+    # changes, so the pin tracks plugin changes and nothing else. See playbook §2.
+    - cron: "0 13 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-ads-mcp
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the plugin tree from ads-mcp
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://github.com/amekala/ads-mcp.git /tmp/src
+          test -d /tmp/src/plugins/grok || {
+            echo "::error::plugins/grok is missing upstream — refusing to wipe the mirror"
+            exit 1
+          }
+          echo "UPSTREAM_SHA=$(git -C /tmp/src rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Validate before adopting
+        run: |
+          # A mirror that publishes a broken manifest is worse than a stale one: the
+          # catalog pins whatever is here. Fail loudly instead of shipping it.
+          python3 - <<'PY'
+          import json, sys, pathlib
+          root = pathlib.Path("/tmp/src/plugins/grok")
+          errors = []
+          manifest_path = root / ".grok-plugin/plugin.json"
+          if not manifest_path.is_file():
+              print("::error::.grok-plugin/plugin.json is missing", file=sys.stderr)
+              sys.exit(1)
+          manifest = json.loads(manifest_path.read_text())
+          if manifest.get("name") != "adspirer":
+              errors.append(f"name must be 'adspirer' to match the catalog entry, got {manifest.get('name')!r}")
+          if "version" in manifest:
+              errors.append("manifest must not carry a version field — see docs/plugin-update-playbook.md §2")
+          for field in ("description", "homepage", "repository", "license"):
+              if not manifest.get(field):
+                  errors.append(f"missing required field {field!r}")
+          logo = manifest.get("logo")
+          if logo and not (root / logo).is_file():
+              errors.append(f"logo {logo!r} does not exist")
+          for required in (".mcp.json", "README.md", "LICENSE"):
+              if not (root / required).is_file():
+                  errors.append(f"{required} is missing")
+          if not any((root / "skills").glob("*/SKILL.md")):
+              errors.append("no skills found — the tree looks empty")
+          if errors:
+              for e in errors:
+                  print(f"::error::{e}", file=sys.stderr)
+              sys.exit(1)
+          print("upstream tree OK — adspirer")
+          PY
+
+      - name: Replace the tree
+        run: |
+          set -euo pipefail
+          # Full replacement so deletions upstream propagate. .github is preserved:
+          # it holds this workflow, which GITHUB_TOKEN is not allowed to rewrite.
+          find . -mindepth 1 -maxdepth 1 -not -name '.git' -not -name '.github' -exec rm -rf {} +
+          cp -R /tmp/src/plugins/grok/. .
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
+            exit 0
+          fi
+          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
+          git push
+          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"

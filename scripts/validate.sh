@@ -19,6 +19,7 @@ plugins/codex/adspirer/skills
 skills
 plugins/gemini/skills
 plugins/chatgpt/adspirer/skills
+plugins/grok/skills
 "
 
 # The only tools callable by name. Everything else lives behind a router.
@@ -115,7 +116,7 @@ done
 # Skills were not the only place the stale contract hid. commands/ and agents/ and the
 # hand-maintained OpenClaw skill all name routed tools too, and none of them are SKILL.md.
 echo ""; echo "--- Tool-call contract: commands, agents, hand-maintained skills ---"
-EXTRA_CONTRACT_FILES="commands/*.md agents/*.md plugins/openclaw/SKILL.md"
+EXTRA_CONTRACT_FILES="commands/*.md agents/*.md plugins/openclaw/SKILL.md plugins/grok/commands/*.md plugins/grok/agents/*.md"
 
 check "Non-skill files naming a routed tool teach list_tools or defer to adspirer-mcp"
 bad=""
@@ -270,6 +271,59 @@ else fail "bad name/version or MCP url"; fi
 
 check "OpenClaw claw.json + SKILL.md exist"
 if [ -f "plugins/openclaw/claw.json" ] && [ -f "plugins/openclaw/SKILL.md" ]; then pass; else fail "missing"; fi
+
+# ---------------------------------------------------------------------------
+# plugins/grok/ is published verbatim to Adspirer/adspirer-grok-plugin, which the xAI
+# marketplace catalog pins by sha. Whatever lands on main here ships to Grok users, so
+# the shape gets checked before merge rather than after publication.
+echo ""; echo "--- Grok plugin package ---"
+
+GROK_MANIFEST="plugins/grok/.grok-plugin/plugin.json"
+
+check "Grok manifest is valid JSON"
+if jq -e . "$GROK_MANIFEST" >/dev/null 2>&1; then pass; else fail "unparseable or missing: $GROK_MANIFEST"; fi
+
+check "Grok manifest name is 'adspirer' (must match the catalog entry)"
+if [ "$(jq -r '.name // empty' "$GROK_MANIFEST" 2>/dev/null)" = "adspirer" ]; then pass
+else fail "got '$(jq -r '.name // "<none>"' "$GROK_MANIFEST" 2>/dev/null)' — a mismatch fails install with strict name checking"; fi
+
+check "Grok manifest has NO version field (SHA versioning — playbook §2)"
+# Same policy as .claude-plugin/plugin.json, and xAI's bump logic has the same shape:
+# "both lack version -> bump to HEAD (SHA is the identity)", but "same version -> skip".
+# A version field here is a second manual gate on top of the catalog pin, and forgetting
+# to bump it strands every installed Grok user on old code with no error anywhere.
+# Unrelated monorepo churn is not a risk: the mirror only commits when plugins/grok/
+# actually changes, so its HEAD moves exactly when the plugin does.
+if jq -e 'has("version") | not' "$GROK_MANIFEST" >/dev/null 2>&1; then pass
+else fail "remove \"version\" — see docs/plugin-update-playbook.md §2"; fi
+
+check "Grok manifest has description, homepage, repository, license"
+missing=""
+for f in description homepage repository license; do
+  [ -n "$(jq -r ".$f // empty" "$GROK_MANIFEST" 2>/dev/null)" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Grok manifest logo resolves"
+logo="$(jq -r '.logo // empty' "$GROK_MANIFEST" 2>/dev/null)"
+if [ -z "$logo" ] || [ -f "plugins/grok/$logo" ]; then pass; else fail "logo '$logo' not found"; fi
+
+check "Grok package ships .mcp.json, README.md, LICENSE"
+missing=""
+for f in .mcp.json README.md LICENSE; do
+  [ -f "plugins/grok/$f" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Grok .mcp.json points at the production MCP endpoint"
+if [ "$(jq -r '.mcpServers.adspirer.url // empty' plugins/grok/.mcp.json 2>/dev/null)" = "https://mcp.adspirer.com/mcp" ]; then pass
+else fail "unexpected url"; fi
+
+check "Grok package ships no executable or hook surface"
+# xAI's security review rejects hooks and install scripts that run shell. This plugin is
+# skills + commands + an agent + one MCP url; keep it that way.
+found="$(find plugins/grok -name 'hooks.json' -o -name '.lsp.json' -o -name '*.sh' -o -name 'install*' 2>/dev/null)"
+[ -z "$found" ] && pass || fail "unexpected executable surface: $found"
 
 # ---------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then
