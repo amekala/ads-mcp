@@ -19,7 +19,11 @@ name: Sync from ads-mcp
 on:
   schedule:
     # 6am Pacific (13:00 UTC) — an hour ahead of xAI's 7am Pacific pin bump, so a
-    # version bump landing here is visible to their nightly sweep the same morning.
+    # change landing here is visible to their nightly sweep the same morning.
+    #
+    # This repo carries no version field, so xAI's bump advances the pin whenever this
+    # HEAD moves. That is the intent: the sync only commits when plugins/grok/ actually
+    # changes, so the pin tracks plugin changes and nothing else. See playbook §2.
     - cron: "0 13 * * *"
   workflow_dispatch:
 
@@ -62,7 +66,9 @@ jobs:
           manifest = json.loads(manifest_path.read_text())
           if manifest.get("name") != "adspirer":
               errors.append(f"name must be 'adspirer' to match the catalog entry, got {manifest.get('name')!r}")
-          for field in ("version", "description", "homepage", "repository", "license"):
+          if "version" in manifest:
+              errors.append("manifest must not carry a version field — see docs/plugin-update-playbook.md §2")
+          for field in ("description", "homepage", "repository", "license"):
               if not manifest.get(field):
                   errors.append(f"missing required field {field!r}")
           logo = manifest.get("logo")
@@ -77,7 +83,7 @@ jobs:
               for e in errors:
                   print(f"::error::{e}", file=sys.stderr)
               sys.exit(1)
-          print(f"upstream tree OK — adspirer v{manifest['version']}")
+          print("upstream tree OK — adspirer")
           PY
 
       - name: Replace the tree
@@ -91,7 +97,6 @@ jobs:
       - name: Commit and push
         run: |
           set -euo pipefail
-          VERSION="$(python3 -c "import json;print(json.load(open('.grok-plugin/plugin.json'))['version'])")"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
@@ -99,6 +104,6 @@ jobs:
             echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
             exit 0
           fi
-          git commit -m "sync: adspirer v${VERSION} from ads-mcp@${UPSTREAM_SHA}"
+          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
           git push
-          echo "published adspirer v${VERSION} (from ads-mcp@${UPSTREAM_SHA})"
+          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"

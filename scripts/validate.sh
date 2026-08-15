@@ -287,10 +287,15 @@ check "Grok manifest name is 'adspirer' (must match the catalog entry)"
 if [ "$(jq -r '.name // empty' "$GROK_MANIFEST" 2>/dev/null)" = "adspirer" ]; then pass
 else fail "got '$(jq -r '.name // "<none>"' "$GROK_MANIFEST" 2>/dev/null)' — a mismatch fails install with strict name checking"; fi
 
-check "Grok manifest declares a version (gates xAI's nightly pin bump)"
-# Without a version, xAI's bump-plugin-shas treats the sha as identity and advances the
-# pin on every upstream commit — shipping unrelated monorepo churn to installed users.
-if [ -n "$(jq -r '.version // empty' "$GROK_MANIFEST" 2>/dev/null)" ]; then pass; else fail "no version field"; fi
+check "Grok manifest has NO version field (SHA versioning — playbook §2)"
+# Same policy as .claude-plugin/plugin.json, and xAI's bump logic has the same shape:
+# "both lack version -> bump to HEAD (SHA is the identity)", but "same version -> skip".
+# A version field here is a second manual gate on top of the catalog pin, and forgetting
+# to bump it strands every installed Grok user on old code with no error anywhere.
+# Unrelated monorepo churn is not a risk: the mirror only commits when plugins/grok/
+# actually changes, so its HEAD moves exactly when the plugin does.
+if jq -e 'has("version") | not' "$GROK_MANIFEST" >/dev/null 2>&1; then pass
+else fail "remove \"version\" — see docs/plugin-update-playbook.md §2"; fi
 
 check "Grok manifest has description, homepage, repository, license"
 missing=""
