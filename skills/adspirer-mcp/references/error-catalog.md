@@ -13,8 +13,10 @@ router, read the real tool name, then execute.
 You called a platform tool at the top level. Only the ten direct tools can be called by name;
 everything else goes through its router with `action: "execute"`. See the tool table in `SKILL.md`.
 
-**`search_tools` or `get_tool_schema` returned "Tool not found"**
-You wrapped them in `action: "execute"`. Both are top-level. Call them directly.
+**`get_tool_schema` is not in your tool list**
+Some clients (the ChatGPT app, some uploaded skill kits) do not list it. Call it through any
+platform router instead: `google_ads` with `action: "execute"`, `tool_name: "get_tool_schema"`,
+`arguments: {"tool_names": [...]}`. It returns the same schema. Never stop because it is missing.
 
 ## Account errors
 

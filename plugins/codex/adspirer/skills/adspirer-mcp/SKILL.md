@@ -58,8 +58,10 @@ Returns every tool on that platform with its full parameter schema.
 - `action: "execute"` without a `tool_name` is **invalid**. It returns an error. **Do not retry
   the same call** — go back to `list_tools` and read the real tool name.
 - Never pass a platform tool name as `action`. `action` is only ever `"list_tools"` or `"execute"`.
-- `search_tools` and `get_tool_schema` are **top-level**. Never wrap them in `action: "execute"`,
-  and never route them through a platform tool. They are not platform-specific.
+- `search_tools` and `get_tool_schema` are **top-level**. Call them directly when they are in
+  your tool list. If your client does not list `get_tool_schema`, call it through any platform
+  router: `google_ads` with `action: "execute"`, `tool_name: "get_tool_schema"`,
+  `arguments: {"tool_names": [...]}`. It returns the same schema. Never stop because it is missing.
 - Never guess a tool name or a parameter. If you are unsure, call `list_tools` or `get_tool_schema`.
 
 ## Finding the right tool
@@ -69,7 +71,7 @@ When you don't know which tool does the job:
 1. `search_tools` with a natural-language description of the task.
 2. `get_tool_schema` with the candidate names **and** `intent` set to the user's complete request,
    word for word. Not a summary, not a paraphrase. Pass it every time — it is how tool discovery
-   improves.
+   improves. Not in your tool list? Call it through a router (see Rules above).
 3. Call the tool: directly if it's in the direct list above, otherwise through its router with
    `action: "execute"`.
 
