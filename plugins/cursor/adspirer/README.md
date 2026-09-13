@@ -1,249 +1,105 @@
-# Adspirer Performance Marketing Agent for Cursor
+# Adspirer for Cursor and Grok Bot
 
-Brand-aware paid media management across Google Ads, Meta Ads, LinkedIn Ads, and TikTok Ads — powered by the Adspirer MCP server (400+ tools).
+Create, analyze, and optimize paid-media campaigns without leaving Cursor. Adspirer connects
+Cursor and Grok Bot to live ad accounts on Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads,
+Amazon Ads, and ChatGPT Ads through Adspirer's hosted MCP server.
 
-## What This Does
+## Install
 
-This plugin turns Cursor into a **brand-specific paid media analyst** that:
+1. Open **Cursor Settings -> Plugins**.
+2. Search for **Adspirer**.
+3. Click **Install**, then complete the Adspirer sign-in prompt.
 
-- **Knows your brand** — scans your local docs (guidelines, media plans, briefs) to understand voice, audience, products
-- **Has live data** — connects to your actual ad accounts via Adspirer for real-time performance data
-- **Manages campaigns** — creates, analyzes, and optimizes campaigns across 4 platforms
-- **Bootstraps itself** — on first use, it reads your folder + pulls live data to build brand context automatically
+Or run `/add-plugin adspirer` in chat.
 
-## Prerequisites
+On first connection, Cursor opens Adspirer's OAuth flow in the browser. Sign in, then connect
+the ad accounts you want to manage at [adspirer.com/connections](https://www.adspirer.com/connections).
+No API key or client secret is required.
 
-- [Cursor IDE](https://cursor.com/) installed (v2.4+ recommended for subagent support)
-- [git](https://git-scm.com/) installed (used by the installer)
-- An Adspirer account at [adspirer.com](https://www.adspirer.com) with at least one ad platform connected
+## Get started
 
----
+Open a project or brand folder in Cursor and ask:
 
-## Quick Install (One Command)
-
-**Run this from your system terminal** (Terminal.app, iTerm, Windows Terminal, etc.), **not** Cursor's built-in terminal. Cursor's terminal is sandboxed and can't write to `~/.cursor/`, which causes permission errors.
-
-```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)
+```text
+Set up my brand workspace
 ```
 
-This automatically:
-- Installs the performance marketing subagent to `~/.cursor/agents/`
-- Installs all 5 Adspirer skills to `~/.cursor/skills/`
-- Configures the Adspirer MCP server in `~/.cursor/mcp.json`
+Adspirer checks your connected accounts, reads relevant brand files in the folder, pulls a live
+performance snapshot, and proposes a `BRAND.md` workspace profile. It asks before writing files
+and preserves existing project instructions.
 
-Then restart Cursor.
+You can also ask:
 
-**Note:** The installer does not require authentication. You'll authenticate in the Getting Started steps below.
-
----
-
-## Getting Started
-
-### 1. Verify the MCP server is connected
-
-Open **Cursor Settings > MCP**. You should see `adspirer` listed.
-
-If it shows a connection error, click on it to authenticate. A browser window will open for Adspirer login — complete the sign-in and return to Cursor.
-
-If `adspirer` is missing entirely, add it manually:
-
-**Cursor Settings > MCP > Add Server** with URL: `https://mcp.adspirer.com/mcp`
-
-### 2. Open your brand folder in Cursor
-
-```bash
-cd ~/Clients/YourBrand
-cursor .
+```text
+How are my Google and Meta campaigns doing this month?
+Find wasted spend across all connected platforms.
+Write new Search ad headlines using my best-performing queries.
+Plan a LinkedIn campaign for IT directors with a $100 daily budget.
+Audit my conversion tracking before I launch anything.
 ```
 
-Your brand folder can have docs (`.md`, `.txt`, `.csv`, `.yaml`, `.json`, `.pdf`) or be completely empty.
+## What agents can do
 
-### 3. Switch to Agent mode and say "set up my brand workspace"
+| Area | Capabilities |
+| --- | --- |
+| Cross-platform reporting | Compare spend, conversions, CPA, ROAS, CTR, and pacing across connected platforms |
+| Google Ads | Search, Performance Max, Demand Gen, YouTube, Display, keywords, assets, and extensions |
+| Meta Ads | Facebook and Instagram campaigns, audiences, creatives, lead generation, and performance |
+| TikTok Ads | In-feed video, Spark Ads, carousel, app promotion, targeting, and analytics |
+| LinkedIn Ads | Sponsored content, lead-gen forms, campaign groups, B2B targeting, and reporting |
+| Amazon Ads | Sponsored Products, Sponsored Brands, Sponsored Display, search terms, bids, and ACoS |
+| ChatGPT Ads | Campaigns, ad groups, creative assets, chat-card ads, and reporting |
+| Optimization | Wasted-spend analysis, budget pacing, creative fatigue, and actionable recommendations |
 
-Make sure you're in **Agent mode** (not Ask or Edit mode) in the Cursor chat panel.
+## Included guidance
 
-The agent will:
-1. Connect to your ad accounts (may open a browser for OAuth on first use)
-2. Scan the folder for brand docs
-3. Pull live campaign data from all connected platforms
-4. Create `BRAND.md` with your brand context, performance snapshot, and KPI targets
-5. Create `STRATEGY.md` for persisting strategic decisions across sessions
-6. Tell you what it found and ask what you'd like to work on
+The plugin includes focused skills for setup, campaign launches, optimization, performance
+reviews, creative, each supported ad platform, and the Adspirer MCP call contract. It also ships
+a performance-marketing subagent that can use the same live tools with brand context.
 
-If it doesn't trigger automatically, type: `/adspirer-setup`
+The hosted runtime is the source of truth for tool names and schemas. The plugin teaches the
+agent how to discover the current tool surface instead of hardcoding every operation.
 
-### 4. Start managing campaigns
+## Safety
 
-```
-How are my Google Ads campaigns doing?
-Find wasted spend across all platforms
-Write new headlines for my Google Search campaigns
-Create a LinkedIn campaign targeting IT Directors
-What keywords should I bid on?
-Compare my Google and Meta ad performance
-```
+- The agent reads account state and performance before proposing changes.
+- New campaigns are created paused.
+- Campaign creation, budget changes, bid changes, and other spend-affecting writes require the
+  user's explicit approval.
+- The agent reads created or changed resources back before reporting success.
+- Campaigns are never deleted automatically.
 
-That's it. You're up and running.
-
----
-
-## Manual Install (Alternative)
-
-If you prefer to install manually instead of using the one-command script:
-
-<details>
-<summary>Click to expand manual steps</summary>
-
-### Step 1: Clone the repo
-
-```bash
-git clone https://github.com/amekala/ads-mcp.git
-cd ads-mcp/plugins/cursor/adspirer
-```
-
-### Step 2: Install subagent and skills
-
-```bash
-mkdir -p ~/.cursor/agents ~/.cursor/skills
-cp .cursor/agents/performance-marketing-agent.md ~/.cursor/agents/
-cp -r .cursor/skills/adspirer-ads ~/.cursor/skills/
-cp -r .cursor/skills/adspirer-setup ~/.cursor/skills/
-cp -r .cursor/skills/adspirer-performance-review ~/.cursor/skills/
-cp -r .cursor/skills/adspirer-write-ad-copy ~/.cursor/skills/
-cp -r .cursor/skills/adspirer-wasted-spend ~/.cursor/skills/
-```
-
-### Step 3: Add the MCP server
-
-Add to `~/.cursor/mcp.json`:
+## MCP and authentication
 
 ```json
 {
   "mcpServers": {
     "adspirer": {
+      "type": "http",
       "url": "https://mcp.adspirer.com/mcp"
     }
   }
 }
 ```
 
-Or use **Cursor Settings > MCP > Add Server** with URL `https://mcp.adspirer.com/mcp`.
+Authentication uses OAuth 2.1 with PKCE and dynamic client registration. Cursor handles the
+browser sign-in; the plugin contains no API keys, tokens, client secrets, or environment variables.
+Ad-platform credentials remain server-side with Adspirer and are scoped to the accounts the user
+connects.
 
-### Step 4: Copy rules to your brand folder (optional)
+## Network and execution surface
 
-```bash
-cd ~/Clients/YourBrand
-mkdir -p .cursor/rules
-cp /path/to/ads-mcp/plugins/cursor/adspirer/.cursor/rules/*.mdc .cursor/rules/
-```
+The marketplace distribution connects only to `https://mcp.adspirer.com/mcp`. It contains no
+hooks, local executables, or bundled server code. Skills, rules, and the subagent are Markdown
+guidance loaded by Cursor.
 
-### Step 5: Restart Cursor
+## Support and source
 
-</details>
+- Website: [adspirer.com](https://www.adspirer.com)
+- Connections: [adspirer.com/connections](https://www.adspirer.com/connections)
+- Support: [support@adspirer.com](mailto:support@adspirer.com)
+- Source and issues: [Adspirer/adspirer-cursor-plugin](https://github.com/Adspirer/adspirer-cursor-plugin)
 
----
+## License
 
-## What Goes in Your Brand Folder?
-
-Drop any brand-relevant files — the agent reads them all:
-
-```
-~/Clients/Acme/
-├── brand-guidelines.md        # Brand voice, tone, prohibited words
-├── Q1-media-plan.csv          # Budget, targets, timeline
-├── campaign-notes.txt         # Past campaign strategy notes
-├── competitor-analysis.pdf    # Competitive landscape
-├── audience-research.csv      # Target audience data
-└── config.yaml                # Any structured brand config
-```
-
-Supported file types: `.md`, `.txt`, `.csv`, `.yaml`, `.json`, `.pdf`
-
-More docs = better brand context = better ad copy and recommendations. No docs? That's fine too — the agent builds context from your live ad platform data.
-
----
-
-## Available Skills
-
-| Skill | Invocation | What it does |
-|-------|-----------|--------------|
-| **Adspirer Ads** | `/adspirer-ads` or just ask naturally | Full campaign management — 400+ tools, all workflows, all platforms |
-| **Setup** | `/adspirer-setup` | Bootstrap a brand workspace (first-time or refresh) |
-| **Performance Review** | `/adspirer-performance-review` | Cross-platform performance scorecard |
-| **Write Ad Copy** | `/adspirer-write-ad-copy` | Brand-voice ad copy from real data |
-| **Wasted Spend** | `/adspirer-wasted-spend` | Find and fix wasted ad spend |
-
-You don't need to remember skill names — just describe what you want and Cursor will match the right skill automatically.
-
----
-
-## Architecture
-
-```
-Cursor IDE (Agent Mode)
-│
-├── Performance Marketing Agent (subagent)
-│   ├── Reads: BRAND.md (brand context), STRATEGY.md (directives), local docs
-│   ├── Writes: MEMORY.md (decisions), STRATEGY.md (confirmed directives)
-│   ├── Uses: Adspirer MCP (400+ tools)
-│   └── Workflows: campaign creation, performance analysis,
-│       keyword research, optimization, ad copy, competitive intel
-│
-├── Skills (playbooks)
-│   ├── adspirer-ads — full tool orchestration
-│   ├── adspirer-setup — workspace bootstrap
-│   └── Quick skills — performance-review, write-ad-copy, wasted-spend
-│
-├── Rules (.cursor/rules/)
-│   ├── use-adspirer.mdc — safety and workflow rules
-│   └── brand-workspace.mdc — brand context loading
-│
-└── Adspirer MCP Server (tools)
-    ├── Google Ads (151 tools — Search, PMax, Display, Demand Gen, YouTube)
-    ├── LinkedIn Ads (54 tools — image, video, carousel, lead-gen, campaign groups)
-    ├── Meta Ads (58 tools — image, video, carousel, OUTCOME_LEADS, app)
-    ├── TikTok Ads (37 tools — in-feed video, Spark Ads, Carousel, App Promotion + analytics)
-    └── Account + monitoring tools
-```
-
-## Safety
-
-- All new campaigns are created in **PAUSED** status
-- The agent **always asks for confirmation** before creating campaigns or changing budgets
-- Rules enforce workflow ordering and prevent skipping safety steps
-- Strategy directives from STRATEGY.md guide campaign creation, keyword research, and ad copy
-- Budget guardrails from BRAND.md are respected
-
-## Troubleshooting
-
-### Nothing works (all tools fail)
-
-If **no Adspirer tools work** — even basic ones like checking connections — follow these steps in order:
-
-1. **Check tool permissions:** Read tools (performance, research, status) should be set to **Always allow**. Write tools (campaign creation, budget changes) should be set to **Custom** (ask each time). If tools are blocked, nothing will execute.
-2. **Disconnect and reconnect:** Open Cursor Settings > MCP, remove the Adspirer server, re-add it with URL `https://mcp.adspirer.com/mcp`, and complete OAuth again.
-3. **Refresh Adspirer session:** Go to [adspirer.ai](https://adspirer.ai), log out, log back in, then retry in Cursor.
-
-> **Note:** If some ad platforms work but one doesn't (e.g., Google works but LinkedIn fails), that's a platform-specific issue — reconnect just that platform at [adspirer.ai/connections](https://adspirer.ai/connections).
-
-### Other issues
-
-| Problem | Solution |
-|---------|----------|
-| Install fails with permission/hooks error | Run the install from your **system terminal**, not Cursor's built-in terminal (it's sandboxed) |
-| MCP server not showing | Open Cursor Settings > MCP > Add server with URL `https://mcp.adspirer.com/mcp` |
-| MCP connection error | Click the server in Settings > MCP to re-authenticate via browser |
-| Authentication failed | Remove and re-add the MCP server in Cursor Settings |
-| OAuth window doesn't open | Check browser pop-up blocker. Try restarting Cursor. |
-| No ad platforms connected | Connect platforms at [adspirer.com](https://www.adspirer.com) |
-| Skills not showing | Verify: `ls ~/.cursor/skills/` — should show `adspirer-*` directories |
-| Subagent not triggering | Ensure you're in **Agent mode** (not Ask or Edit). Try `/adspirer-setup` directly. |
-| No data returned | Check for active campaigns. Try longer lookback (60/90 days) |
-| Rate limit hit | Check Adspirer tier (Free: 15/mo, Plus: 150/mo, Pro: 600/mo, Max: 3,000/mo) |
-
-## Links
-
-- [Adspirer](https://www.adspirer.com) — Connect your ad accounts
-- [Cursor IDE](https://cursor.com/) — AI-powered code editor
-- [Report Issues](https://github.com/amekala/ads-mcp/issues)
+MIT. See [LICENSE](LICENSE).

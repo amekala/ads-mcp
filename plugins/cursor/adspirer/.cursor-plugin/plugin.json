@@ -1,0 +1,38 @@
+{
+  "name": "adspirer",
+  "displayName": "Adspirer",
+  "version": "1.0.0",
+  "description": "Create, analyze, and optimize campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads.",
+  "author": {
+    "name": "Adspirer",
+    "email": "support@adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/Adspirer/adspirer-cursor-plugin",
+  "license": "MIT",
+  "logo": "assets/icon.png",
+  "keywords": [
+    "advertising",
+    "google ads",
+    "meta ads",
+    "tiktok ads",
+    "linkedin ads",
+    "amazon ads",
+    "chatgpt ads",
+    "performance marketing",
+    "campaign management",
+    "mcp"
+  ],
+  "category": "integrations",
+  "tags": [
+    "advertising",
+    "marketing",
+    "campaigns",
+    "analytics",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "rules": "./rules/",
+  "mcpServers": "./mcp.json"
+}

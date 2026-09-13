@@ -1,6 +1,7 @@
 #!/bin/bash
 # Adspirer Performance Marketing Agent — One-Command Installer for Cursor
-# Usage: bash <(curl -fsSL https://raw.githubusercontent.com/amekala/ads-mcp/main/plugins/cursor/adspirer/install.sh)
+# Legacy manual installer. Marketplace users should install with /add-plugin adspirer.
+# Usage: bash <(curl -fsSL https://raw.githubusercontent.com/Adspirer/adspirer-cursor-plugin/main/install.sh)
 
 set -e
 
@@ -17,26 +18,26 @@ mkdir -p "$TMPDIR"
 trap "rm -rf '$TMPDIR'" EXIT
 
 # Try zip download first (no .git directory, works in sandboxed terminals)
-if curl -fsSL -o "$TMPDIR/plugin.zip" "https://github.com/amekala/ads-mcp/archive/refs/heads/main.zip" 2>/dev/null; then
+if curl -fsSL -o "$TMPDIR/plugin.zip" "https://github.com/Adspirer/adspirer-cursor-plugin/archive/refs/heads/main.zip" 2>/dev/null; then
     unzip -q "$TMPDIR/plugin.zip" -d "$TMPDIR"
-    PLUGIN_DIR="$TMPDIR/ads-mcp-main/plugins/cursor/adspirer"
+    PLUGIN_DIR="$TMPDIR/adspirer-cursor-plugin-main"
 else
     # Fallback: shallow git clone without hooks
     echo "  Zip download failed, trying git clone..."
-    git clone --quiet --depth 1 --config core.hooksPath=/dev/null https://github.com/amekala/ads-mcp.git "$TMPDIR/ads-mcp"
-    PLUGIN_DIR="$TMPDIR/ads-mcp/plugins/cursor/adspirer"
+    git clone --quiet --depth 1 --config core.hooksPath=/dev/null https://github.com/Adspirer/adspirer-cursor-plugin.git "$TMPDIR/adspirer-cursor-plugin"
+    PLUGIN_DIR="$TMPDIR/adspirer-cursor-plugin"
 fi
 
 # Step 2: Install subagent
 echo "[2/4] Installing subagent to ~/.cursor/agents/..."
 mkdir -p ~/.cursor/agents
-cp "$PLUGIN_DIR/.cursor/agents/performance-marketing-agent.md" ~/.cursor/agents/
+cp "$PLUGIN_DIR/agents/performance-marketing-agent.md" ~/.cursor/agents/
 
 # Step 3: Install skills (generated from shared/skills/ templates — do not edit directly)
 echo "[3/4] Installing skills to ~/.cursor/skills/..."
 mkdir -p ~/.cursor/skills
 SKILL_COUNT=0
-for skill_dir in "$PLUGIN_DIR/.cursor/skills/adspirer-"*; do
+for skill_dir in "$PLUGIN_DIR/skills/adspirer-"*; do
     [ -d "$skill_dir" ] || continue
     cp -r "$skill_dir" ~/.cursor/skills/
     SKILL_COUNT=$((SKILL_COUNT + 1))
