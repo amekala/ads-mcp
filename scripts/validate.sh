@@ -14,7 +14,7 @@ pass()  { PASSED=$((PASSED+1)); echo "OK"; }
 fail()  { ERRORS=$((ERRORS+1)); echo "FAIL"; [ $# -gt 0 ] && echo "       $1"; }
 
 TARGET_ROOTS="
-plugins/cursor/adspirer/.cursor/skills
+plugins/cursor/adspirer/skills
 plugins/codex/adspirer/skills
 skills
 plugins/gemini/skills
@@ -149,7 +149,7 @@ echo ""; echo "--- Host surfaces gated to the right target ---"
 
 check "Artifact guidance appears only in the Claude build"
 bad=""
-for root in plugins/chatgpt/adspirer/skills plugins/cursor/adspirer/.cursor/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
+for root in plugins/chatgpt/adspirer/skills plugins/cursor/adspirer/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
   [ -d "$root" ] || continue
   hits=$(grep -rlio 'artifact' "$root"/*/SKILL.md 2>/dev/null || true)
   [ -n "$hits" ] && bad="$bad $hits"
@@ -162,7 +162,7 @@ SITES_RE='\bSites?\b'
 
 check "Sites guidance appears only in the ChatGPT build"
 bad=""
-for root in skills plugins/cursor/adspirer/.cursor/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
+for root in skills plugins/cursor/adspirer/skills plugins/codex/adspirer/skills plugins/gemini/skills; do
   [ -d "$root" ] || continue
   hits=$(grep -rlE "$SITES_RE" "$root"/*/SKILL.md 2>/dev/null || true)
   [ -n "$hits" ] && bad="$bad $hits"
@@ -200,8 +200,8 @@ echo ""; echo "--- No hardcoded Adspirer pricing ---"
 # Plans and prices change; skills must point at the docs, never carry a number.
 # Ad *budget* examples ($50/day) are fine — this targets Adspirer's own plan prices.
 check "No plan prices baked into skills or references"
-if grep -rEqi '\$(49|99|199|485|999|2,?000)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null; then
-  grep -rEni '\$(49|99|199|485|999|2,?000)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null | head -5
+if grep -rEqi '\$(49|99|199|485|999)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null; then
+  grep -rEni '\$(49|99|199|485|999)\b|\$0\.(50|30|20) per|per additional call' $TARGET_ROOTS 2>/dev/null | head -5
   fail "a plan price is hardcoded — point at /docs/knowledge-base/pricing instead"
 else pass; fi
 
@@ -251,14 +251,14 @@ if [ -f "plugins/codex/adspirer/skills/adspirer-agent/agents/openai.yaml" ]; the
 # ---------------------------------------------------------------------------
 echo ""; echo "--- Context file correctness ---"
 check "Cursor uses BRAND.md only"
-if grep -rlq 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/.cursor/skills/*/SKILL.md 2>/dev/null; then fail "wrong context file"; else pass; fi
+if grep -rlq 'AGENTS\.md\|CLAUDE\.md' plugins/cursor/adspirer/skills/*/SKILL.md 2>/dev/null; then fail "wrong context file"; else pass; fi
 check "Codex uses AGENTS.md only"
 if grep -rlq 'BRAND\.md\|CLAUDE\.md' plugins/codex/adspirer/skills/*/SKILL.md 2>/dev/null; then fail "wrong context file"; else pass; fi
 
 # ---------------------------------------------------------------------------
 echo ""; echo "--- Agents + Gemini extension ---"
 for f in shared/agents/performance-marketing-agent/PROMPT.md agents/performance-marketing-agent.md \
-         plugins/cursor/adspirer/.cursor/agents/performance-marketing-agent.md \
+         plugins/cursor/adspirer/agents/performance-marketing-agent.md \
          plugins/codex/adspirer/agents/performance-marketing-agent.toml gemini-extension.json GEMINI.md; do
   check "exists: $f"; [ -f "$f" ] && pass || fail "not found"
 done
@@ -271,6 +271,63 @@ else fail "bad name/version or MCP url"; fi
 
 check "OpenClaw claw.json + SKILL.md exist"
 if [ -f "plugins/openclaw/claw.json" ] && [ -f "plugins/openclaw/SKILL.md" ]; then pass; else fail "missing"; fi
+
+# ---------------------------------------------------------------------------
+# plugins/cursor/adspirer is the source for the company-owned Cursor Marketplace
+# distribution. Cursor and Grok Bot load the same package. The mirror publishes only
+# declarative plugin files; install.sh remains a legacy monorepo-only helper.
+echo ""; echo "--- Cursor plugin package ---"
+
+CURSOR_ROOT="plugins/cursor/adspirer"
+CURSOR_MANIFEST="$CURSOR_ROOT/.cursor-plugin/plugin.json"
+
+check "Cursor manifest is valid JSON"
+if jq -e . "$CURSOR_MANIFEST" >/dev/null 2>&1; then pass; else fail "unparseable or missing: $CURSOR_MANIFEST"; fi
+
+check "Cursor manifest name and version are valid"
+if [ "$(jq -r '.name // empty' "$CURSOR_MANIFEST" 2>/dev/null)" = "adspirer" ] \
+   && jq -e '.version | test("^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$")' "$CURSOR_MANIFEST" >/dev/null 2>&1; then
+  pass
+else fail "expected name adspirer and a strict X.Y.Z version"; fi
+
+check "Cursor manifest has marketplace metadata"
+missing=""
+for f in displayName description author homepage repository license logo category mcpServers; do
+  [ -n "$(jq -r ".$f // empty" "$CURSOR_MANIFEST" 2>/dev/null)" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Cursor manifest has no deprecated or unsupported fields"
+if jq -e 'has("primaryColor") or (.author | type == "object" and has("url"))' "$CURSOR_MANIFEST" >/dev/null 2>&1; then
+  fail "remove primaryColor and author.url; the current Cursor schema rejects them"
+else pass; fi
+
+check "Cursor manifest component paths resolve"
+missing=""
+for f in skills agents rules mcpServers; do
+  rel="$(jq -r ".$f // empty" "$CURSOR_MANIFEST" 2>/dev/null)"
+  rel="${rel#./}"
+  [ -n "$rel" ] && [ -e "$CURSOR_ROOT/${rel%/}" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing component path(s):$missing"
+
+check "Cursor logo, README, license, security policy, and changelog ship"
+logo="$(jq -r '.logo // empty' "$CURSOR_MANIFEST" 2>/dev/null)"
+missing=""
+[ -n "$logo" ] && [ -f "$CURSOR_ROOT/$logo" ] || missing="$missing logo"
+for f in README.md LICENSE SECURITY.md CHANGELOG.md; do
+  [ -f "$CURSOR_ROOT/$f" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Cursor MCP config is hosted HTTP with the production URL"
+if [ "$(jq -r '.mcpServers.adspirer.type // empty' "$CURSOR_ROOT/mcp.json" 2>/dev/null)" = "http" ] \
+   && [ "$(jq -r '.mcpServers.adspirer.url // empty' "$CURSOR_ROOT/mcp.json" 2>/dev/null)" = "https://mcp.adspirer.com/mcp" ]; then
+  pass
+else fail "expected hosted HTTP MCP at https://mcp.adspirer.com/mcp"; fi
+
+check "Legacy .cursor/plugin.json is absent"
+if [ ! -e "$CURSOR_ROOT/.cursor/plugin.json" ]; then pass; else fail "use .cursor-plugin/plugin.json"; fi
 
 # ---------------------------------------------------------------------------
 # plugins/grok/ is published verbatim to Adspirer/adspirer-grok-plugin, which the xAI

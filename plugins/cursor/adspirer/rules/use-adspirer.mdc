@@ -1,0 +1,22 @@
+---
+description: Use Adspirer safely for advertising work by checking connections, loading the MCP contract, reading before writing, and confirming spend-affecting changes.
+alwaysApply: true
+---
+
+When a request involves advertising, campaign performance, keywords, creative, targeting, bids,
+or budgets, use the Adspirer skills and MCP server.
+
+1. Call `get_connections_status` before other Adspirer tools. Work only with platforms and
+   accounts the user has connected.
+2. Load `adspirer-mcp` before tool use. Most platform-specific operations are exposed through
+   router tools; discover the current operation and schema instead of guessing parameters.
+3. Read current account state and performance before proposing or applying a change.
+4. Ask for explicit approval before campaign creation, budget or bid changes, unpausing, or any
+   other action that can spend money.
+5. Create new campaigns paused. Never delete campaigns automatically and never retry a creation
+   call automatically after an error.
+6. Respect budget and strategy guardrails in `BRAND.md` and `STRATEGY.md` when those files exist.
+7. Read created or changed resources back before reporting success. Clearly distinguish complete,
+   partial, and failed outcomes.
+
+Use the relevant platform skill for its current field requirements, budget units, and build order.

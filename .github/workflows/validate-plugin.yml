@@ -1,8 +1,9 @@
 name: Validate Plugin
 
-# Two gates, mirroring what Anthropic's marketplace pipeline runs on us:
-#  1. `claude plugin validate --strict` — manifest + marketplace schema
-#  2. frontmatter YAML parse across all .md files — the check whose failure
+# Marketplace packaging gates:
+#  1. Claude manifest + marketplace validation
+#  2. Cursor manifest validation against Cursor's current public schema
+#  3. Frontmatter YAML parsing across all .md files — the check whose failure
 #     silently froze our community-marketplace SHA pin for three months
 #     (anthropics/claude-plugins-community#964)
 on:
@@ -15,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
 
@@ -29,6 +30,15 @@ jobs:
       # version-resolve by commit SHA (docs/plugin-update-playbook.md §2).
       - name: Validate plugin manifest
         run: claude plugin validate .
+
+      - name: Validate Cursor plugin manifest against the current schema
+        run: |
+          curl -fsSLo /tmp/cursor-plugin.schema.json \
+            https://raw.githubusercontent.com/cursor/plugins/main/schemas/plugin.schema.json
+          npx --yes --package ajv-cli@5 --package ajv-formats@3 ajv validate --spec=draft7 \
+            -s /tmp/cursor-plugin.schema.json \
+            -d plugins/cursor/adspirer/.cursor-plugin/plugin.json \
+            -c ajv-formats
 
       # Guard the SHA-versioning decision: a "version" field in plugin.json or
       # a marketplace entry silently pins users until it is manually bumped.
