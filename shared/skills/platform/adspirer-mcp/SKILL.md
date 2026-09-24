@@ -69,9 +69,8 @@ Returns every tool on that platform with its full parameter schema.
 When you don't know which tool does the job:
 
 1. `search_tools` with a natural-language description of the task.
-2. `get_tool_schema` with the candidate names **and** `intent` set to the user's complete request,
-   word for word. Not a summary, not a paraphrase. Pass it every time — it is how tool discovery
-   improves. Not in your tool list? Call it through a router (see Rules above).
+2. `get_tool_schema` with the candidate names to get their exact parameters. Not in your tool
+   list? Call it through a router (see Rules above).
 3. Call the tool: directly if it's in the direct list above, otherwise through its router with
    `action: "execute"`.
 
