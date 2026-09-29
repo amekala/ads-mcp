@@ -49,6 +49,25 @@ GROK_AGENT="$REPO_ROOT/plugins/grok/agents/performance-marketing-agent.md"
 CLAUDE_COMMANDS="$REPO_ROOT/commands"
 GROK_COMMANDS="$REPO_ROOT/plugins/grok/commands"
 
+# The brand icon has one source, shared/assets/, and is copied into every plugin that
+# ships one, under the file name that plugin's manifest already points at. Change the
+# icon there and re-run this script; never edit a copy. Each line is src|dest, relative
+# to the repo root.
+#
+# Both are brand files used unchanged:
+#   icon.png  gs://adspirer-images-v1/brand/adspirer-logo-square.png (640x640, black square)
+#   icon.svg  the 512x512 square AD mark on white (muse-ai-adspirer.svg); the Claude plugin
+#             directory wants an SVG or a 512x512 PNG, and this is both square and vector.
+# The Codex SVG slots (adspirer-small.svg, round black) are a separate existing file.
+ICON_COPIES="
+shared/assets/icon.svg|assets/icon.svg
+shared/assets/icon.svg|logo.svg
+shared/assets/icon.png|plugins/cursor/adspirer/assets/icon.png
+shared/assets/icon.png|plugins/grok/assets/icon.png
+shared/assets/icon.png|plugins/codex/adspirer/assets/adspirer.png
+shared/assets/icon.png|plugins/adspirer/assets/adspirer.png
+"
+
 # ---------------------------------------------------------------------------
 # Target table: name | context file | auth message | keep-set | websearch | workspace skills | commands
 # ---------------------------------------------------------------------------
@@ -374,6 +393,28 @@ compare_tree() {
   return $rc
 }
 
+copy_icons() {
+  local line src dest
+  for line in $ICON_COPIES; do
+    src="$REPO_ROOT/${line%%|*}"; dest="$REPO_ROOT/${line#*|}"
+    mkdir -p "$(dirname "$dest")"
+    cp "$src" "$dest"
+  done
+}
+
+compare_icons() {
+  local line src dest rc=0
+  for line in $ICON_COPIES; do
+    src="$REPO_ROOT/${line%%|*}"; dest="$REPO_ROOT/${line#*|}"
+    if [ -f "$dest" ]; then
+      cmp -s "$src" "$dest" || { echo "DIFF: $dest (icon differs from ${line%%|*})"; rc=1; }
+    else
+      echo "MISSING: $dest"; rc=1
+    fi
+  done
+  return $rc
+}
+
 MODE="${1:-generate}"
 
 case "$MODE" in
@@ -383,6 +424,7 @@ case "$MODE" in
     rc=0
     for t in $TARGETS; do compare_tree "$t" "$TMPDIR" || rc=1; done
     for t in $COMMAND_TARGETS; do compare_commands "$t" "$TMPDIR" || rc=1; done
+    compare_icons || rc=1
     for pair in "$CURSOR_AGENT:cursor-agent.md" "$CODEX_AGENT:codex-agent.toml" "$CLAUDE_AGENT:claude-agent.md" "$GROK_AGENT:grok-agent.md"; do
       expected="${pair%%:*}"; actual="$TMPDIR/${pair##*:}"
       if [ -f "$expected" ]; then
@@ -410,6 +452,7 @@ case "$MODE" in
 
   *)
     generate_all ""
+    copy_icons
     echo "Sync complete. Generated skills for: $TARGETS"
     ;;
 esac
