@@ -38,7 +38,7 @@ Setting `pixel_id` on the ad group for, say, `TRAFFIC` returns
 Single static image as an in-feed ad is **not supported** — error 40002. The options are:
 
 - **Video** — the default.
-- **Spark Ad** — boost an existing organic post; pass `tiktok_item_id`.
+- **Spark Ad** — boost an existing organic post; set `tiktok_item_id`.
 - **Carousel** — 2 to 10 images plus music, via `create_tiktok_carousel_card`.
 
 ## Upload failure

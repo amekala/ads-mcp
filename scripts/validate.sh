@@ -410,8 +410,12 @@ found="$(find plugins/claude -name 'hooks.json' -o -name '.lsp.json' -o -name '*
 [ -z "$found" ] && pass || fail "unexpected file(s): $found"
 
 check "Claude package has no download-and-run commands"
-found="$(grep -rlE 'curl |wget |npx |bash <\(|\| *(ba)?sh( |$)' plugins/claude 2>/dev/null || true)"
+found="$(grep -rlE 'curl |wget |npx |npm install|bash <\(|\| *(ba)?sh( |$)' plugins/claude 2>/dev/null || true)"
 [ -z "$found" ] && pass || fail "download-and-run text in: $found"
+
+check "Claude package has no 'pass \`…\`' phrasing (the scan reads it as the pass password manager)"
+found="$(grep -rlE '(^|[^A-Za-z])pass `' plugins/claude 2>/dev/null || true)"
+[ -z "$found" ] && pass || fail "reword 'pass \`x\`' as 'set \`x\`' in: $found"
 
 # ---------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then

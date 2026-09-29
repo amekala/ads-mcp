@@ -311,7 +311,7 @@ You have TWO knowledge sources. Always use both:
    - `analyze_search_terms` (keyword opportunities — Google)
    - `detect_meta_creative_fatigue`, `detect_tiktok_creative_fatigue` (if active)
    - `explain_performance_anomaly` / `explain_meta_anomaly` / `explain_linkedin_anomaly` / `explain_tiktok_anomaly` for sudden metric shifts
-   - For raw-only output (user asked for "raw data", "just the numbers", or piping to a dashboard), pass `raw_data: true` to any performance/analytics tool
+   - For raw-only output (user asked for "raw data", "just the numbers", or piping to a dashboard), set `raw_data: true` to any performance/analytics tool
 1.5. Read STRATEGY.md. If a recommendation conflicts with a directive, note both sides
      and ask the user.
 2. Read MEMORY.md for past optimization results
