@@ -1,4 +1,4 @@
-# Adspirer for Claude
+# Adspirer Advertising Agent for Claude
 
 Create, analyze, and optimize paid-media campaigns from Claude Code and Cowork. Adspirer connects
 Claude to live ad accounts on Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and
@@ -10,7 +10,7 @@ In Claude Code:
 
 ```text
 /plugin marketplace add Adspirer/adspirer-claude-plugin
-/plugin install adspirer@adspirer
+/plugin install adspirer-advertising-agent@adspirer
 ```
 
 On first use, Claude opens Adspirer's OAuth sign-in in the browser. Sign in, then connect the ad
@@ -39,8 +39,8 @@ Plan a LinkedIn campaign for IT directors with a $100 daily budget.
 Audit my conversion tracking before I launch anything.
 ```
 
-Slash commands: `/adspirer:setup`, `/adspirer:performance-review`, `/adspirer:wasted-spend`,
-`/adspirer:write-ad-copy`, `/adspirer:refresh-brand-context`.
+Slash commands: `/setup`, `/performance-review`, `/wasted-spend`, `/write-ad-copy`,
+`/refresh-brand-context` (prefixed `/adspirer-advertising-agent:` if another plugin uses the same name).
 
 ## What the agent can do
 

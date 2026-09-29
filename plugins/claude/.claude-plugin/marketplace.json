@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "adspirer",
+      "name": "adspirer-advertising-agent",
       "source": "./",
       "description": "Create, analyze, and optimize ad campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads from Claude.",
       "author": {

@@ -2,7 +2,7 @@
 #
 # It lives at .github/workflows/sync-from-ads-mcp.yml inside
 # Adspirer/adspirer-claude-plugin, the repo behind the Claude plugin-directory listing
-# "adspirer". Same pull pattern as the Cursor and Grok mirrors next to this file: the
+# "adspirer-advertising-agent". Same pull pattern as the Cursor and Grok mirrors next to this file: the
 # mirror clones the public ads-mcp tree with its own GITHUB_TOKEN, so there is no
 # cross-repo credential to create or rotate.
 #
@@ -62,8 +62,8 @@ jobs:
           root = pathlib.Path("/tmp/src/plugins/claude")
           errors = []
           manifest = json.loads((root / ".claude-plugin/plugin.json").read_text())
-          if manifest.get("name") != "adspirer":
-              errors.append(f"name must be 'adspirer' to match the listing, got {manifest.get('name')!r}")
+          if manifest.get("name") != "adspirer-advertising-agent":
+              errors.append(f"name must be 'adspirer-advertising-agent' to match the listing, got {manifest.get('name')!r}")
           if "version" in manifest:
               errors.append("manifest must not carry a version field — see docs/plugin-update-playbook.md §2")
           for field in ("description", "homepage", "repository", "license", "icon", "privacyPolicyUrl"):
@@ -81,20 +81,19 @@ jobs:
                   errors.append(f"{required} is missing")
           if not any((root / "skills").glob("*/SKILL.md")):
               errors.append("no skills found — the tree looks empty")
+          # The download-and-run text check lives in ads-mcp scripts/validate.sh, which CI
+          # runs before anything reaches main. It is not repeated here: this file ships
+          # inside the plugin folder, and the directory scan matches the patterns a check
+          # like that has to spell out.
           banned_names = {"CLAUDE.md", "CLAUDE.local.md", "GEMINI.md", "AGENTS.md", "hooks.json", ".lsp.json"}
-          fetch_exec = re.compile(r"curl |wget |npx |bash <\(|\| *(ba)?sh( |$)", re.M)
           for p in root.rglob("*"):
-              if not p.is_file():
-                  continue
-              if p.name in banned_names or p.suffix in (".sh", ".exe"):
+              if p.is_file() and (p.name in banned_names or p.suffix in (".sh", ".exe")):
                   errors.append(f"would ship {p.relative_to(root)}")
-              elif p.suffix in (".md", ".json", ".yaml", ".yml", ".toml") and fetch_exec.search(p.read_text(errors="ignore")):
-                  errors.append(f"download-and-run text in {p.relative_to(root)}")
           if errors:
               for e in errors:
                   print(f"::error::{e}", file=sys.stderr)
               sys.exit(1)
-          print("upstream tree OK — adspirer")
+          print("upstream tree OK — adspirer-advertising-agent")
           PY
 
       - name: Replace the tree
@@ -115,6 +114,6 @@ jobs:
             echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
             exit 0
           fi
-          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
+          git commit -m "sync: adspirer-advertising-agent from ads-mcp@${UPSTREAM_SHA}"
           git push
-          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"
+          echo "published adspirer-advertising-agent (from ads-mcp@${UPSTREAM_SHA})"

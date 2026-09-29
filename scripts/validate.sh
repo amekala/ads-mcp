@@ -383,16 +383,16 @@ found="$(find plugins/grok -name 'hooks.json' -o -name '.lsp.json' -o -name '*.s
 [ -z "$found" ] && pass || fail "unexpected executable surface: $found"
 
 # ---------------------------------------------------------------------------
-# Claude plugin package (plugins/claude → Adspirer/adspirer-claude-plugin, listing "adspirer").
+# Claude plugin package (plugins/claude → Adspirer/adspirer-claude-plugin, listing "adspirer-advertising-agent").
 # These mirror what the Claude plugin-directory check flags, so a regression fails here
 # instead of in the directory review.
 echo ""; echo "--- Claude plugin package ---"
 CLAUDE_MANIFEST="plugins/claude/.claude-plugin/plugin.json"
 
-check "Claude package manifest is named 'adspirer' and carries no version (SHA versioning)"
-if [ "$(jq -r '.name // empty' "$CLAUDE_MANIFEST" 2>/dev/null)" = "adspirer" ] \
+check "Claude package manifest is named 'adspirer-advertising-agent' and carries no version (SHA versioning)"
+if [ "$(jq -r '.name // empty' "$CLAUDE_MANIFEST" 2>/dev/null)" = "adspirer-advertising-agent" ] \
    && jq -e 'has("version") | not' "$CLAUDE_MANIFEST" >/dev/null 2>&1; then pass
-else fail "name must be 'adspirer' and there must be no version field (docs/plugin-update-playbook.md §2)"; fi
+else fail "name must be 'adspirer-advertising-agent' and there must be no version field (docs/plugin-update-playbook.md §2)"; fi
 
 check "Claude package manifest has an icon that resolves and a privacyPolicyUrl"
 icon="$(jq -r '.icon // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"

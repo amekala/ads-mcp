@@ -1,6 +1,6 @@
 {
-  "name": "adspirer",
-  "displayName": "Adspirer",
+  "name": "adspirer-advertising-agent",
+  "displayName": "Adspirer Advertising Agent",
   "description": "Create, analyze, and optimize ad campaigns across Google Ads, Meta Ads (Facebook & Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads from Claude. Keyword research with live CPC data, campaign creation, cross-platform performance review, wasted-spend and creative-fatigue detection, and budget optimization, with brand awareness.",
   "author": {
     "name": "Adspirer",
