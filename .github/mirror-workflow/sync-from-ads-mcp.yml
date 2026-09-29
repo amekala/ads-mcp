@@ -18,13 +18,16 @@ name: Sync from ads-mcp
 
 on:
   schedule:
-    # 6am Pacific (13:00 UTC) — an hour ahead of xAI's 7am Pacific pin bump, so a
-    # change landing here is visible to their nightly sweep the same morning.
+    # 08:17 UTC (1:17am Pacific), well ahead of xAI's 7am Pacific (14:00 UTC) pin bump.
+    # It was 13:00 UTC, but GitHub starts scheduled runs late under load, and in
+    # September 2026 they started between 16:51 and 19:57 UTC, after xAI's sweep, so
+    # every change reached users a day later than planned. An off-peak minute and a
+    # ~6h margin fix that.
     #
     # This repo carries no version field, so xAI's bump advances the pin whenever this
     # HEAD moves. That is the intent: the sync only commits when plugins/grok/ actually
     # changes, so the pin tracks plugin changes and nothing else. See playbook §2.
-    - cron: "0 13 * * *"
+    - cron: "17 8 * * *"
   workflow_dispatch:
 
 permissions:

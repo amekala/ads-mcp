@@ -1,0 +1,124 @@
+# DEPLOYED FILE — this is the canonical copy, but it does not run from this repo.
+#
+# It lives at .github/workflows/sync-from-ads-mcp.yml inside
+# Adspirer/adspirer-cursor-plugin, the repo the Cursor Marketplace listing tracks.
+# Same pattern as the Grok mirror (sync-from-ads-mcp.yml next to this file): the
+# mirror pulls the public ads-mcp tree with its own GITHUB_TOKEN, so there is no
+# cross-repo credential to create or rotate.
+#
+# Before this existed the Cursor repo was synced by hand and fell 11 days behind
+# plugins/cursor/adspirer (it still asked for the removed `intent` parameter).
+#
+# GITHUB_TOKEN cannot write under .github/workflows/, so the sync never touches
+# .github; this file is updated by hand. Edit it here, then copy it over.
+#
+# Cursor versions its marketplace listing by the "version" field in
+# .cursor-plugin/plugin.json and reviews each update before publishing. When you ship
+# a user-visible change in plugins/cursor/adspirer, bump that version and add a
+# CHANGELOG entry in ads-mcp; this job carries both over.
+name: Sync from ads-mcp
+
+on:
+  schedule:
+    # 08:17 UTC daily, an off-peak minute: GitHub starts top-of-hour schedules late
+    # under load.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-ads-mcp
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the plugin tree from ads-mcp
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://github.com/amekala/ads-mcp.git /tmp/src
+          test -d /tmp/src/plugins/cursor/adspirer || {
+            echo "::error::plugins/cursor/adspirer is missing upstream — refusing to wipe the mirror"
+            exit 1
+          }
+          echo "UPSTREAM_SHA=$(git -C /tmp/src rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Validate before adopting
+        run: |
+          # A mirror that publishes a broken manifest is worse than a stale one: the
+          # marketplace tracks whatever is here. Fail loudly instead of shipping it.
+          python3 - <<'PY'
+          import json, sys, pathlib
+          root = pathlib.Path("/tmp/src/plugins/cursor/adspirer")
+          errors = []
+          manifest_path = root / ".cursor-plugin/plugin.json"
+          if not manifest_path.is_file():
+              print("::error::.cursor-plugin/plugin.json is missing", file=sys.stderr)
+              sys.exit(1)
+          manifest = json.loads(manifest_path.read_text())
+          if manifest.get("name") != "adspirer":
+              errors.append(f"name must be 'adspirer' to match the listing, got {manifest.get('name')!r}")
+          if not manifest.get("version"):
+              errors.append("missing 'version': Cursor versions the listing by it")
+          for field in ("description", "homepage", "repository", "license", "logo"):
+              if not manifest.get(field):
+                  errors.append(f"missing required field {field!r}")
+          logo = manifest.get("logo")
+          if logo and not (root / logo).is_file():
+              errors.append(f"logo {logo!r} does not exist")
+          mcp = json.loads((root / "mcp.json").read_text()) if (root / "mcp.json").is_file() else {}
+          server = mcp.get("mcpServers", {}).get("adspirer", {})
+          if server.get("type") != "http" or server.get("url") != "https://mcp.adspirer.com/mcp":
+              errors.append("mcp.json must point adspirer at https://mcp.adspirer.com/mcp over http")
+          for required in ("README.md", "LICENSE", "SECURITY.md", "CHANGELOG.md",
+                           "agents/performance-marketing-agent.md"):
+              if not (root / required).is_file():
+                  errors.append(f"{required} is missing")
+          for required_dir in ("rules", "skills"):
+              if not (root / required_dir).is_dir():
+                  errors.append(f"{required_dir}/ is missing")
+          if not any((root / "skills").glob("*/SKILL.md")):
+              errors.append("no skills found — the tree looks empty")
+          if errors:
+              for e in errors:
+                  print(f"::error::{e}", file=sys.stderr)
+              sys.exit(1)
+          print("upstream tree OK — adspirer", manifest.get("version"))
+          PY
+
+      - name: Replace the tree
+        run: |
+          set -euo pipefail
+          # Full replacement so deletions upstream propagate. .github is preserved: it
+          # holds this workflow, the validation workflow, and CODEOWNERS.
+          find . -mindepth 1 -maxdepth 1 -not -name '.git' -not -name '.github' -exec rm -rf {} +
+          cp -R /tmp/src/plugins/cursor/adspirer/. .
+          # Not part of the marketplace package: install.sh is the retired manual
+          # installer (the package must ship no executables), and .cursor/ is its
+          # staging tree.
+          rm -rf install.sh .cursor
+          if [ -n "$(find . -path ./.git -prune -o -path ./.github -prune -o \
+                \( -name 'hooks.json' -o -name '*.sh' -o -name '*.exe' \) -print)" ]; then
+            echo "::error::the package would ship a hook or executable — refusing"
+            exit 1
+          fi
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
+            exit 0
+          fi
+          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
+          git push
+          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"
