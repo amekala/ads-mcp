@@ -1,8 +1,25 @@
 # Adspirer Advertising Agent for Claude
 
-Create, analyze, and optimize paid-media campaigns from Claude Code and Cowork. Adspirer connects
-Claude to live ad accounts on Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and
-ChatGPT Ads through Adspirer's hosted MCP server.
+Run your ad campaigns from Claude Code and Cowork. Adspirer connects Claude to your live ad
+accounts on Google Ads, Meta Ads (Facebook and Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads,
+Microsoft Advertising (Bing), and ChatGPT Ads through Adspirer's hosted MCP server, so you can
+research keywords, launch and optimize PPC and paid social campaigns, and report on ROAS, CPA, CTR,
+and cost per lead without leaving the conversation.
+
+## Use it for
+
+- **Paid search (PPC):** Google Ads Search and Performance Max, Microsoft Advertising (Bing), keyword
+  research with live CPC and search volume, negative keywords, and search term reports.
+- **Paid social:** Facebook and Instagram ads, TikTok Spark Ads and in-feed video, LinkedIn B2B lead
+  generation, and YouTube and Demand Gen campaigns.
+- **Retail and marketplace ads:** Amazon Sponsored Products, Sponsored Brands, and Sponsored Display,
+  with ACoS and bid management.
+- **Reporting:** cross-platform performance for spend, conversions, ROAS, CPA, CTR, CPC, and cost per
+  lead, with pacing against budget.
+- **Optimization:** find wasted spend, shift budget to what converts, catch creative fatigue, and
+  audit conversion tracking before you scale.
+- **Ad copy:** headlines, descriptions, and primary text written to each platform's limits and your
+  brand voice.
 
 ## Install
 
@@ -52,6 +69,7 @@ Slash commands: `/setup`, `/performance-review`, `/wasted-spend`, `/write-ad-cop
 | TikTok Ads | In-feed video, Spark Ads, carousel, app promotion, targeting, and analytics |
 | LinkedIn Ads | Sponsored content, lead-gen forms, campaign groups, B2B targeting, and reporting |
 | Amazon Ads | Sponsored Products, Sponsored Brands, Sponsored Display, search terms, bids, and ACoS |
+| Microsoft Advertising | Bing search campaigns, ad groups, ads, keywords, extensions, audiences, budgets, and bids |
 | ChatGPT Ads | Campaigns, ad groups, creative assets, chat-card ads, and reporting |
 | Optimization | Wasted-spend analysis, budget pacing, creative fatigue, and actionable recommendations |
 

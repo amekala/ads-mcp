@@ -5,13 +5,13 @@
     "email": "support@adspirer.com"
   },
   "metadata": {
-    "description": "The Adspirer plugin for Claude Code and Cowork: manage ad campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads."
+    "description": "Adspirer for Claude Code and Cowork: run Google, Meta (Facebook and Instagram), TikTok, LinkedIn, Amazon, Microsoft (Bing) and ChatGPT ad campaigns, with keyword research, ROAS and CPA reporting, and wasted-spend fixes."
   },
   "plugins": [
     {
       "name": "adspirer-advertising-agent",
       "source": "./",
-      "description": "Create, analyze, and optimize ad campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads from Claude.",
+      "description": "Run Google Ads, Meta (Facebook and Instagram) Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, Microsoft Advertising (Bing) and ChatGPT Ads from Claude. Research keywords with live CPC and search volume, launch and optimize PPC and paid social campaigns, track ROAS, CPA, CTR and cost per lead, find wasted spend, audit conversion tracking, and write on-brand ad copy. New campaigns are created paused, and every spend change needs your approval.",
       "author": {
         "name": "Adspirer"
       }
