@@ -70,7 +70,7 @@ shared/assets/icon.svg|plugins/claude/assets/icon.svg
 "
 
 # plugins/claude/ is the standalone Claude plugin package that Adspirer/adspirer-claude-plugin
-# mirrors (the directory listing "adspirer"). It ships the root Claude target unchanged —
+# mirrors (the directory listing "adspirer-advertising-agent"). It ships the root Claude target unchanged —
 # skills, the agent, the slash commands, .mcp.json — so the plugin never carries the rest of
 # this repo (other hosts' packages, install scripts, GEMINI.md, CLAUDE.md), which the Claude
 # directory check reads as part of a plugin published from the repo root.
