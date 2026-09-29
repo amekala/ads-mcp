@@ -383,6 +383,37 @@ found="$(find plugins/grok -name 'hooks.json' -o -name '.lsp.json' -o -name '*.s
 [ -z "$found" ] && pass || fail "unexpected executable surface: $found"
 
 # ---------------------------------------------------------------------------
+# Claude plugin package (plugins/claude → Adspirer/adspirer-claude-plugin, listing "adspirer").
+# These mirror what the Claude plugin-directory check flags, so a regression fails here
+# instead of in the directory review.
+echo ""; echo "--- Claude plugin package ---"
+CLAUDE_MANIFEST="plugins/claude/.claude-plugin/plugin.json"
+
+check "Claude package manifest is named 'adspirer' and carries no version (SHA versioning)"
+if [ "$(jq -r '.name // empty' "$CLAUDE_MANIFEST" 2>/dev/null)" = "adspirer" ] \
+   && jq -e 'has("version") | not' "$CLAUDE_MANIFEST" >/dev/null 2>&1; then pass
+else fail "name must be 'adspirer' and there must be no version field (docs/plugin-update-playbook.md §2)"; fi
+
+check "Claude package manifest has an icon that resolves and a privacyPolicyUrl"
+icon="$(jq -r '.icon // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
+privacy="$(jq -r '.privacyPolicyUrl // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
+if [ -n "$icon" ] && [ -f "plugins/claude/$icon" ] && [ -n "$privacy" ]; then pass
+else fail "icon='$icon' privacyPolicyUrl='$privacy'"; fi
+
+check "Claude package .mcp.json points at the production MCP endpoint"
+if [ "$(jq -r '.mcpServers.adspirer.url // empty' plugins/claude/.mcp.json 2>/dev/null)" = "https://mcp.adspirer.com/mcp" ]; then pass
+else fail "unexpected url"; fi
+
+check "Claude package ships no executable, hook, or root context file"
+found="$(find plugins/claude -name 'hooks.json' -o -name '.lsp.json' -o -name '*.sh' -o -name 'install*' \
+  -o -name 'CLAUDE.md' -o -name 'CLAUDE.local.md' -o -name 'GEMINI.md' -o -name 'AGENTS.md' 2>/dev/null)"
+[ -z "$found" ] && pass || fail "unexpected file(s): $found"
+
+check "Claude package has no download-and-run commands"
+found="$(grep -rlE 'curl |wget |npx |bash <\(|\| *(ba)?sh( |$)' plugins/claude 2>/dev/null || true)"
+[ -z "$found" ] && pass || fail "download-and-run text in: $found"
+
+# ---------------------------------------------------------------------------
 if [ "${1:-}" = "--live" ]; then
   echo ""; echo "--- MCP endpoint ---"
   check "https://mcp.adspirer.com/mcp responds"

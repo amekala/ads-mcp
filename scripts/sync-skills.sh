@@ -66,7 +66,21 @@ shared/assets/icon.png|plugins/cursor/adspirer/assets/icon.png
 shared/assets/icon.png|plugins/grok/assets/icon.png
 shared/assets/icon.png|plugins/codex/adspirer/assets/adspirer.png
 shared/assets/icon.png|plugins/adspirer/assets/adspirer.png
+shared/assets/icon.svg|plugins/claude/assets/icon.svg
 "
+
+# plugins/claude/ is the standalone Claude plugin package that Adspirer/adspirer-claude-plugin
+# mirrors (the directory listing "adspirer"). It ships the root Claude target unchanged —
+# skills, the agent, the slash commands, .mcp.json — so the plugin never carries the rest of
+# this repo (other hosts' packages, install scripts, GEMINI.md, CLAUDE.md), which the Claude
+# directory check reads as part of a plugin published from the repo root.
+# Skipped skills: adspirer-get-started is the standalone "install me" skill for people who
+# don't have the plugin; its npx/curl install lines are what the check flags as
+# download-and-run, and inside the plugin it is redundant.
+# The hand-maintained files (.claude-plugin/, README.md, LICENSE, SECURITY.md) live in
+# plugins/claude/ directly and are never touched here.
+CLAUDE_PLUGIN="$REPO_ROOT/plugins/claude"
+CLAUDE_PLUGIN_SKIP_SKILLS="adspirer-get-started"
 
 # ---------------------------------------------------------------------------
 # Target table: name | context file | auth message | keep-set | websearch | workspace skills | commands
@@ -415,6 +429,37 @@ compare_icons() {
   return $rc
 }
 
+# Fill the generated parts of a Claude plugin package at $1 (default plugins/claude) from the
+# committed root Claude target.
+build_claude_plugin() {
+  local dest="${1:-$CLAUDE_PLUGIN}" skill_dir skill_name
+  rm -rf "$dest/skills" "$dest/agents" "$dest/commands"
+  mkdir -p "$dest/skills" "$dest/agents" "$dest/commands"
+  for skill_dir in "$CLAUDE_SKILLS"/adspirer-*; do
+    [ -d "$skill_dir" ] || continue
+    skill_name="$(basename "$skill_dir")"
+    case " $CLAUDE_PLUGIN_SKIP_SKILLS " in *" $skill_name "*) continue ;; esac
+    cp -R "$skill_dir" "$dest/skills/$skill_name"
+  done
+  cp "$CLAUDE_AGENT" "$dest/agents/"
+  cp "$CLAUDE_COMMANDS"/*.md "$dest/commands/"
+  cp "$REPO_ROOT/.mcp.json" "$dest/.mcp.json"
+}
+
+compare_claude_plugin() {
+  local tmp="$1/claude-plugin" part rc=0
+  build_claude_plugin "$tmp"
+  for part in skills agents commands .mcp.json; do
+    if [ -e "$CLAUDE_PLUGIN/$part" ]; then
+      diff -rq "$tmp/$part" "$CLAUDE_PLUGIN/$part" >/dev/null 2>&1 \
+        || { echo "DIFF: $CLAUDE_PLUGIN/$part (re-run scripts/sync-skills.sh)"; rc=1; }
+    else
+      echo "MISSING: $CLAUDE_PLUGIN/$part"; rc=1
+    fi
+  done
+  return $rc
+}
+
 MODE="${1:-generate}"
 
 case "$MODE" in
@@ -425,6 +470,7 @@ case "$MODE" in
     for t in $TARGETS; do compare_tree "$t" "$TMPDIR" || rc=1; done
     for t in $COMMAND_TARGETS; do compare_commands "$t" "$TMPDIR" || rc=1; done
     compare_icons || rc=1
+    compare_claude_plugin "$TMPDIR" || rc=1
     for pair in "$CURSOR_AGENT:cursor-agent.md" "$CODEX_AGENT:codex-agent.toml" "$CLAUDE_AGENT:claude-agent.md" "$GROK_AGENT:grok-agent.md"; do
       expected="${pair%%:*}"; actual="$TMPDIR/${pair##*:}"
       if [ -f "$expected" ]; then
@@ -453,6 +499,7 @@ case "$MODE" in
   *)
     generate_all ""
     copy_icons
+    build_claude_plugin
     echo "Sync complete. Generated skills for: $TARGETS"
     ;;
 esac

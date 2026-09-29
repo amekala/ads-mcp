@@ -1,0 +1,20 @@
+{
+  "name": "adspirer",
+  "owner": {
+    "name": "Adspirer",
+    "email": "support@adspirer.com"
+  },
+  "metadata": {
+    "description": "The Adspirer plugin for Claude Code and Cowork: manage ad campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads."
+  },
+  "plugins": [
+    {
+      "name": "adspirer",
+      "source": "./",
+      "description": "Create, analyze, and optimize ad campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads from Claude.",
+      "author": {
+        "name": "Adspirer"
+      }
+    }
+  ]
+}

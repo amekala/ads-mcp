@@ -1,0 +1,28 @@
+{
+  "name": "adspirer",
+  "displayName": "Adspirer",
+  "description": "Create, analyze, and optimize ad campaigns across Google Ads, Meta Ads (Facebook & Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads from Claude. Keyword research with live CPC data, campaign creation, cross-platform performance review, wasted-spend and creative-fatigue detection, and budget optimization, with brand awareness.",
+  "author": {
+    "name": "Adspirer",
+    "email": "support@adspirer.com",
+    "url": "https://www.adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/Adspirer/adspirer-claude-plugin",
+  "license": "MIT",
+  "icon": "assets/icon.svg",
+  "privacyPolicyUrl": "https://www.adspirer.com/privacy",
+  "keywords": [
+    "adspirer",
+    "advertising",
+    "google-ads",
+    "meta-ads",
+    "tiktok-ads",
+    "linkedin-ads",
+    "amazon-ads",
+    "chatgpt-ads",
+    "performance-marketing",
+    "campaign-management",
+    "mcp"
+  ]
+}

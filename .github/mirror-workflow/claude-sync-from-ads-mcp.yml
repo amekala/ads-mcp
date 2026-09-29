@@ -1,0 +1,123 @@
+# DEPLOYED FILE — this is the canonical copy, but it does not run from this repo.
+#
+# It lives at .github/workflows/sync-from-ads-mcp.yml inside
+# Adspirer/adspirer-claude-plugin, the repo behind the Claude plugin-directory listing
+# "adspirer". Same pull pattern as the Cursor and Grok mirrors next to this file: the
+# mirror clones the public ads-mcp tree with its own GITHUB_TOKEN, so there is no
+# cross-repo credential to create or rotate.
+#
+# plugins/claude/ in ads-mcp is the whole package; scripts/sync-skills.sh builds its
+# skills/, agents/, commands/ and .mcp.json from the root Claude target. Edit ads-mcp,
+# never the mirror.
+#
+# Versioning is by commit SHA (no "version" field; docs/plugin-update-playbook.md §2), so
+# every commit this job pushes is a new release to the directory. It validates before
+# adopting and only commits when something changed.
+#
+# GITHUB_TOKEN cannot write under .github/workflows/, so the sync never touches .github;
+# this file is updated by hand. Edit it here, then copy it over.
+name: Sync from ads-mcp
+
+on:
+  schedule:
+    # 08:17 UTC daily, an off-peak minute: GitHub starts top-of-hour schedules late
+    # under load.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-ads-mcp
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Fetch the plugin tree from ads-mcp
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://github.com/amekala/ads-mcp.git /tmp/src
+          test -d /tmp/src/plugins/claude || {
+            echo "::error::plugins/claude is missing upstream — refusing to wipe the mirror"
+            exit 1
+          }
+          echo "UPSTREAM_SHA=$(git -C /tmp/src rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Validate before adopting
+        run: |
+          set -euo pipefail
+          # A mirror that publishes a broken plugin is worse than a stale one: the
+          # directory lists whatever is here. Fail loudly instead of shipping it.
+          npm install -g @anthropic-ai/claude-code >/dev/null
+          claude plugin validate /tmp/src/plugins/claude
+          python3 - <<'PY'
+          import json, sys, pathlib, re
+          root = pathlib.Path("/tmp/src/plugins/claude")
+          errors = []
+          manifest = json.loads((root / ".claude-plugin/plugin.json").read_text())
+          if manifest.get("name") != "adspirer":
+              errors.append(f"name must be 'adspirer' to match the listing, got {manifest.get('name')!r}")
+          if "version" in manifest:
+              errors.append("manifest must not carry a version field — see docs/plugin-update-playbook.md §2")
+          for field in ("description", "homepage", "repository", "license", "icon", "privacyPolicyUrl"):
+              if not manifest.get(field):
+                  errors.append(f"missing required field {field!r}")
+          icon = manifest.get("icon")
+          if icon and not (root / icon).is_file():
+              errors.append(f"icon {icon!r} does not exist")
+          mcp = json.loads((root / ".mcp.json").read_text()) if (root / ".mcp.json").is_file() else {}
+          server = mcp.get("mcpServers", {}).get("adspirer", {})
+          if server.get("type") != "http" or server.get("url") != "https://mcp.adspirer.com/mcp":
+              errors.append(".mcp.json must point adspirer at https://mcp.adspirer.com/mcp over http")
+          for required in ("README.md", "LICENSE", "SECURITY.md", "agents/performance-marketing-agent.md"):
+              if not (root / required).is_file():
+                  errors.append(f"{required} is missing")
+          if not any((root / "skills").glob("*/SKILL.md")):
+              errors.append("no skills found — the tree looks empty")
+          banned_names = {"CLAUDE.md", "CLAUDE.local.md", "GEMINI.md", "AGENTS.md", "hooks.json", ".lsp.json"}
+          fetch_exec = re.compile(r"curl |wget |npx |bash <\(|\| *(ba)?sh( |$)", re.M)
+          for p in root.rglob("*"):
+              if not p.is_file():
+                  continue
+              if p.name in banned_names or p.suffix in (".sh", ".exe"):
+                  errors.append(f"would ship {p.relative_to(root)}")
+              elif p.suffix in (".md", ".json", ".yaml", ".yml", ".toml") and fetch_exec.search(p.read_text(errors="ignore")):
+                  errors.append(f"download-and-run text in {p.relative_to(root)}")
+          if errors:
+              for e in errors:
+                  print(f"::error::{e}", file=sys.stderr)
+              sys.exit(1)
+          print("upstream tree OK — adspirer")
+          PY
+
+      - name: Replace the tree
+        run: |
+          set -euo pipefail
+          # Full replacement so deletions upstream propagate. .github is preserved: it
+          # holds this workflow.
+          find . -mindepth 1 -maxdepth 1 -not -name '.git' -not -name '.github' -exec rm -rf {} +
+          cp -R /tmp/src/plugins/claude/. .
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
+            exit 0
+          fi
+          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
+          git push
+          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"
