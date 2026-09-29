@@ -394,11 +394,13 @@ if [ "$(jq -r '.name // empty' "$CLAUDE_MANIFEST" 2>/dev/null)" = "adspirer-adve
    && jq -e 'has("version") | not' "$CLAUDE_MANIFEST" >/dev/null 2>&1; then pass
 else fail "name must be 'adspirer-advertising-agent' and there must be no version field (docs/plugin-update-playbook.md §2)"; fi
 
-check "Claude package manifest has an icon that resolves and a privacyPolicyUrl"
+check "Claude package manifest has an icon that resolves and privacy, terms, and documentation URLs"
 icon="$(jq -r '.icon // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
 privacy="$(jq -r '.privacyPolicyUrl // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
-if [ -n "$icon" ] && [ -f "plugins/claude/$icon" ] && [ -n "$privacy" ]; then pass
-else fail "icon='$icon' privacyPolicyUrl='$privacy'"; fi
+terms="$(jq -r '.termsOfServiceUrl // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
+docs="$(jq -r '.documentationUrl // empty' "$CLAUDE_MANIFEST" 2>/dev/null)"
+if [ -n "$icon" ] && [ -f "plugins/claude/$icon" ] && [ -n "$privacy" ] && [ -n "$terms" ] && [ -n "$docs" ]; then pass
+else fail "icon='$icon' privacyPolicyUrl='$privacy' termsOfServiceUrl='$terms' documentationUrl='$docs'"; fi
 
 check "Claude package .mcp.json points at the production MCP endpoint"
 if [ "$(jq -r '.mcpServers.adspirer.url // empty' plugins/claude/.mcp.json 2>/dev/null)" = "https://mcp.adspirer.com/mcp" ]; then pass
