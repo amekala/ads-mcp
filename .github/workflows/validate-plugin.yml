@@ -31,6 +31,10 @@ jobs:
       - name: Validate plugin manifest
         run: claude plugin validate .
 
+      # plugins/claude is the standalone package mirrored to Adspirer/adspirer-claude-plugin.
+      - name: Validate the Claude plugin package
+        run: claude plugin validate plugins/claude
+
       - name: Validate Cursor plugin manifest against the current schema
         run: |
           curl -fsSLo /tmp/cursor-plugin.schema.json \
