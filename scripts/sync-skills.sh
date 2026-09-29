@@ -54,12 +54,14 @@ GROK_COMMANDS="$REPO_ROOT/plugins/grok/commands"
 # icon there and re-run this script; never edit a copy. Each line is src|dest, relative
 # to the repo root.
 #
-# icon.png is the brand file unchanged: gs://adspirer-images-v1/brand/adspirer-logo-square.png
-# (640x640). icon-512.png is the same file resized, only because the Claude plugin
-# directory requires an SVG or a 512x512 PNG. The Codex SVG slots (adspirer-small.svg)
-# keep their existing SVG: there is no SVG of the square mark in the brand bucket.
+# Both are brand files used unchanged:
+#   icon.png  gs://adspirer-images-v1/brand/adspirer-logo-square.png (640x640, black square)
+#   icon.svg  the 512x512 square AD mark on white (muse-ai-adspirer.svg); the Claude plugin
+#             directory wants an SVG or a 512x512 PNG, and this is both square and vector.
+# The Codex SVG slots (adspirer-small.svg, round black) are a separate existing file.
 ICON_COPIES="
-shared/assets/icon-512.png|assets/icon.png
+shared/assets/icon.svg|assets/icon.svg
+shared/assets/icon.svg|logo.svg
 shared/assets/icon.png|plugins/cursor/adspirer/assets/icon.png
 shared/assets/icon.png|plugins/grok/assets/icon.png
 shared/assets/icon.png|plugins/codex/adspirer/assets/adspirer.png
