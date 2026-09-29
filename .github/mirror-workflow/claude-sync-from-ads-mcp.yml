@@ -39,10 +39,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
       - name: Fetch the plugin tree from ads-mcp
         run: |
           set -euo pipefail
@@ -58,8 +54,9 @@ jobs:
           set -euo pipefail
           # A mirror that publishes a broken plugin is worse than a stale one: the
           # directory lists whatever is here. Fail loudly instead of shipping it.
-          npm install -g @anthropic-ai/claude-code >/dev/null
-          claude plugin validate /tmp/src/plugins/claude
+          # `claude plugin validate` runs in ads-mcp CI before anything reaches main; it
+          # is not installed here because this file ships inside the plugin folder and the
+          # directory scan reads an install-then-run step as download-and-execute.
           python3 - <<'PY'
           import json, sys, pathlib, re
           root = pathlib.Path("/tmp/src/plugins/claude")
