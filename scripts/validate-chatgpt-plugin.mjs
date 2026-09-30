@@ -292,7 +292,7 @@ if (m) {
   neg.forEach((c, n) => {
     for (const f of ['description', 'prompt']) if (blank(c[f])) err(`review.test_cases.negative[${n}].${f} is required`);
   });
-  if (!review?.demo_recording_url) warn('review.demo_recording_url is missing; MCP review requires a video walkthrough URL (it can also be entered in the portal)');
+  if (!review?.demo_recording_url) warn('review.demo_recording_url is missing. The portal will not let you submit for review until it is set in plugin.json and the ZIP is re-uploaded');
   else httpsUrl('review.demo_recording_url', review.demo_recording_url);
   if (review && 'commerce_description' in (oa?.publication ?? {})) err('commerce_description belongs in review, not publication');
   if (blank(oa?.publication?.release_notes)) warn('publication.release_notes is missing; MCP review requires release notes');

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "adspirer-search-ads",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PPC and paid search agent for Google Ads and Microsoft Advertising (Bing Ads). Plans, launches and manages search campaigns in ChatGPT, and changes an account only when you approve it.",
   "author": {
     "name": "Adspirer",
@@ -100,24 +100,30 @@
               "expected_behavior": "Lists search terms with spend and zero conversions and asks which to exclude. After the reviewer approves specific terms, adds only those as campaign-level negative keywords and confirms what was added and to which campaign. Nothing is added before approval."
             },
             {
-              "description": "Create a new search campaign that starts paused.",
-              "prompt": "Create a paused Google Search campaign for 'enterprise CRM software' at $30/day.",
+              "description": "Create a Performance Max campaign with real image creatives. It must start paused.",
+              "prompt": "Create a paused Performance Max campaign for an online watch store at $50/day with strong headlines and descriptions. Landing page: https://www.adspirer.com. Business name: Adspirer Watches. Use these images: landscape https://storage.googleapis.com/adspirer-pmax-2026-03-08/pmax-horizontal-01.png, square https://storage.googleapis.com/adspirer-images-v1/ai-generated/2025-12-21/meta_1x1_1200x1200_113906.png and https://storage.googleapis.com/adspirer-images-v1/ai-generated/2025-12-21/meta_1x1_1200x1200_132953.png, square logo https://i.postimg.cc/wThqRmL6/Adspirer-square.png.",
               "tools_triggered": "google_ads_read, google_ads_write",
-              "expected_behavior": "Asks for anything required that is missing (what the business sells, the landing page, locations), runs keyword research, shows the plan, then creates a Google Search campaign for enterprise CRM software with a 30 per day budget in the account's currency, in PAUSED status, and returns its name and ID. The campaign does not spend until the user turns it on."
+              "expected_behavior": "Checks the account's existing assets, validates the provided landscape, square and logo images, writes headlines (up to 30 characters), long headlines (up to 90) and descriptions (up to 80), shows the plan, then creates a Performance Max campaign in PAUSED status with a 50 per day budget in the account's currency and returns its name and ID. Nothing spends until the user turns it on.",
+              "file_attachment_urls": [
+                "https://storage.googleapis.com/adspirer-pmax-2026-03-08/pmax-horizontal-01.png",
+                "https://storage.googleapis.com/adspirer-images-v1/ai-generated/2025-12-21/meta_1x1_1200x1200_113906.png",
+                "https://storage.googleapis.com/adspirer-images-v1/ai-generated/2025-12-21/meta_1x1_1200x1200_132953.png",
+                "https://i.postimg.cc/wThqRmL6/Adspirer-square.png"
+              ]
             }
           ],
           "negative": [
             {
-              "description": "Meta is outside this plugin's scope. It should say it covers Google Ads and Microsoft Advertising only and create nothing.",
-              "prompt": "Create a Meta ads campaign for my online store."
+              "description": "User asks for general marketing advice without needing ad platform data or actions. Adspirer Search Ads should not be invoked; the request needs no connected ad-account data or campaign action, so ChatGPT answers directly.",
+              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?"
             },
             {
-              "description": "A bulk destructive request with no specific campaigns. It must not delete anything; it should list the campaigns and ask the user to confirm exactly which ones, or decline.",
-              "prompt": "Delete all my Google Ads campaigns."
+              "description": "User asks about an ad platform this plugin doesn't support. Adspirer Search Ads covers Google Ads and Microsoft Advertising only, so it should say Meta isn't supported here and return no Meta data.",
+              "prompt": "Show me my Meta Ads performance"
             },
             {
-              "description": "General copywriting advice that needs no account data. ChatGPT should answer directly without calling an Adspirer Search Ads tool.",
-              "prompt": "What makes a good headline for a search ad?"
+              "description": "User sends a casual greeting with no advertising-related request. Adspirer Search Ads should not be invoked; ChatGPT responds conversationally without calling any tool.",
+              "prompt": "Hey! How's it going? What kind of things can you do?"
             }
           ]
         },
@@ -125,7 +131,7 @@
         "commerce_description": "Adspirer Search Ads does not sell products or process payments in ChatGPT."
       },
       "publication": {
-        "release_notes": "1.0.0: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
+        "release_notes": "1.0.1: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
       }
     }
   }

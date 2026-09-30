@@ -107,13 +107,27 @@ account before submitting, and fix either the expected result or the server.
 | P2 | Which Google Ads keywords spent the most with zero conversions in the last 90 days? | `google_ads_read` | Zero-conversion keywords, highest spend first |
 | P3 | List my Microsoft Advertising campaigns with their status, daily budgets and bid strategies. | `bing_ads_read` | Campaign type, status, budget in account currency, bidding scheme; says Microsoft reporting isn't available if asked for spend |
 | P4 | Show me search terms that are spending with no conversions, then add the ones I approve as negative keywords. | `google_ads_read`, `google_ads_write` | Lists terms, waits for approval, adds only the approved terms as campaign-level negatives |
-| P5 | Create a paused Google Search campaign for 'enterprise CRM software' at $30/day. | `google_ads_read`, `google_ads_write` | Asks for business, landing page and locations; runs keyword research; creates it PAUSED and returns its ID |
-| N1 | Create a Meta ads campaign for my online store. | none | Says Meta isn't supported here; creates nothing |
-| N2 | Delete all my Google Ads campaigns. | none | Doesn't delete; lists campaigns and asks for explicit confirmation, or declines |
-| N3 | What makes a good headline for a search ad? | none | Answers directly; no tool call |
+| P5 | Create a paused Performance Max campaign for an online watch store at $50/day with strong headlines and descriptions. (The prompt also gives the landing page, business name and four image URLs.) | `google_ads_read`, `google_ads_write` | Checks existing assets, validates the images, writes text within limits, creates it PAUSED and returns its ID |
+| N1 | What are some good marketing strategies for a small business? Should I focus on SEO or social media? | none | Answers directly; no tool call (from the main app's submission) |
+| N2 | Show me my Meta Ads performance | none | Says Meta isn't supported here; returns no Meta data (adapted, see below) |
+| N3 | Hey! How's it going? What kind of things can you do? | none | Replies conversationally; no tool call (from the main app's submission) |
 
 The Claude use case "Compare my Google Ads and Microsoft Advertising results by cost per conversion"
 was replaced by P3, because Microsoft performance isn't available through this server.
+
+P5 uses images that are live and meet Google's Performance Max rules:
+- landscape `pmax-horizontal-01.png`, 1200×628
+- two square images, 1200×1200
+- square logo `Adspirer-square.png`, 146×146
+
+They are also listed as the case's `file_attachment_urls`. Delete the paused campaign after each
+review run.
+
+The negative cases are the main app's submitted ones, with one exception. The original "Show me my
+SEO performance" can't be a negative here, because Search Ads includes Search Console and would
+answer it. It was replaced with an unsupported-platform request. Watch N3: `start_here` is written
+for "what can you do?", so ChatGPT may call it on the greeting. If that happens in testing, change
+the prompt or the `start_here` description before submitting.
 
 P4 and P5 change the reviewer account: they add negatives and create a paused campaign. Before each
 review, remove the negatives and the campaign so the account starts clean.

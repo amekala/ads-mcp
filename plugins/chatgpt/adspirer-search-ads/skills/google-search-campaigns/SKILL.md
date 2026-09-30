@@ -1,9 +1,9 @@
 ---
 name: google-search-campaigns
-description: Build and tune Google Ads Search campaigns with Adspirer Search Ads - keyword research, match types, ad groups, responsive search ads, sitelinks and callouts, and bid strategy. Use when the user wants a new Search campaign or to restructure one.
+description: Build and tune Google Ads Search and Performance Max campaigns with Adspirer Search Ads - keyword research, match types, ad groups, responsive search ads, image assets, sitelinks and callouts, and bid strategy. Use when the user wants a new Google campaign or to restructure one.
 ---
 
-# Google Search campaigns
+# Google Search and Performance Max campaigns
 
 Follow `adspirer-search-ads` for how to call tools, currency and confirmation. Reads go through
 `google_ads_read` and changes through `google_ads_write`. The account parameter is `customer_id`, as
@@ -29,6 +29,21 @@ a string.
    minimal paused campaign, create that and suggest extensions as a next step.
 7. **Read it back** with `get_campaign_structure`. Confirm budget, status, targeting and ads match
    the plan. Tell the user it's paused and ask whether to turn it on.
+
+## Creating a Performance Max campaign
+
+1. **Gather what's required:** business name (up to 25 characters), landing page, daily budget,
+   locations, and images. Ask for anything missing.
+2. **Check existing assets first** with `discover_existing_assets` (read). Offer to reuse them.
+3. **Validate new images** with `validate_and_prepare_assets`. Google requires at least one landscape
+   image (1.91:1, at least 600×314), one square image (1:1, at least 300×300) and one square logo
+   (1:1, at least 128×128). Images must be public HTTPS links. It returns an asset bundle that
+   **expires after one hour**; if more time passes, validate again.
+4. **Write the text:** 3–15 headlines (up to 30 characters), 1–5 long headlines (up to 90) and 2–4
+   descriptions (up to **80**, shorter than a search ad's 90). Use only claims the business supports.
+5. **Confirm the plan,** then call `create_pmax_campaign` once with the bundle (or existing image
+   ids). Don't retry it automatically. It comes back **paused**.
+6. **Read it back** and ask before turning it on.
 
 ## Where keywords, negatives and ads attach
 
