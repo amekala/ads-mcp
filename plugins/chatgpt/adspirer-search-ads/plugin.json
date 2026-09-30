@@ -1,0 +1,132 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "adspirer-search-ads",
+  "version": "1.0.0",
+  "description": "PPC and paid search agent for Google Ads and Microsoft Advertising (Bing Ads). Plans, launches and manages search campaigns in ChatGPT, and changes an account only when you approve it.",
+  "author": {
+    "name": "Adspirer",
+    "email": "hello@adspirer.com",
+    "url": "https://www.adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/amekala/ads-mcp",
+  "license": "MIT",
+  "keywords": [
+    "ppc",
+    "paid search",
+    "search engine marketing",
+    "sem",
+    "search ads",
+    "google ads",
+    "microsoft advertising",
+    "bing ads",
+    "keyword research",
+    "match types",
+    "negative keywords",
+    "search terms",
+    "responsive search ads",
+    "bid strategy",
+    "quality score",
+    "performance max",
+    "shopping ads",
+    "roas",
+    "cpa",
+    "wasted spend",
+    "conversion tracking",
+    "google analytics",
+    "search console",
+    "ppc agency"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Adspirer Search Ads",
+        "shortDescription": "PPC agent for Google & Bing",
+        "longDescription": "Adspirer Search Ads is a PPC and paid search agent for Google Ads and Microsoft Advertising (Bing Ads). It plans, launches and manages search advertising campaigns through conversation in ChatGPT.\n\nTurn an objective like \"more demos under a $50 cost per lead\" into well-structured search campaigns, then keep improving them each time you check in. Adspirer Search Ads can:\n- Research keywords and choose match types\n- Find high-intent search terms and add negative keywords for the ones wasting budget\n- Manage bids, bid strategies and budgets, and move spend toward what converts\n- Write and refresh responsive search ad copy\n- Report ROAS, CPA and CPC, run wasted-spend audits, and diagnose Quality Score\n- Audit conversion tracking, and compare ad results with Google Analytics 4, Search Console and Tag Manager\n\nIt covers Search, Shopping and Performance Max campaigns on Google Ads, plus Microsoft Advertising search and shopping. It works across multiple brands and client accounts, for in-house teams and PPC agencies.\n\nYou set the strategy and approve the changes. Reading and changing an account are separate tools, so a report never changes a live campaign. Adspirer Search Ads changes an account only when you ask, and new campaigns start paused, so nothing goes live without you.\n\nRequirements: an Adspirer account, and a Google Ads or Microsoft Advertising login with access to the ad account. Reporting needs read access; creating or editing campaigns needs standard (edit) access. Meta, LinkedIn, TikTok and Amazon are not covered by this plugin.",
+        "developerName": "Adspirer",
+        "category": "Business & Operations",
+        "capabilities": [
+          "Plan and launch Google Search campaigns, created paused",
+          "Research keywords and match types",
+          "Harvest search terms and add negative keywords",
+          "Manage bids, bid strategies and budgets on request",
+          "Write and refresh responsive search ads",
+          "Report ROAS, CPA and CPC across Google Ads and Microsoft Advertising",
+          "Wasted-spend audits and Quality Score diagnostics",
+          "Search, Shopping and Performance Max on Google Ads",
+          "Microsoft Advertising search and shopping",
+          "Audit conversion tracking",
+          "Read Google Analytics 4, Search Console and Tag Manager",
+          "Work across multiple brands and client accounts"
+        ],
+        "websiteURL": "https://www.adspirer.com",
+        "supportURL": "https://www.adspirer.com/docs/knowledge-base/support",
+        "privacyPolicyURL": "https://www.adspirer.com/privacy",
+        "termsOfServiceURL": "https://www.adspirer.com/terms",
+        "defaultPrompt": [
+          "Pull my Google Ads performance for the last 90 days by campaign",
+          "Which Google Ads keywords spent the most with zero conversions?",
+          "Compare Google Ads and Microsoft Ads cost per conversion, last 30 days"
+        ],
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Report Google Ads performance by campaign for a date range.",
+              "prompt": "Pull my Google Ads performance for the last 90 days: impressions, clicks, spend, and conversions, by campaign.",
+              "tools_triggered": "get_campaign_performance",
+              "expected_behavior": "Shows impressions, clicks, spend and conversions for each campaign in the test Google Ads account for the last 90 days, with totals. Nothing is changed."
+            },
+            {
+              "description": "Find keywords with spend and no conversions.",
+              "prompt": "Which Google Ads keywords spent the most with zero conversions in the last 90 days?",
+              "tools_triggered": "google_ads_read",
+              "expected_behavior": "Lists the keywords with the highest spend and zero conversions in the last 90 days, with spend and clicks for each, highest spend first. Nothing is changed."
+            },
+            {
+              "description": "Compare the two search engines on cost per conversion.",
+              "prompt": "Compare my Google Ads and Microsoft Advertising results for the last 30 days by cost per conversion.",
+              "tools_triggered": "get_campaign_performance, bing_ads_read",
+              "expected_behavior": "Shows spend, conversions and cost per conversion for Google Ads and for Microsoft Advertising over the same 30 days, side by side, and says which engine is cheaper per conversion. Nothing is changed."
+            },
+            {
+              "description": "Review wasted search terms, then add only the negatives the user approves.",
+              "prompt": "Show me search terms that are spending with no conversions, then add the ones I approve as negative keywords.",
+              "tools_triggered": "google_ads_read, google_ads_write",
+              "expected_behavior": "Lists search terms with spend and zero conversions and asks which to exclude. After the reviewer approves specific terms, adds only those as negative keywords and confirms what was added and where. Nothing is added before approval."
+            },
+            {
+              "description": "Create a new search campaign that starts paused.",
+              "prompt": "Create a paused Google Search campaign for 'enterprise CRM software' at $30/day.",
+              "tools_triggered": "google_ads_write",
+              "expected_behavior": "Asks for anything required that is missing (such as the landing page or location), then creates a Google Search campaign for enterprise CRM software with a $30 daily budget in PAUSED status and returns its name and ID. The campaign does not spend until the user turns it on."
+            }
+          ],
+          "negative": [
+            {
+              "description": "Meta is outside this plugin's scope. It should say it covers Google Ads and Microsoft Advertising only and create nothing.",
+              "prompt": "Create a Meta ads campaign for my online store."
+            },
+            {
+              "description": "A bulk destructive request with no specific campaigns. It must not delete anything; it should list the campaigns and ask the user to confirm exactly which ones, or decline.",
+              "prompt": "Delete all my Google Ads campaigns."
+            },
+            {
+              "description": "General copywriting advice that needs no account data. ChatGPT should answer directly without calling an Adspirer Search Ads tool.",
+              "prompt": "What makes a good headline for a search ad?"
+            }
+          ]
+        },
+        "commerce": false,
+        "commerce_description": "Adspirer Search Ads does not sell products or process payments in ChatGPT."
+      },
+      "publication": {
+        "release_notes": "1.0.0: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles three skills: get-started, adspirer-search-ads and google-search-campaigns."
+      }
+    }
+  }
+}
