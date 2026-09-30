@@ -61,7 +61,7 @@ tag.
 |---|---|
 | Listing text, icons, skills, test cases, release notes | New version plus a ZIP upload |
 | Tool descriptions, schemas or annotations on the MCP server | Deploy the server, then **Rescan** in the portal. No ZIP |
-| MCP URL path | New version of the same plugin |
+| MCP URL (path or host) | Contact OpenAI support. The submission guide says URL changes aren't supported in the update flow; the review guide says a path change can ship as a new version. Assume support is needed |
 | MCP origin (`mcp.adspirer.com`) | Not allowed. It would have to be a brand-new plugin |
 
 After publication OpenAI rescans the server daily. A changed tool keeps its old approved definition

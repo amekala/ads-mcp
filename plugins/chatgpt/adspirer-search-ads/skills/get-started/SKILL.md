@@ -17,6 +17,6 @@ description: First steps with Adspirer Search Ads. Use when the user has just in
 5. Offer three first tasks the user can pick from:
    - Pull Google Ads performance for the last 90 days, by campaign.
    - Find the keywords that spent the most with zero conversions.
-   - Compare Google Ads and Microsoft Ads cost per conversion for the last 30 days.
+   - List Microsoft Ads campaigns with their budgets and bid strategies.
 
 For how to use the tools after this, follow the `adspirer-search-ads` skill.

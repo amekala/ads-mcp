@@ -1,54 +1,59 @@
 ---
 name: google-search-campaigns
-description: Build and tune Google Ads Search campaigns through Adspirer Search Ads. Use for creating a Search campaign, keyword research, search terms and negative keywords, sitelinks and callouts, bid strategy, or quality score. Covers the ad-group-id trap and the mandatory extensions step.
+description: Build and tune Google Ads Search campaigns with Adspirer Search Ads - keyword research, match types, ad groups, responsive search ads, sitelinks and callouts, and bid strategy. Use when the user wants a new Search campaign or to restructure one.
 ---
 
 # Google Search campaigns
 
-Reads go through `google_ads_read` and changes through `google_ads_write`. Use the two steps from
-the `adspirer-search-ads` skill: `list_tools`, then `get_tool_schema`, then `execute`.
-
-The account parameter is `customer_id`, as a **string**. Hyphens are stripped for you.
-Budgets are in **dollars**: `$50/day` is `50.0`.
+Follow `adspirer-search-ads` for how to call tools, currency and confirmation. Reads go through
+`google_ads_read` and changes through `google_ads_write`. The account parameter is `customer_id`, as
+a string.
 
 ## Creating a Search campaign
 
-1. **Gather what's required:** daily budget, final URL, locations and the conversion goal. Resolve
-   place names with the location tool instead of guessing geo ids.
-2. **Research keywords:** use keyword research for volume and competition. Group keywords into tight
-   themes, one ad group each.
-3. **Confirm the plan with the user:** budget, locations, keywords and ad copy.
-4. **Create it.** The campaign comes back **paused**, so it does not spend.
-5. **Add extensions. This is not optional.** A Search campaign without them underperforms. Add at
-   least 4 sitelinks, 4–6 callouts and one structured snippet. See `references/extensions.md`.
-6. **Read it back.** Confirm budget, status and targeting match the plan, then tell the user it is
-   paused and ask whether to resume.
+1. **Gather what's required:** what the business sells (one sentence), the landing page, the daily
+   budget, the locations, and what counts as a conversion. Ask for anything missing. Resolve place
+   names with `resolve_google_locations` rather than guessing ids.
+2. **Research keywords first.** `create_search_campaign` expects `research_keywords` to have run.
+   Group the results into tight themes, one ad group each, and choose match types on purpose: exact
+   and phrase for proven intent, broad only with good conversion tracking and a smart bid strategy.
+3. **Write the ads.** Responsive search ads need up to 15 headlines (30 characters each) and up to 4
+   descriptions (90 characters each). Use only claims the user or their website supports: no invented
+   prices, awards, guarantees or reviews.
+4. **Confirm the plan** with the user: budget in the account's currency, locations, keywords, match
+   types, and ad copy.
+5. **Create it.** The campaign comes back **paused**, so it doesn't spend.
+6. **Recommend extensions.** Sitelinks, callouts and structured snippets usually raise click-through
+   rate; see `references/extensions.md`. Add the ones the business can support with real pages and
+   real facts. Never invent landing pages or claims to reach a count. If the user asked for a
+   minimal paused campaign, create that and suggest extensions as a next step.
+7. **Read it back** with `get_campaign_structure`. Confirm budget, status, targeting and ads match
+   the plan. Tell the user it's paused and ask whether to turn it on.
 
-## Keywords and ads belong to ad groups, not campaigns
+## Where keywords, negatives and ads attach
 
-Any tool that touches a keyword, a negative keyword or an ad needs an `ad_group_id`. Get it from the
-campaign structure read. Don't pass a campaign id where an ad group id is expected.
+- Keywords and ads belong to an **ad group**: they need an `ad_group_id` from `get_campaign_structure`.
+- `add_negative_keywords` adds negatives at the **campaign** level and needs a `campaign_id`. It
+  affects every ad group in that campaign.
+- Shared negative lists (`create_negative_keyword_list`, `attach_negative_keyword_list_to_campaign`)
+  suit terms you want excluded across several campaigns.
 
-Negatives come from search terms: what people actually typed. Look for terms that spent money
-without converting, group them by theme, and show the list before adding anything.
+Always check the schema with `get_tool_schema`; don't pass a campaign id where an ad group id is
+expected.
 
 ## Bidding
 
-Don't set a target CPA or ROAS on a campaign with no conversion history; it has nothing to learn
-from and will underdeliver. Start with maximize clicks or manual CPC, let conversions build up, then
-move to a target. `references/bidding.md` has the thresholds.
+See `references/bidding.md`. Smart bidding can use account-level data, so a new campaign in an
+account that already converts can often start on a conversion-based strategy. An account with little
+or no conversion history usually does better starting on clicks or manual bids. Explain the learning
+period before changing a strategy with `update_bid_strategy`.
 
 ## Reading performance
 
-`get_campaign_performance` is a top-level tool; don't route it through `google_ads_read`. It renders
-a performance card. Pass `raw_data: true` when the user wants the numbers rather than the summary.
+`get_campaign_performance` is a direct tool; don't route it through `google_ads_read`. It renders a
+card and includes keyword quality scores. Pass `raw_data: true` when the user wants the numbers.
 
 ## Rate limits
 
-Google counts keyword operations, not calls: roughly 300 per hour and 500 per day at the keyword
-level. Batch large keyword work and tell the user if you're pacing it.
-
-## References
-
-- `references/extensions.md`: the mandatory extensions step
-- `references/bidding.md`: bid strategies and when each becomes viable
+Google limits keyword operations, roughly 300 per hour and 500 per day at the keyword level. Batch
+large keyword changes and tell the user if you're pacing them.

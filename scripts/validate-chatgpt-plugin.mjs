@@ -384,4 +384,6 @@ if (errors.length) {
   console.error(`\n✗ ${label}: ${errors.length} error(s), ${warnings.length} warning(s)`);
   process.exit(1);
 }
-console.log(`✓ ${label}: valid (${warnings.length} warning(s)${checkUrls ? ', URLs checked' : ''})`);
+console.log(`✓ ${label}: package checks passed (${warnings.length} warning(s)${checkUrls ? ', URLs checked' : ''}).`);
+console.log('  This checks the ZIP contents only. Submission also needs a clean MCP scan, domain verification,');
+console.log('  reviewer credentials, a demo video, and all test cases run for real. See docs/chatgpt-plugins/.');

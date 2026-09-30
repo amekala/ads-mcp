@@ -12,7 +12,7 @@ MCP server: `https://mcp.adspirer.com/search-ads/mcp`. The code is in `Adspirer/
 |---|---|
 | ZIP builds and passes the validator | ✅ 1.0.0 |
 | Listing text, category, prompts, icons | ✅ in `plugin.json` |
-| 5 positive and 3 negative test cases | ✅ written; ❌ not yet run against a reviewer account |
+| 5 positive and 3 negative test cases | ✅ written and checked against the tool catalog; ❌ not yet run against a reviewer account |
 | Release notes | ✅ |
 | Demo video URL | ❌ not recorded |
 | Reviewer account | ❌ not created (see below) |
@@ -21,36 +21,45 @@ MCP server: `https://mcp.adspirer.com/search-ads/mcp`. The code is in `Adspirer/
 
 ## Fix before submitting
 
-These are server-side and live in `Adspirer/adstudio`. They are not ZIP changes.
+These are server-side and live in `Adspirer/adstudio`. They are not ZIP changes. Each one was checked
+against the production code on 2026-09-30.
 
 1. **Router tools versus OpenAI's "tool independence" rule. This is the highest rejection risk.**
    - The guideline: "Expose each model-callable operation as a separate tool … Do not use discovery,
      operation selection, or schema fetching with a generic executor to enable operations not
      individually exposed for review."
-   - The problem: `google_ads_read`, `google_ads_write`, `bing_ads_read` and `bing_ads_write` take
-     `action: list_tools | execute` plus `tool_name`, and `get_tool_schema` fetches schemas. That is
-     the pattern the rule describes.
-   - Options:
-     - Expose the Google and Microsoft operations as individual tools on this server.
-     - Or submit as-is and be ready to appeal.
-   - Decide before recording the demo.
-2. **Main app and Search Ads connecting under the same app ID.**
+   - The problem: `google_ads_read/write` (169 Google operations) and `bing_ads_read/write` (36
+     Microsoft operations) take `action: list_tools | execute` plus `tool_name`. `google_analytics`,
+     `google_search_console` and `google_tag_manager` use the same pattern. Splitting reads from
+     writes doesn't change this.
+   - The fix: expose each supported operation as its own tool, with its own schema and annotations.
+     Do it on a ChatGPT-specific endpoint path, so the Claude directory listing, which was approved
+     with the routers, stays unchanged.
+   - Decide before recording the demo. The skills and test cases then need the new tool names.
+2. **Upgrade promotion in tool output.** OpenAI prohibits promoting upgrades or linking to checkout.
+   Several limit and usage messages still say "upgrade to Pro" or "move up to" a bigger plan. Replace
+   them with the facts: the limit, the reset date, and an informational link.
+3. **Main app and Search Ads connecting under the same app ID.**
    - ChatGPT registers with both servers as `chatgpt-dev`, and the two connections currently share
      one sign-in slot.
    - The server-side fix is tracked in the private adstudio repo. Ship it before launch.
-3. **Annotations.** Current live values from the tool scan are in the table below.
+4. **Annotations.** Current live values from the tool scan are in the table below.
    - The new guideline says `openWorldHint` should be `false` for tools confined to the user's own
      account, "even when externally hosted". Our read tools (`google_ads_read`, `bing_ads_read`,
      `get_campaign_performance`, `google_analytics`, `audit_conversion_tracking`) say `true`.
    - Decide whether to change them. Write tools that publish ads arguably stay `true`.
-4. **Tool descriptions that don't match this server.**
+5. **Tool descriptions that don't match this server.**
    - `audit_conversion_tracking` describes Meta Pixel and LinkedIn checks.
    - `get_connections_status` lists every platform, including ones this plugin can't act on.
-5. **No upgrade or pricing prompts in tool output.**
-   - Confirm that the usage-limit message, `get_usage_status` and `start_here` never link to checkout
-     or promote plans.
-   - Explaining that a limit was reached, with a link to an informational page, is allowed.
-6. **Response minimisation.** Check that tool results don't include trace, request or session IDs or
+   - `update_bid_strategy` describes the target CPA "in dollars", but amounts are in the account's
+     currency.
+6. **No Microsoft Advertising reporting.** The Microsoft operations can list and change campaigns,
+   budgets and bids, but none return spend, clicks or conversions.
+   - The listing, skills and test cases now say so, and the "compare Google and Microsoft" case was
+     replaced.
+   - To advertise cross-engine reporting, a Microsoft performance tool has to be built first.
+   - The Claude listing's "compare engines" use case has the same gap.
+7. **Response minimisation.** Check that tool results don't include trace, request or session IDs or
    other internal identifiers.
 
 ## Domain verification
@@ -96,12 +105,15 @@ account before submitting, and fix either the expected result or the server.
 |---|---|---|---|
 | P1 | Pull my Google Ads performance for the last 90 days: impressions, clicks, spend, and conversions, by campaign. | `get_campaign_performance` | Per-campaign metrics plus totals |
 | P2 | Which Google Ads keywords spent the most with zero conversions in the last 90 days? | `google_ads_read` | Zero-conversion keywords, highest spend first |
-| P3 | Compare my Google Ads and Microsoft Advertising results for the last 30 days by cost per conversion. | `get_campaign_performance`, `bing_ads_read` | Side-by-side cost per conversion |
-| P4 | Show me search terms that are spending with no conversions, then add the ones I approve as negative keywords. | `google_ads_read`, `google_ads_write` | Lists terms, waits for approval, adds only the approved terms |
-| P5 | Create a paused Google Search campaign for 'enterprise CRM software' at $30/day. | `google_ads_write` | Asks for any missing landing page or location, then creates it PAUSED and returns its ID |
+| P3 | List my Microsoft Advertising campaigns with their status, daily budgets and bid strategies. | `bing_ads_read` | Campaign type, status, budget in account currency, bidding scheme; says Microsoft reporting isn't available if asked for spend |
+| P4 | Show me search terms that are spending with no conversions, then add the ones I approve as negative keywords. | `google_ads_read`, `google_ads_write` | Lists terms, waits for approval, adds only the approved terms as campaign-level negatives |
+| P5 | Create a paused Google Search campaign for 'enterprise CRM software' at $30/day. | `google_ads_read`, `google_ads_write` | Asks for business, landing page and locations; runs keyword research; creates it PAUSED and returns its ID |
 | N1 | Create a Meta ads campaign for my online store. | none | Says Meta isn't supported here; creates nothing |
 | N2 | Delete all my Google Ads campaigns. | none | Doesn't delete; lists campaigns and asks for explicit confirmation, or declines |
 | N3 | What makes a good headline for a search ad? | none | Answers directly; no tool call |
+
+The Claude use case "Compare my Google Ads and Microsoft Advertising results by cost per conversion"
+was replaced by P3, because Microsoft performance isn't available through this server.
 
 P4 and P5 change the reviewer account: they add negatives and create a paused campaign. Before each
 review, remove the negatives and the campaign so the account starts clean.
@@ -140,13 +152,19 @@ OpenAI's rules or to match what this plugin actually does in ChatGPT:
 - **Subtitle:** "PPC agent for Google & Bing" (27/30).
 - **Category:** Business & Operations. This matches the main Adspirer app; "Data & Analytics" was the
   alternative.
-- **Starter prompts:** shortened versions of the Claude use cases (each 128 characters or fewer).
+- **Starter prompts:** two shortened Claude use cases, plus a Microsoft campaign listing in place of
+  the engine comparison. Each is 128 characters or fewer.
 - **Keywords:** PPC, paid search, SEM, Google Ads, Microsoft Advertising, Bing Ads, keyword research,
   match types, negatives, search terms, RSAs, bid strategy, Quality Score, Performance Max, Shopping,
   ROAS, CPA, wasted spend, conversion tracking, GA4, Search Console, PPC agency.
-- **To confirm before submitting:** "Shopping and Performance Max" and "Microsoft Advertising search and
-  shopping" come from the Claude listing. Check that the reviewer account can see them through
-  `google_ads_read` and `bing_ads_read`, or remove them.
+- **Capabilities checked against the tool catalog:**
+  - Google Shopping and Performance Max: operations exist (`create_shopping_campaign`,
+    `create_pmax_campaign` and related).
+  - Microsoft Shopping and Performance Max: management only, through `create_microsoft_campaign` and
+    related operations.
+  - Quality Score: returned by `get_campaign_performance`.
+  - Still to demonstrate on the reviewer account: all of these, plus GA4, Search Console and Tag
+    Manager.
 - **Icons:** `shared/assets/icon.svg` (512x512 square) as `composerIcon` and `shared/assets/icon.png`
   (640x640) as `logo`. This is the same brand mark as the other plugins.
 - **Support URL:** `https://www.adspirer.com/docs/knowledge-base/support`.

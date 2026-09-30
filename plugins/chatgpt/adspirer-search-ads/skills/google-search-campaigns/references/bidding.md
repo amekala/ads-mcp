@@ -1,43 +1,38 @@
 # Google Ads bid strategies
 
-A smart bidding strategy is a prediction model. With no conversions to learn from, it predicts
-nothing and underdelivers — the campaign quietly stops serving. Match the strategy to the data the
-account actually has.
+Smart bidding predicts which auctions will convert. It learns from the campaign's own conversions
+and from the rest of the account, so how much data it has depends on the whole account, not just the
+new campaign. Pick the strategy from the data the account actually has.
 
-## When each becomes viable
+## Rules of thumb (not hard requirements)
 
-| Strategy | Use when | Conversions needed first |
-|---|---|---|
-| **Manual CPC** | Brand-new account, or you need absolute control | none |
-| **Maximize clicks** | Cold start; you need traffic to generate conversion data | none |
-| **Maximize conversions** | Conversions are flowing, no strict cost ceiling | ~15–30 / month |
-| **Target CPA** | You know what a conversion may cost | ~30 / month, stable |
-| **Maximize conversion value** | Order values vary a lot | ~30 / month with values |
-| **Target ROAS** | E-commerce, revenue tracked per conversion | ~50 / month with values |
-| **Target impression share** | Brand defense, competitor bidding on your name | none |
+| Strategy | Usually fits when |
+|---|---|
+| **Manual CPC** | You need tight control, or the account has no conversion tracking yet |
+| **Maximize clicks** | Little or no conversion history; you need traffic to learn from |
+| **Maximize conversions** | Conversions are tracked and flowing, with no strict cost ceiling |
+| **Target CPA** | Conversion volume is steady and you know what a conversion may cost |
+| **Maximize conversion value** | Conversions carry values that vary a lot |
+| **Target ROAS** | Revenue is tracked per conversion and volume is steady |
+| **Target impression share** | Brand defense, or a visibility goal rather than a cost goal |
 
-## The usual sequence
-
-1. Launch on **maximize clicks** with a sane CPC cap.
-2. Accumulate 30 conversions. Verify they are real conversions, not thank-you-page reloads.
-3. Move to **maximize conversions**.
-4. Once CPA is stable, set a **target CPA** near the achieved average — not at the number the user
-   wishes for.
+Volume guidance you'll often see (around 15–30 conversions a month for a CPA target, more for ROAS)
+is a rough indicator of stability. It isn't a prerequisite Google enforces; treat it as a reason to
+be cautious, not a rule.
 
 ## Things that go wrong
 
-**Setting a target CPA far below the current CPA.** The campaign stops serving. If the account
-converts at $80 and the user sets a $30 target, impressions collapse and they conclude Google is
-broken. Move toward a target in steps of 10–20%.
+**A target far below the current CPA.** If the account converts at 80 and the target is set to 30,
+delivery can collapse. Move a target in steps of about 10–20%.
 
-**Switching strategies weekly.** Each change restarts the learning period — roughly 7 days of
-unstable delivery. Change one thing, then wait.
+**Changing strategy often.** Each change starts a new learning period, typically about a week of
+less stable delivery. Change one thing, then wait.
 
-**Target ROAS without conversion values.** ROAS is revenue over spend. No revenue on the conversion
-means no ROAS to target. Check `list_conversion_actions` for whether values are set.
+**Target ROAS without conversion values.** No revenue on the conversion means there's nothing to
+target. Check `list_conversion_actions` first.
 
-**Optimizing toward a conversion that isn't the business goal.** A form view is not a lead. Look at
-what the conversion action actually fires on before you optimize toward it.
+**Optimizing toward the wrong conversion.** A page view isn't a lead. Check what the conversion
+action fires on before optimizing toward it.
 
-Change strategy with `update_bid_strategy`. Say what the learning period will do to delivery before
-you do it.
+Targets and caps are in the account's currency. Change strategy with `update_bid_strategy`, after the
+user agrees, and say what the learning period will do to delivery.
