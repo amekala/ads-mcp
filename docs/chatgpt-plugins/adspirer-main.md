@@ -152,9 +152,12 @@ P4 creates a paused Meta campaign on the reviewer account. Delete it after each 
 
 ## Process notes (from the submission guide, checked 2026-09-30)
 
-- The guide says an app first submitted through the old form should start from **… → Download
-  release ZIP** on its published version. We built 2.1.0 from scratch instead. Diff the release ZIP
-  against this package: the plugin name, the `mcp.json` server name and any assets it carries.
+- Compared with the published release ZIP (**… → Download release ZIP**, 2026-09-30). It holds only
+  `.codex-plugin/plugin.json`: name `app-69461dc91ee48191ae4a14eb9bde1c21`, version 1.0.0, empty
+  `capabilities`, one starter prompt, no support URL, no skills, no `mcp.json`, no assets. The MCP
+  connection and icons live in the dashboard. 2.1.0 keeps the name and the MCP URL, and adds the
+  rest. The portal accepted the 2.1.0 upload with `mcp.json` included.
+- Tool annotations are never in the ZIP. The portal reads them from the MCP tool scan.
 - Only one review can be active per plugin. The 2.0.0 export showed status `REVIEW`. If that review
   is still open, wait for it or cancel it before uploading 2.1.0.
 - "We couldn't complete an automated assessment of your privacy policy" is a non-blocking finding.
