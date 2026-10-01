@@ -61,7 +61,7 @@
         ],
         "websiteURL": "https://www.adspirer.com",
         "supportURL": "https://www.adspirer.com/docs/knowledge-base/support",
-        "privacyPolicyURL": "https://www.adspirer.com/privacy",
+        "privacyPolicyURL": "https://www.adspirer.com/privacy.txt",
         "termsOfServiceURL": "https://www.adspirer.com/terms",
         "defaultPrompt": [
           "Pull my Google Ads performance for the last 90 days by campaign",
