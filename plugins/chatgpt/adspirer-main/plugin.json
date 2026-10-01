@@ -1,0 +1,145 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "adspirer",
+  "version": "2.1.0",
+  "description": "AI advertising agent for Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising. Plans, launches, reports on and optimizes campaigns in ChatGPT, and changes an account only when you ask.",
+  "author": {
+    "name": "Adspirer",
+    "email": "hello@adspirer.com",
+    "url": "https://www.adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/amekala/ads-mcp",
+  "license": "MIT",
+  "keywords": [
+    "ads",
+    "advertising",
+    "paid media",
+    "ppc",
+    "google ads",
+    "meta ads",
+    "facebook ads",
+    "instagram ads",
+    "linkedin ads",
+    "tiktok ads",
+    "amazon ads",
+    "chatgpt ads",
+    "microsoft advertising",
+    "bing ads",
+    "performance max",
+    "campaign management",
+    "ad performance",
+    "roas",
+    "cpa",
+    "wasted spend",
+    "keyword research",
+    "ad creative",
+    "conversion tracking",
+    "competitor ads",
+    "google analytics",
+    "search console",
+    "tag manager",
+    "klaviyo",
+    "marketing agency"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Adspirer",
+        "shortDescription": "Create, launch & analyze ads",
+        "longDescription": "Adspirer is an AI advertising agent for Google Ads, Meta Ads (Facebook and Instagram), LinkedIn Ads, TikTok Ads, Amazon Ads, ChatGPT Ads and Microsoft Advertising (Bing Ads). It plans, launches, reports on and optimizes paid campaigns through conversation in ChatGPT.\n\nConnect your ad accounts once, then ask in plain language. Adspirer can:\n- Report campaign performance with interactive dashboards for Google Ads and Meta Ads, and pull LinkedIn, TikTok, Amazon and ChatGPT Ads reports\n- Find wasted spend, search terms and keywords that don't convert, and creative fatigue\n- Research keywords, audiences and targeting\n- Draft and create Search, Performance Max, YouTube and Demand Gen campaigns on Google; image, video and carousel campaigns on Meta, LinkedIn and TikTok; and campaigns on Amazon, ChatGPT Ads and Microsoft Advertising\n- Write and refresh ad copy and creative\n- Audit conversion tracking across every connected platform and return a prioritized fix list\n- Diagnose why ads aren't producing sales by checking the funnel in order and stopping at the first broken step\n- Show what competitors are advertising right now, next to your own account\n- Read Google Analytics 4, Search Console, Tag Manager and Klaviyo to compare ad results with site and email outcomes\n- Set up scheduled performance reports and threshold alerts\n- Work across multiple brands and client accounts, for in-house teams and agencies\n\nYou stay in control. New campaigns are always created paused, and budget, bid, status and targeting changes are made only when you ask. Read-only tools are marked as read-only, and write tools return the IDs of what they changed so you can check them.\n\nRequirements: an Adspirer account and a login with access to at least one supported ad account. Reporting needs read access; creating or editing campaigns needs edit access. Microsoft Advertising supports campaign management but not performance reporting yet.",
+        "developerName": "Adspirer",
+        "category": "Business & Operations",
+        "capabilities": [
+          "Report campaign performance for Google, Meta, LinkedIn, TikTok, Amazon and ChatGPT Ads",
+          "Interactive performance dashboards for Google Ads and Meta Ads",
+          "Create Google Search, Performance Max, YouTube and Demand Gen campaigns, paused",
+          "Create Meta, LinkedIn and TikTok image, video and carousel campaigns, paused",
+          "Manage Amazon Ads, ChatGPT Ads and Microsoft Advertising campaigns",
+          "Find wasted spend, non-converting search terms and creative fatigue",
+          "Research keywords, audiences and targeting",
+          "Write and refresh ad copy and creative",
+          "Change budgets, bids, status and targeting only when you ask",
+          "Audit conversion tracking across every connected platform",
+          "Diagnose why ads aren't producing sales",
+          "Research competitors' live ads next to your own account",
+          "Read Google Analytics 4, Search Console, Tag Manager and Klaviyo",
+          "Schedule performance reports and threshold alerts",
+          "See connected accounts and switch the active account",
+          "Work across multiple brands and client accounts"
+        ],
+        "websiteURL": "https://www.adspirer.com",
+        "supportURL": "https://www.adspirer.com/docs/knowledge-base/support",
+        "privacyPolicyURL": "https://www.adspirer.com/privacy",
+        "termsOfServiceURL": "https://www.adspirer.com/terms",
+        "defaultPrompt": [
+          "Show my Google Ads performance for the last 30 days by campaign",
+          "Audit my conversion tracking across all my ad platforms",
+          "Show me my latest LinkedIn Ads spend and ad performance"
+        ],
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/logo.png"
+      },
+      "onboardingSkill": "./skills/get-started/SKILL.md",
+      "review": {
+        "test_cases": {
+          "positive": [
+            {
+              "description": "Pull a LinkedIn Ads performance report for a date range.",
+              "prompt": "Pull my LinkedIn Ads performance report for the last 90 days. Include impressions, clicks, spend, and leads.",
+              "tools_triggered": "linkedin_ads",
+              "expected_behavior": "A LinkedIn Ads performance summary for the last 90 days: the account ID, the requested date window, a data-coverage note, and core metrics (impressions, clicks, spend and leads) plus CTR. Nothing is changed."
+            },
+            {
+              "description": "Verify connected ad accounts before creating a new campaign.",
+              "prompt": "Check which ad accounts are connected to Adspirer and flag any that need reauthentication.",
+              "tools_triggered": "get_connections_status",
+              "expected_behavior": "A list of the connected ad accounts (Google Ads, Meta Ads and LinkedIn Ads in the test account) with each account's name and ID, and a clear flag on any account whose connection needs reauthentication. Nothing is changed."
+            },
+            {
+              "description": "Audit conversion tracking health across every connected ad platform and return a prioritized fix list.",
+              "prompt": "Audit my conversion tracking setup across all platforms.",
+              "tools_triggered": "audit_conversion_tracking",
+              "expected_behavior": "An overall conversion-tracking health grade, the strongest and weakest platforms, and a per-platform breakdown (Google Ads, Meta, LinkedIn) with grades, warnings, failures and prioritized fixes. Nothing is changed."
+            },
+            {
+              "description": "Create a Meta single-image campaign end to end from one prompt, including asset validation, ad set and ad. It must be created paused.",
+              "prompt": "Create a Meta single-image campaign in ad account 1299711684712660 called \"Adspirer - Image Test 1\" with the objective set to traffic, a daily budget of $20, the image https://storage.googleapis.com/adspirer-pmax-2026-03-08/pmax-square-01.png, the primary text \"Stop wasting ad spend. Let AI optimize your campaigns automatically.\", the headline \"Grow Faster with AI Ads\", and the landing page URL https://adspirer.com.",
+              "tools_triggered": "meta_ads",
+              "expected_behavior": "Confirmation that the campaign, ad set and ad were created in PAUSED status for review (name \"Adspirer - Image Test 1\", objective Traffic, 20 per day budget in the account's currency), with the new Campaign, Ad Set and Ad IDs. The campaign does not deliver or spend until the user turns it on.",
+              "file_attachment_urls": [
+                "https://storage.googleapis.com/adspirer-pmax-2026-03-08/pmax-square-01.png"
+              ]
+            },
+            {
+              "description": "Pull a Google Ads performance report for the last 90 days.",
+              "prompt": "Pull my Google Ads performance report for the last 90 days. Include impressions, clicks, spend, and conversions.",
+              "tools_triggered": "get_campaign_performance",
+              "expected_behavior": "A Google Ads performance dashboard for the last 90 days: the account ID, the requested date window, and impressions, clicks, spend and conversions by campaign with totals and CTR. Nothing is changed."
+            }
+          ],
+          "negative": [
+            {
+              "description": "User asks for general marketing advice without needing ad platform data or actions. Adspirer should not be invoked; the request needs no connected ad-account data or campaign action, so ChatGPT answers directly.",
+              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?"
+            },
+            {
+              "description": "User asks about an ad platform Adspirer doesn't support. Adspirer covers Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising, not Pinterest, so it should return no Pinterest data and say Pinterest isn't supported.",
+              "prompt": "Show me my Pinterest Ads performance"
+            },
+            {
+              "description": "User sends a casual greeting with no advertising-related request. Adspirer should not be invoked; ChatGPT responds conversationally without calling any Adspirer tool.",
+              "prompt": "Hey! How's it going? What kind of things can you do?"
+            }
+          ]
+        },
+        "demo_recording_url": "https://youtu.be/dYU-6sudjZM",
+        "commerce": false,
+        "commerce_description": "Adspirer does not sell products or process payments in ChatGPT."
+      },
+      "publication": {
+        "release_notes": "2.1.0: adds Microsoft Advertising (Bing Ads) campaign management; Google Search Console and Google Tag Manager alongside Google Analytics 4 and Klaviyo; a funnel check that finds the first thing stopping ads from producing sales; competitor ad research by website domain; and a usage meter that shows tool calls left and the reset date. Interactive dashboards for Google Ads and Meta Ads performance, conversion tracking, connections and account switching continue from 2.0.0. New campaigns are still created paused. Bundles 15 skills, including a get-started onboarding skill and a new Microsoft Advertising skill."
+      }
+    }
+  }
+}

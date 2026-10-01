@@ -364,7 +364,9 @@ async function liveUrls() {
     .filter(([, u]) => u);
   for (const [f, u] of urls) {
     try {
-      const r = await fetch(u, { redirect: 'follow' });
+      const r = await fetch(u, { redirect: 'follow', signal: AbortSignal.timeout(20000) });
+      // Drop the body: an unread body keeps the socket open and the process never exits.
+      await r.body?.cancel();
       const final = new URL(r.url);
       if (!r.ok) err(`${f} ${u} returned HTTP ${r.status}`);
       else if (/sign-?in|login/i.test(final.pathname)) err(`${f} ${u} redirects to a sign-in page (${r.url}); it must be public`);
