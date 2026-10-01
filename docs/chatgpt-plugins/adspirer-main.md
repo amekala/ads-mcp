@@ -25,7 +25,7 @@ an **update** to that app, not a new plugin.
 | Demo video URL | ✅ the 2.0.0 video, `https://youtu.be/dYU-6sudjZM` (public) |
 | Release notes | ✅ |
 | Tool annotations on the server | ✅ all 23 tools set `readOnlyHint`, `destructiveHint` and `openWorldHint` explicitly |
-| Annotation justifications (portal) | ⚠️ 15 carried over from 2.0.0; 8 new tools need them (below) |
+| Annotation justifications (portal) | Not required any more (plugin guidelines, "Correct annotation"). Drafts for the 8 new tools are below in case a scan finding needs an appeal |
 | Reviewer account | ❌ enter in the portal (same rules as the Search Ads sheet) |
 | Domain verification | ✅ `mcp.adspirer.com` already serves this app's token |
 
@@ -73,7 +73,7 @@ portal reads them from the tool scan.
 | `google_search_console` | false | true | true | new |
 | `google_tag_manager` | false | true | true | new |
 
-## Justifications for the 8 new tools (paste into the portal if asked)
+## Justifications for the 8 new tools (only for an appeal; no longer required)
 
 **`get_usage_status`**
 - Read-only: Returns the user's tool-call usage for the current period, the limit and the reset date, and renders a usage meter. It changes nothing.
@@ -150,6 +150,19 @@ P4 creates a paused Meta campaign on the reviewer account. Delete it after each 
   dollars.
 - **`adspirer-agent`:** the Codex `agents/openai.yaml` is left out; `mcp.json` declares the server.
 
+## Process notes (from the submission guide, checked 2026-09-30)
+
+- The guide says an app first submitted through the old form should start from **… → Download
+  release ZIP** on its published version. We built 2.1.0 from scratch instead. Diff the release ZIP
+  against this package: the plugin name, the `mcp.json` server name and any assets it carries.
+- Only one review can be active per plugin. The 2.0.0 export showed status `REVIEW`. If that review
+  is still open, wait for it or cancel it before uploading 2.1.0.
+- "We couldn't complete an automated assessment of your privacy policy" is a non-blocking finding.
+  Required setup and validation errors block submission; other findings can go to the review team.
+  Use **Submit for additional review**.
+- The demo video has to show the test cases. The 2.0.0 video is Google Ads only; it doesn't show
+  LinkedIn, the conversion audit or the Meta campaign.
+
 ## Server-side items that still apply (not ZIP changes)
 
 These are tracked in the private adstudio repo and affect this app as much as Search Ads:
@@ -160,6 +173,10 @@ These are tracked in the private adstudio repo and affect this app as much as Se
 2. **Upgrade wording in tool output.** Some limit and usage messages still say "upgrade to Pro" or
    "move up to" a plan. OpenAI prohibits promoting upgrades. The skills no longer repeat it, but the
    server text needs the fix.
-3. **Stale `microsoft_ads` description.** It says write operations are "when added" and lists only
+3. **`switch_primary_account` annotation.** It sets `destructiveHint: false`, but it overwrites which
+   accounts are active. The guideline allows `false` only for additive writes, and says being able
+   to undo a change doesn't justify `false`. The Search Ads server already marks the same tool
+   `true`. Make them match.
+4. **Stale `microsoft_ads` description.** It says write operations are "when added" and lists only
    two operations, but the router fronts 36, including creates, updates and deletes. The annotations
    (`destructiveHint: true`) are right; the description should match them.
