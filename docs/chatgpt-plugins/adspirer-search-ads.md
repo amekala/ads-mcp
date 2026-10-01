@@ -10,11 +10,11 @@ MCP server: `https://mcp.adspirer.com/search-ads/mcp`. The code is in `Adspirer/
 
 | Item | State |
 |---|---|
-| ZIP builds and passes the validator | ✅ 1.0.0 |
+| ZIP builds and passes the validator | ✅ 1.0.2 |
 | Listing text, category, prompts, icons | ✅ in `plugin.json` |
 | 5 positive and 3 negative test cases | ✅ written and checked against the tool catalog; ❌ not yet run against a reviewer account |
 | Release notes | ✅ |
-| Demo video URL | ❌ not recorded |
+| Demo video URL | ✅ the main app's 2.0.0 video, `https://youtu.be/dYU-6sudjZM` (Google Ads in ChatGPT) |
 | Reviewer account | ❌ not created (see below) |
 | Domain verification | ❌ needs the parent-domain token (see below) |
 | Blockers on the MCP server | ❌ see "Fix before submitting" |
@@ -184,6 +184,18 @@ OpenAI's rules or to match what this plugin actually does in ChatGPT:
 - **Support URL:** `https://www.adspirer.com/docs/knowledge-base/support`.
   - The old app used `https://adspirer.ai/help`, which redirects to sign-in. OpenAI requires public
     URLs.
+
+## Scan findings (2026-09-30) and what was done
+
+| Tool | Finding | Action |
+|---|---|---|
+| `bing_ads_read` | Description claims capabilities that don't match behavior | It said "performance, reporting", but Microsoft has no reporting operation. The server now lists the 13 read operations and says there's no reporting. Deploy, then **Rescan** |
+| `switch_primary_account` | Name unclear | Not changed yet (renaming would break the Claude listing and skills). Appeal with: it switches which connected ad account(s) Adspirer acts on for a platform |
+| Server instructions | Needs further review | None; waits for the review team |
+| `audit_conversion_tracking`, `get_campaign_performance`, `get_connections_status`, `get_usage_status`, `start_here`, `switch_primary_account` | Update needs further review | None; a hold for human review, not a defect |
+
+Negative test cases (1.0.2) use the original submission's short description plus an
+`expected_behavior`, the same shape as the main app's export. The SEO case stays swapped for Meta.
 
 ## Tool annotations (live scan, 2026-09-30)
 

@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "adspirer-search-ads",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "PPC and paid search agent for Google Ads and Microsoft Advertising (Bing Ads). Plans, launches and manages search campaigns in ChatGPT, and changes an account only when you approve it.",
   "author": {
     "name": "Adspirer",
@@ -114,24 +114,28 @@
           ],
           "negative": [
             {
-              "description": "User asks for general marketing advice without needing ad platform data or actions. Adspirer Search Ads should not be invoked; the request needs no connected ad-account data or campaign action, so ChatGPT answers directly.",
-              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?"
+              "description": "User asks for general marketing advice without needing ad platform data or actions.",
+              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?",
+              "expected_behavior": "Adspirer Search Ads should not be invoked; the request is general marketing advice that needs no connected ad-account data or campaign action, so ChatGPT answers directly."
             },
             {
-              "description": "User asks about an ad platform this plugin doesn't support. Adspirer Search Ads covers Google Ads and Microsoft Advertising only, so it should say Meta isn't supported here and return no Meta data.",
-              "prompt": "Show me my Meta Ads performance"
+              "description": "User requests operations on an unsupported platform such as Meta Ads.",
+              "prompt": "Show me my Meta Ads performance",
+              "expected_behavior": "Adspirer Search Ads should not be invoked; it supports Google Ads and Microsoft Advertising only and has no Meta Ads data."
             },
             {
-              "description": "User sends a casual greeting with no advertising-related request. Adspirer Search Ads should not be invoked; ChatGPT responds conversationally without calling any tool.",
-              "prompt": "Hey! How's it going? What kind of things can you do?"
+              "description": "User sends a casual greeting with no advertising-related request.",
+              "prompt": "Hey! How's it going? What kind of things can you do?",
+              "expected_behavior": "Adspirer Search Ads should not be invoked; a casual greeting carries no advertising intent, so ChatGPT responds conversationally without calling any Adspirer Search Ads tool."
             }
           ]
         },
         "commerce": false,
-        "commerce_description": "Adspirer Search Ads does not sell products or process payments in ChatGPT."
+        "commerce_description": "Adspirer Search Ads does not sell products or process payments in ChatGPT.",
+        "demo_recording_url": "https://youtu.be/dYU-6sudjZM"
       },
       "publication": {
-        "release_notes": "1.0.1: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
+        "release_notes": "1.0.2: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
       }
     }
   }
