@@ -65,7 +65,7 @@
         "termsOfServiceURL": "https://www.adspirer.com/terms",
         "defaultPrompt": [
           "Pull my Google Ads performance from January to September 2026 by campaign",
-          "Which Google Ads keywords spent the most with zero conversions from January to September 2026?",
+          "Show my Google Analytics sessions and conversions by traffic source from January to September 2026",
           "List my Microsoft Ads campaigns with their budgets and bid strategies"
         ],
         "composerIcon": "./assets/icon.svg",
