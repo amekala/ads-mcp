@@ -82,10 +82,10 @@
               "expected_behavior": "Shows impressions, clicks, spend and conversions for each campaign in the test Google Ads account from January 1 to September 30, 2026, with totals. Nothing is changed."
             },
             {
-              "description": "Find keywords with spend and no conversions.",
-              "prompt": "Which Google Ads keywords spent the most with zero conversions from January 1 to September 30, 2026?",
-              "tools_triggered": "google_ads_read",
-              "expected_behavior": "Lists the keywords with the highest spend and zero conversions from January 1 to September 30, 2026, with spend and clicks for each, highest spend first. Nothing is changed."
+              "description": "Report Google Analytics traffic and conversions by source for a date range.",
+              "prompt": "Show my Google Analytics sessions and conversions by traffic source from January 1 to September 30, 2026.",
+              "tools_triggered": "google_analytics",
+              "expected_behavior": "Runs a Google Analytics 4 report for the test property from January 1 to September 30, 2026 and lists sessions and conversions (key events) for each traffic source, with totals. If more than one GA4 property is connected, it asks which one to use instead of guessing. Nothing is changed."
             },
             {
               "description": "Review Microsoft Advertising campaign settings.",
