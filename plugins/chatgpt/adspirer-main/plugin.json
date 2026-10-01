@@ -1,6 +1,6 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
-  "name": "adspirer",
+  "name": "app-69461dc91ee48191ae4a14eb9bde1c21",
   "version": "2.1.0",
   "description": "AI advertising agent for Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising. Plans, launches, reports on and optimizes campaigns in ChatGPT, and changes an account only when you ask.",
   "author": {

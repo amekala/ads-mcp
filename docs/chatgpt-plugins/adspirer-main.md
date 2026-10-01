@@ -7,8 +7,9 @@ The plugin source is `plugins/chatgpt/adspirer-main/`. Build it with
 MCP server: `https://mcp.adspirer.com/mcp`, the same URL the published app (2.0.0) uses. This ZIP is
 an **update** to that app, not a new plugin.
 
-- Package `name` is `adspirer`. If the portal reports `plugin_name_mismatch`, it shows the name it
-  expects; change `name` in `plugin.json` to that and rebuild.
+- Package `name` is `app-69461dc91ee48191ae4a14eb9bde1c21`. That's the ID OpenAI gave the existing
+  app when it moved apps to plugins, and an update must use it (`plugin_name_mismatch` otherwise).
+  Never change it. The listing still shows `displayName` ("Adspirer").
 - `version` must differ from the last upload. 2.0.0 was the last app version, so this is 2.1.0.
 - `plugins/chatgpt/adspirer/` is the older skills-only upload. Its skills are synced from the
   source skills by `scripts/sync-skills.sh`. The copies in `adspirer-main/skills/` are edited for
