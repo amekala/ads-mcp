@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "app-69461dc91ee48191ae4a14eb9bde1c21",
-  "version": "2.1.0",
+  "version": "2.0.0",
   "description": "AI advertising agent for Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising. Plans, launches, reports on and optimizes campaigns in ChatGPT, and changes an account only when you ask.",
   "author": {
     "name": "Adspirer",
@@ -138,7 +138,7 @@
         "commerce_description": "Adspirer does not sell products or process payments in ChatGPT."
       },
       "publication": {
-        "release_notes": "2.1.0: adds Microsoft Advertising (Bing Ads) campaign management; Google Search Console and Google Tag Manager alongside Google Analytics 4 and Klaviyo; a funnel check that finds the first thing stopping ads from producing sales; competitor ad research by website domain; and a usage meter that shows tool calls left and the reset date. Interactive dashboards for Google Ads and Meta Ads performance, conversion tracking, connections and account switching continue from 2.0.0. New campaigns are still created paused. Bundles 15 skills, including a get-started onboarding skill and a new Microsoft Advertising skill."
+        "release_notes": "2.0.0: adds Microsoft Advertising (Bing Ads) campaign management; Google Search Console and Google Tag Manager alongside Google Analytics 4 and Klaviyo; a funnel check that finds the first thing stopping ads from producing sales; competitor ad research by website domain; and a usage meter that shows tool calls left and the reset date. Interactive dashboards for Google Ads and Meta Ads performance, conversion tracking, connections and account switching continue. New campaigns are still created paused. Bundles 15 skills, including a get-started onboarding skill and a new Microsoft Advertising skill."
       }
     }
   }

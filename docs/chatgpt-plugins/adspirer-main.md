@@ -10,7 +10,7 @@ an **update** to that app, not a new plugin.
 - Package `name` is `app-69461dc91ee48191ae4a14eb9bde1c21`. That's the ID OpenAI gave the existing
   app when it moved apps to plugins, and an update must use it (`plugin_name_mismatch` otherwise).
   Never change it. The listing still shows `displayName` ("Adspirer").
-- `version` must differ from the last upload. 2.0.0 was the last app version, so this is 2.1.0.
+- `version` is 2.0.0. The published release ZIP is 1.0.0.
 - `plugins/chatgpt/adspirer/` is the older skills-only upload. Its skills are synced from the
   source skills by `scripts/sync-skills.sh`. The copies in `adspirer-main/skills/` are edited for
   this listing (see "Skills") and are **not** a sync target, so a sync won't overwrite them.
@@ -19,7 +19,7 @@ an **update** to that app, not a new plugin.
 
 | Item | State |
 |---|---|
-| ZIP builds and passes the validator | ✅ 2.1.0 |
+| ZIP builds and passes the validator | ✅ 2.0.0 |
 | Listing text, category, capabilities, prompts, icons | ✅ in `plugin.json` |
 | 5 positive and 3 negative test cases | ✅ in `plugin.json`; ❌ not yet run against a reviewer account |
 | Demo video URL | ✅ the 2.0.0 video, `https://youtu.be/dYU-6sudjZM` (public) |
@@ -155,11 +155,11 @@ P4 creates a paused Meta campaign on the reviewer account. Delete it after each 
 - Compared with the published release ZIP (**… → Download release ZIP**, 2026-09-30). It holds only
   `.codex-plugin/plugin.json`: name `app-69461dc91ee48191ae4a14eb9bde1c21`, version 1.0.0, empty
   `capabilities`, one starter prompt, no support URL, no skills, no `mcp.json`, no assets. The MCP
-  connection and icons live in the dashboard. 2.1.0 keeps the name and the MCP URL, and adds the
-  rest. The portal accepted the 2.1.0 upload with `mcp.json` included.
+  connection and icons live in the dashboard. 2.0.0 keeps the name and the MCP URL, and adds the
+  rest. The portal accepted the upload with `mcp.json` included.
 - Tool annotations are never in the ZIP. The portal reads them from the MCP tool scan.
 - Only one review can be active per plugin. The 2.0.0 export showed status `REVIEW`. If that review
-  is still open, wait for it or cancel it before uploading 2.1.0.
+  is still open, wait for it or cancel it before uploading.
 - "We couldn't complete an automated assessment of your privacy policy" is a non-blocking finding.
   Required setup and validation errors block submission; other findings can go to the review team.
   Use **Submit for additional review**.
