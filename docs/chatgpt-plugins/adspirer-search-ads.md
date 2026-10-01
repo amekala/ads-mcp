@@ -14,7 +14,7 @@ MCP server: `https://mcp.adspirer.com/search-ads/mcp`. The code is in `Adspirer/
 | Listing text, category, prompts, icons | ✅ in `plugin.json` |
 | 5 positive and 3 negative test cases | ✅ written and checked against the tool catalog; ❌ not yet run against a reviewer account |
 | Release notes | ✅ |
-| Demo video URL | ✅ the main app's 2.0.0 video, `https://youtu.be/dYU-6sudjZM` (Google Ads in ChatGPT) |
+| Demo video URL | ✅ `https://screen.studio/share/OOqPY3xQ` (recorded for these test cases) |
 | Reviewer account | ❌ not created (see below) |
 | Domain verification | ❌ needs the parent-domain token (see below) |
 | Blockers on the MCP server | ❌ see "Fix before submitting" |
