@@ -94,10 +94,10 @@
               "expected_behavior": "Lists each Microsoft Advertising campaign in the test account with its type, status, daily budget in the account's currency, and bidding scheme. Nothing is changed. If asked for Microsoft spend or conversions, it says reporting for Microsoft isn't available rather than estimating."
             },
             {
-              "description": "Review wasted Google Ads search terms, then add only the negatives the user approves.",
-              "prompt": "In my Google Ads account, show me search terms from January 1 to September 30, 2026 that spent money with no conversions, then add the ones I approve as negative keywords.",
-              "tools_triggered": "google_ads_read, google_ads_write",
-              "expected_behavior": "Lists Google Ads search terms with spend and zero conversions from January 1 to September 30, 2026 and asks which to exclude. After the reviewer approves specific terms, adds only those as campaign-level negative keywords in Google Ads and confirms what was added and to which campaign. Nothing is added before approval."
+              "description": "Find Google Ads search terms that spent money with no conversions.",
+              "prompt": "In my Google Ads account, show me search terms from January 1 to September 30, 2026 that spent money with no conversions.",
+              "tools_triggered": "google_ads_read",
+              "expected_behavior": "Lists the Google Ads search terms that had spend and zero conversions from January 1 to September 30, 2026, with spend and clicks for each and the campaign they came from, highest spend first. Nothing is changed."
             },
             {
               "description": "Create a Microsoft Advertising Performance Max campaign with real image creatives. It must start paused.",
