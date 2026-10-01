@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "adspirer-search-ads",
-  "version": "1.0.2",
+  "version": "1.0.0",
   "description": "PPC and paid search agent for Google Ads and Microsoft Advertising (Bing Ads). Plans, launches and manages search campaigns in ChatGPT, and changes an account only when you approve it.",
   "author": {
     "name": "Adspirer",
@@ -135,7 +135,7 @@
         "demo_recording_url": "https://youtu.be/dYU-6sudjZM"
       },
       "publication": {
-        "release_notes": "1.0.2: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
+        "release_notes": "1.0.0: first release of Adspirer Search Ads for ChatGPT. Separate read and write tools for Google Ads and Microsoft Advertising, a Google Ads performance dashboard, keyword research, search-term and negative-keyword workflows, Microsoft Advertising campaign management, a conversion tracking audit, and read access to Google Analytics 4, Search Console and Tag Manager. Bundles six skills: get-started, adspirer-search-ads, google-search-campaigns, search-performance-review, search-optimization and microsoft-advertising."
       }
     }
   }

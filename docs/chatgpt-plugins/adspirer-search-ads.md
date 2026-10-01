@@ -10,7 +10,7 @@ MCP server: `https://mcp.adspirer.com/search-ads/mcp`. The code is in `Adspirer/
 
 | Item | State |
 |---|---|
-| ZIP builds and passes the validator | ✅ 1.0.2 |
+| ZIP builds and passes the validator | ✅ 1.0.0 |
 | Listing text, category, prompts, icons | ✅ in `plugin.json` |
 | 5 positive and 3 negative test cases | ✅ written and checked against the tool catalog; ❌ not yet run against a reviewer account |
 | Release notes | ✅ |
