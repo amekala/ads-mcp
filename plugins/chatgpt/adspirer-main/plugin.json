@@ -120,16 +120,19 @@
           ],
           "negative": [
             {
-              "description": "User asks for general marketing advice without needing ad platform data or actions. Adspirer should not be invoked; the request needs no connected ad-account data or campaign action, so ChatGPT answers directly.",
-              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?"
+              "description": "User asks for general marketing advice without needing ad platform data or actions.",
+              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?",
+              "expected_behavior": "Adspirer should not be invoked; the request is general marketing advice that needs no connected ad-account data or campaign action, so ChatGPT answers directly."
             },
             {
-              "description": "User asks about an ad platform Adspirer doesn't support. Adspirer covers Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising, not Pinterest, so it should return no Pinterest data and say Pinterest isn't supported.",
-              "prompt": "Show me my Pinterest Ads performance"
+              "description": "User requests operations on an unsupported platform such as Pinterest Ads.",
+              "prompt": "Show me my Pinterest Ads performance",
+              "expected_behavior": "Adspirer should not be invoked; it supports Google, Meta, LinkedIn, TikTok, Amazon, ChatGPT Ads and Microsoft Advertising only and has no Pinterest data."
             },
             {
-              "description": "User sends a casual greeting with no advertising-related request. Adspirer should not be invoked; ChatGPT responds conversationally without calling any Adspirer tool.",
-              "prompt": "Hey! How's it going? What kind of things can you do?"
+              "description": "User sends a casual greeting with no advertising-related request.",
+              "prompt": "Hey! How's it going? What kind of things can you do?",
+              "expected_behavior": "Adspirer should not be invoked; a casual greeting carries no advertising intent, so ChatGPT responds conversationally without calling any Adspirer tool."
             }
           ]
         },
