@@ -64,8 +64,8 @@
         "privacyPolicyURL": "https://www.adspirer.com/privacy.txt",
         "termsOfServiceURL": "https://www.adspirer.com/terms",
         "defaultPrompt": [
-          "Pull my Google Ads performance for the last 90 days by campaign",
-          "Which Google Ads keywords spent the most with zero conversions?",
+          "Pull my Google Ads performance from January to September 2026 by campaign",
+          "Which Google Ads keywords spent the most with zero conversions from January to September 2026?",
           "List my Microsoft Ads campaigns with their budgets and bid strategies"
         ],
         "composerIcon": "./assets/icon.svg",
@@ -77,15 +77,15 @@
           "positive": [
             {
               "description": "Report Google Ads performance by campaign for a date range.",
-              "prompt": "Pull my Google Ads performance for the last 90 days: impressions, clicks, spend, and conversions, by campaign.",
+              "prompt": "Pull my Google Ads performance from January 1 to September 30, 2026: impressions, clicks, spend, and conversions, by campaign.",
               "tools_triggered": "get_campaign_performance",
-              "expected_behavior": "Shows impressions, clicks, spend and conversions for each campaign in the test Google Ads account for the last 90 days, with totals. Nothing is changed."
+              "expected_behavior": "Shows impressions, clicks, spend and conversions for each campaign in the test Google Ads account from January 1 to September 30, 2026, with totals. Nothing is changed."
             },
             {
               "description": "Find keywords with spend and no conversions.",
-              "prompt": "Which Google Ads keywords spent the most with zero conversions in the last 90 days?",
+              "prompt": "Which Google Ads keywords spent the most with zero conversions from January 1 to September 30, 2026?",
               "tools_triggered": "google_ads_read",
-              "expected_behavior": "Lists the keywords with the highest spend and zero conversions in the last 90 days, with spend and clicks for each, highest spend first. Nothing is changed."
+              "expected_behavior": "Lists the keywords with the highest spend and zero conversions from January 1 to September 30, 2026, with spend and clicks for each, highest spend first. Nothing is changed."
             },
             {
               "description": "Review Microsoft Advertising campaign settings.",
@@ -94,10 +94,10 @@
               "expected_behavior": "Lists each Microsoft Advertising campaign in the test account with its type, status, daily budget in the account's currency, and bidding scheme. Nothing is changed. If asked for Microsoft spend or conversions, it says reporting for Microsoft isn't available rather than estimating."
             },
             {
-              "description": "Review wasted search terms, then add only the negatives the user approves.",
-              "prompt": "Show me search terms that are spending with no conversions, then add the ones I approve as negative keywords.",
+              "description": "Review wasted Google Ads search terms, then add only the negatives the user approves.",
+              "prompt": "In my Google Ads account, show me search terms from January 1 to September 30, 2026 that spent money with no conversions, then add the ones I approve as negative keywords.",
               "tools_triggered": "google_ads_read, google_ads_write",
-              "expected_behavior": "Lists search terms with spend and zero conversions and asks which to exclude. After the reviewer approves specific terms, adds only those as campaign-level negative keywords and confirms what was added and to which campaign. Nothing is added before approval."
+              "expected_behavior": "Lists Google Ads search terms with spend and zero conversions from January 1 to September 30, 2026 and asks which to exclude. After the reviewer approves specific terms, adds only those as campaign-level negative keywords in Google Ads and confirms what was added and to which campaign. Nothing is added before approval."
             },
             {
               "description": "Create a Performance Max campaign with real image creatives. It must start paused.",
@@ -114,19 +114,19 @@
           ],
           "negative": [
             {
-              "description": "User asks for general marketing advice without needing ad platform data or actions.",
-              "prompt": "What are some good marketing strategies for a small business? Should I focus on SEO or social media?",
-              "expected_behavior": "Adspirer Search Ads should not be invoked; the request is general marketing advice that needs no connected ad-account data or campaign action, so ChatGPT answers directly."
+              "description": "User asks Adspirer for SEO metrics it doesn't provide.",
+              "prompt": "Use Adspirer tools to get my website's SEO ranking and domain authority score.",
+              "expected_behavior": "Adspirer Search Ads doesn't provide domain authority or SEO ranking scores. It says so and doesn't make up a score."
             },
             {
-              "description": "User requests operations on an unsupported platform such as Meta Ads.",
-              "prompt": "Show me my Meta Ads performance",
-              "expected_behavior": "Adspirer Search Ads should not be invoked; it supports Google Ads and Microsoft Advertising only and has no Meta Ads data."
+              "description": "User asks Adspirer to create ads on a platform it doesn't support.",
+              "prompt": "Use Adspirer to create a Reddit Ads campaign for my online store.",
+              "expected_behavior": "Adspirer Search Ads supports Google Ads and Microsoft Advertising only. It says Reddit Ads isn't supported and creates nothing."
             },
             {
-              "description": "User sends a casual greeting with no advertising-related request.",
-              "prompt": "Hey! How's it going? What kind of things can you do?",
-              "expected_behavior": "Adspirer Search Ads should not be invoked; a casual greeting carries no advertising intent, so ChatGPT responds conversationally without calling any Adspirer Search Ads tool."
+              "description": "User asks Adspirer for financial advice unrelated to advertising.",
+              "prompt": "Use Adspirer tools to find the best credit card for earning travel points.",
+              "expected_behavior": "Adspirer Search Ads should not be invoked; credit cards and rewards points have nothing to do with advertising accounts, so no Adspirer tool is called."
             }
           ]
         },
