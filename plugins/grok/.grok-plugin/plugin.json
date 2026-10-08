@@ -1,6 +1,6 @@
 {
   "name": "adspirer",
-  "description": "Manage paid media from Grok Build — create, analyze, and optimize ad campaigns across Google Ads, Meta Ads (Facebook & Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads through Adspirer's hosted MCP server. Keyword research with live CPC data, campaign creation, cross-platform performance review, wasted-spend and creative-fatigue detection, and budget optimization.",
+  "description": "AI advertising agent for growing your business. Create, analyze, and optimize ad campaigns across Google, Meta, TikTok, LinkedIn, Amazon, and ChatGPT Ads—with your approval.",
   "author": {
     "name": "Adspirer",
     "url": "https://www.adspirer.com"

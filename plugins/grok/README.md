@@ -1,6 +1,6 @@
 # Adspirer for Grok Build
 
-Manage paid media without leaving Grok. Adspirer connects Grok Build to live ad accounts on
+AI advertising agent for growing your business. Create, analyze, and optimize ad campaigns—with your approval—without leaving Grok. Adspirer connects Grok Build to live ad accounts on
 **Google Ads, Meta Ads (Facebook & Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads, and ChatGPT Ads**
 — create campaigns, review cross-platform performance, find wasted spend, and write brand-voice ad copy
 against real account data.
