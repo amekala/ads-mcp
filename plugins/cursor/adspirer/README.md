@@ -51,11 +51,42 @@ Audit my conversion tracking before I launch anything.
 | ChatGPT Ads | Campaigns, ad groups, creative assets, chat-card ads, and reporting |
 | Optimization | Wasted-spend analysis, budget pacing, creative fatigue, and actionable recommendations |
 
+## Skills
+
+| Skill | What it does |
+| --- | --- |
+| `adspirer-agent` | Safety rules, evidence labeling, and which skill to load |
+| `adspirer-mcp` | How to call the MCP hub, including the conversion-audit account bug |
+| `adspirer-setup` | Brand workspace, including business type and test-account checks |
+| `adspirer-launch` | Plan a paused campaign, and the only path that turns spend on |
+| `adspirer-optimize` | Waste, pacing watch, and a review table before several edits |
+| `adspirer-performance-review` | Cross-channel scorecard. Read-only |
+| `adspirer-dashboard` | Charts from those same numbers. Read-only |
+| `adspirer-digest` | Email or Slack draft. Sends only after a fresh yes |
+| `adspirer-ads-manager-sign-in` | User signs into each ads manager in the agent browser. No passwords in chat |
+| `adspirer-ads-manager-browser` | Read-only conversion check in each ads manager's own UI |
+| `adspirer-keywords` | Keyword ideas, search terms, and negative candidates |
+| `adspirer-creative` | Headlines, descriptions, primary text, creative fatigue |
+| `adspirer-google-ads` | Search, Performance Max, Demand Gen, YouTube, Display |
+| `adspirer-meta-ads` | Facebook and Instagram, including pixel versus Conversions API |
+| `adspirer-tiktok-ads` | In-feed video, Spark Ads, carousel, app promotion |
+| `adspirer-linkedin-ads` | Sponsored content and lead-gen forms |
+| `adspirer-amazon-ads` | Sponsored Products, Brands, and Display |
+| `adspirer-microsoft-ads` | Microsoft Advertising. No performance report unless the live catalog has one |
+| `adspirer-chatgpt-ads` | Ads inside ChatGPT |
+| `adspirer-google-analytics` | GA4 as context, never added to ad conversions |
+| `adspirer-search-console` | Organic queries as context for paid search |
+| `adspirer-tag-manager` | Inspect tags. Publishing the container is a separate yes |
+| `adspirer-competitors` | Public competitor ads. No estimated spend |
+| `adspirer-docs` | Adspirer pricing, quotas, and how to connect an account |
+
 ## Included guidance
 
-The plugin includes focused skills for setup, campaign launches, optimization, performance
-reviews, creative, each supported ad platform, and the Adspirer MCP call contract. It also ships
-a performance-marketing subagent that can use the same live tools with brand context.
+The plugin includes the skills above, rules for the brand workspace, and a performance-marketing
+subagent that can use the same live tools with brand context. Grok Build installs the same skills
+from its own package. On any host that can hand over a browser, the user signs into each ads
+manager themselves. The agent never asks for a password or a 2FA code. A host with no controllable
+browser uses the Adspirer API instead.
 
 The hosted runtime is the source of truth for tool names and schemas. The plugin teaches the
 agent how to discover the current tool surface instead of hardcoding every operation.

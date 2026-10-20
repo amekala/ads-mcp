@@ -33,17 +33,27 @@ Then run `/adspirer:setup` to bootstrap a brand workspace in the current folder.
 |---|---|
 | `adspirer-agent` | Core agent behavior — how to plan, confirm, and report on paid-media work |
 | `adspirer-mcp` | The MCP call contract: which tools are direct and which go through a platform router |
-| `adspirer-setup` | Bootstraps the brand workspace on first run |
-| `adspirer-launch` | Plans and launches a new campaign across one or several platforms |
-| `adspirer-optimize` | Finds and fixes wasted spend — negative keywords, audience exclusions, budget shifts |
-| `adspirer-performance-review` | Cross-channel reporting and KPI comparison |
+| `adspirer-setup` | Bootstraps the brand workspace on first run, including business type |
+| `adspirer-launch` | Plans a paused campaign. Enabling or raising spend is a separate yes |
+| `adspirer-optimize` | Wasted spend, a read-only threshold watch, and a review table before several edits |
+| `adspirer-performance-review` | Cross-channel reporting and KPI comparison. Read-only |
+| `adspirer-dashboard` | Charts from those numbers. Read-only |
+| `adspirer-digest` | Email or Slack draft. Sends only after a fresh yes |
+| `adspirer-ads-manager-sign-in` | You sign into each ads manager on this computer yourself. The agent never sees the password |
+| `adspirer-ads-manager-browser` | Read-only conversion check in each ads manager, after that sign-in |
+| `adspirer-keywords` | Keyword ideas, search terms, and negative candidates |
 | `adspirer-creative` | Writes and refreshes headlines, descriptions, and primary text |
 | `adspirer-google-ads` | Search, Performance Max, Demand Gen, YouTube, and Display |
 | `adspirer-meta-ads` | Image, video, carousel, and lead-gen campaigns on Facebook and Instagram |
 | `adspirer-tiktok-ads` | In-feed video, Spark Ads, carousel, app promotion, and conversions |
 | `adspirer-linkedin-ads` | Sponsored content, single image, video, carousel, text, and lead-gen forms |
 | `adspirer-amazon-ads` | Sponsored Products, Sponsored Brands, and Sponsored Display |
+| `adspirer-microsoft-ads` | Microsoft Advertising campaigns and budgets. Metrics only if the live catalog has a report |
 | `adspirer-chatgpt-ads` | Ads that appear inside ChatGPT responses |
+| `adspirer-google-analytics` | GA4 as context, kept separate from ad conversions |
+| `adspirer-search-console` | Organic queries as context for paid search |
+| `adspirer-tag-manager` | Inspect tags. Publishing is a separate yes |
+| `adspirer-competitors` | Public competitor ads from a domain you name. No estimated spend |
 | `adspirer-docs` | Answers questions about Adspirer itself — pricing, quotas, connecting accounts |
 
 ## Agent

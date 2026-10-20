@@ -33,6 +33,12 @@ Meta refuses to create an ad without a Facebook `page_id` and an `http(s)` landi
 page before you start building; asking for it halfway through a build wastes the user's time.
 `list_meta_pixels` and `list_meta_instagram_accounts` find the other ids you'll want.
 
+Meta events arrive from the browser pixel, the Conversions API, or both. A pixel that looks idle
+does not mean server events stopped, and the reverse is also true. Dedup and event match quality
+are per event. `audit_conversion_tracking` covers Meta; the UI read is
+`adspirer-ads-manager-browser`. Don't pause an ad set for "no conversions" until you've checked
+which of those sources the optimization event actually uses.
+
 ## Structure: one campaign, several ad sets
 
 Targeting lives on the **ad set**, not the campaign. When a user wants to test three audiences,

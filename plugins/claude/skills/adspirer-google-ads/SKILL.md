@@ -43,14 +43,38 @@ intended. Then tell the user it is paused and ask whether to resume.
 Any tool that touches a keyword, a negative keyword, or an ad needs an `ad_group_id`. Run
 `get_campaign_structure` to get them. Do not pass a campaign id where an ad group id is expected.
 
-For keyword research, `research_keywords` returns volume and competition from Google's own planner.
-`analyze_search_terms` shows what people actually typed — that's where the negatives come from.
+For a keyword plan, search-term mining, or negative candidates, load `adspirer-keywords`.
+`research_keywords` is planner volume. `analyze_search_terms` is what people actually typed.
+Keep those two separate, and don't pad a short planner result. A brand query in a non-brand
+campaign is a routing negative, not waste.
 
 ## Bidding
 
 Don't set a target CPA or ROAS on a campaign with no conversion history; it has nothing to learn
 from and will underdeliver. Start with maximize clicks or manual CPC, let conversions accumulate,
 then move to a target. `references/bidding.md` has the thresholds.
+
+## Conversion actions
+
+People send Google conversions in more than one way: a website tag, a Google tag through Tag
+Manager, a GA4 import, an offline or click import (Conversions API, a CRM, an API upload), an app
+SDK, calls, or a lead form. Judge each action by its own source.
+
+- A tag chip that says Urgent, or an empty Data manager, does not mean tracking is broken. Those
+  signals apply to tag-based actions. "Import from clicks" is judged by the last conversion date
+  and import quality, not by a listed connection.
+- Bidding uses **primary** actions. Secondary actions still show up in All conv. A wide gap
+  between Conversions and All conv. means most of the activity is invisible to bidding. Primary
+  versus secondary is set in the Google Ads UI, not through Adspirer.
+- `audit_conversion_tracking` is the API check. It looks back from today. No delivery in that
+  window is not a broken tag. With several Google accounts connected it can ignore `customer_id`
+  — retry once, then the error catalog in `adspirer-mcp`.
+- When the API can't show the method, read the ads UI with `adspirer-ads-manager-browser`. Tag
+  configuration is `adspirer-tag-manager`. GA4 key events are a different number
+  (`adspirer-google-analytics`). Don't swap them.
+
+Don't launch Performance Max on tracking you haven't actually checked. A tag warning alone is not
+that check. See `references/campaign-types.md`.
 
 ## Reading performance
 

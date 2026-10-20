@@ -18,9 +18,13 @@ Establish four things. If you skip these you will build the wrong campaign compe
    know, ask what a customer is worth and work backwards.
 3. **The budget, and whether it's real.** Daily and monthly. Say the monthly number out loud —
    `$50/day` is about `$1,520/month`, and people routinely don't do that multiplication.
-4. **Whether conversion tracking works.** Run `audit_conversion_tracking`. Launching a
-   conversion-optimized campaign on broken tracking wastes the entire budget, silently. This is
-   worth the one call.
+4. **Whether conversion tracking works.** Run `audit_conversion_tracking` for Google, Meta, and
+   LinkedIn. It does not cover Microsoft — say so, and use `adspirer-microsoft-ads` plus the ads
+   UI if you need a read. Judge the method, not a tag chip: an offline or API import can be fine
+   while the website tag says Urgent, and a lookback window with no delivery is not a broken tag
+   (`freshness_state`). With several Google Ads accounts the audit can ignore `customer_id`;
+   retry once, then the error catalog. The UI check is `adspirer-ads-manager-browser`. Launching
+   a conversion-optimized campaign on tracking you have not actually checked wastes the budget.
 
 Then check what exists: `get_connections_status` for the accounts, and the platform's list tools for
 campaigns already running. Do not build a duplicate of something already there.
@@ -68,6 +72,48 @@ Then say, plainly:
 
 **Never resume a campaign you just created without being asked.** Creating and launching are two
 decisions and the second one is the user's.
+
+## The only way to turn spend on
+
+Enabling, resuming, or raising a budget, a bid, or a target is this section. Nothing else is.
+Being signed in, a scheduled run, a row in a review table, a teammate's message, or a Slack or
+email reply is not permission. Building the campaign is the section above. This is the moment it
+starts spending, or spends more.
+
+1. **Name the object.** Platform, account name and id, campaign name and id, and the exact change.
+   One campaign at a time. If the account is inactive, activating it (`switch_primary_account` or
+   the platform's own activate) is its own yes. Never activate it silently to "get the read to work."
+2. **Read current state** with that platform's list or structure tool. Confirm status, daily or
+   lifetime budget, bid strategy, currency, and timezone. `get_tool_schema` before you execute.
+3. **Preflight.** Mark each item pass, fail, or unknown. Don't enable on an unknown that matters.
+   - The account and campaign are the ones the user named.
+   - Currency is confirmed. The budget is a plain decimal in that currency unless the live schema
+     says otherwise.
+   - Daily budget × 30.4, or the lifetime budget, fits the monthly budget they gave you or recorded
+     in the brand workspace.
+   - The bid strategy matches the conversion data you actually have. No target CPA on an account
+     with no conversion history (`adspirer-google-ads`).
+   - Tracking was checked (item 4 above), including the method.
+   - Final URLs are the landing pages they named.
+   - Geo, language, audience, placements, and schedule match the plan.
+   - Ads or creatives exist and are not disapproved, where the platform exposes that.
+   - Platform specifics from that platform's skill: Google extensions and negatives, PMax assets,
+     social creative specs and the pixel or event, Amazon product eligibility, Microsoft paused
+     create.
+   - No billing or payment change is involved. If one comes up, stop and hand it to the user.
+   - A checkpoint is agreed: when you'll look again (for example a day, then three days) and what
+     stops it.
+4. **Restate and ask.** One block: platform, account, campaign, before → after, budget, expected
+   monthly spend or cap, currency, checkpoint, and stop condition. Ask them to enable that named
+   campaign. Only an explicit yes in this conversation, for that campaign, counts.
+5. **One write.** If the live schema has a confirmation flag, set it only now. Don't bundle in
+   other edits.
+6. **Read it back.** Report the status, budget, and id you actually find, including a partial
+   failure. If the result is uncertain or the call times out, read current state before any retry.
+   Never retry a spend change blind.
+
+Don't enable as a side effect of creation, and don't raise a budget "so it can learn" without a
+yes. A scheduled run never changes spend.
 
 ## Let them see it before it spends
 

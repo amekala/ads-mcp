@@ -9,7 +9,9 @@ once.
    Reuse them. Asking the user to upload things they've already uploaded is a bad experience.
 2. **`audit_conversion_tracking`** — PMax optimizes toward conversions. If tracking is broken it
    optimizes toward nothing and spends the full budget doing it. Do not launch PMax on broken
-   tracking; say why.
+   tracking; say why. Judge the method, not the tag chip: an import can be healthy while the
+   website tag says Urgent, and a window with no delivery is not proof of a break. When the API
+   audit can't name the account or the source, read the ads UI (`adspirer-ads-manager-browser`).
 3. **`validate_and_prepare_assets`** — validates dimensions and formats and returns a bundle.
 
 > The bundle **expires after one hour.** If more than an hour passes before you create the campaign,

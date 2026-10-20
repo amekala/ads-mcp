@@ -191,3 +191,15 @@ the right default for a performance review; daily is for accounts spending enoug
    revisit or send to someone.
 3. **Ask before publishing anything that leaves the conversation.** A shared page is outward-facing.
 4. **If the host can't do it, say so once and move on.** A markdown table is a fine answer.
+
+<!-- BEGIN:GROK -->
+
+---
+
+## Example: handing over the browser
+
+The procedure is `adspirer-ads-manager-sign-in`. On this host the handoff tool is
+`request_box_help`. Pass the login page as the url, with reason auth, on that ads domain. If
+sign-in redirects, name the login host as well (for example `accounts.google.com`). When the user
+hands the screen back, confirm the account from a screenshot. Don't click login, consent, or 2FA.
+<!-- END:GROK -->

@@ -33,6 +33,14 @@ Waste has a few shapes and they need different fixes:
 converts nothing very often converts fine and reports nothing. Pausing it would destroy a working
 campaign — this mistake is common and expensive.
 
+Judge the method, not the tag chip. Zero conversions can be an import that stopped, a secondary
+action bidding ignores, or a window with no spend. The audit looks back from today. If
+`freshness_state` shows no delivery in that window, say so — it is not proof the tag is dead. A
+website-tag warning does not condemn an offline or API import. When the API can't show the source,
+or it ignores `customer_id` (retry once, then the error catalog), check the ads manager with
+`adspirer-ads-manager-browser` before you pause anything. Microsoft has no audit tool;
+`adspirer-microsoft-ads`.
+
 **Check the volume.** Ten clicks and no conversions is not evidence. Roughly, you want at least
 3× the target CPA in spend, or ~100 clicks, before you call something a loser.
 
@@ -76,6 +84,80 @@ Compare spend so far against elapsed days in the period.
 
 Google can overspend the daily budget by up to 2× on any given day, and settles over the month.
 A single-day overspend is not a bug — say so before someone panics.
+
+## A spend check, without changing anything
+
+Use this when the user asks whether an account is overspending or broken, or when a scheduled run
+is only supposed to watch. It proposes. It never pauses, never edits a budget or bid, and never
+activates an account.
+
+Thresholds come from the brand workspace when the user has set them. Otherwise:
+
+- Pacing: month-to-date spend over 110% or under 80% of (monthly budget × elapsed days ÷ days in
+  the month).
+- A day over 150% of the daily budget, or of the 7-day average.
+- CPA over 130% of target, or ROAS under 70% of target, across the last 7 days. Say where the
+  target came from: the user, the workspace, or a tool default such as `analyze_wasted_spend`'s
+  2.0.
+- Conversions at 0 for a day when the 14-day daily average is 3 or more. Treat that as a possible
+  tracking break, then check method and freshness before you call it one.
+- Frequency over 4 in 7 days, or CTR down about 40% versus the prior 7 days. That's creative
+  fatigue — `adspirer-creative`.
+- A campaign limited by budget, with disapproved ads, or paused when the user didn't pause it.
+
+**Quiet floor.** Don't fire a rule under about 100 clicks (or 10,000 impressions for awareness),
+under 5 conversions for a CPA or ROAS rule, or under 50 in account currency for the window.
+Yesterday may still be incomplete. Never fire a CPA rule on yesterday alone.
+
+Pull yesterday, the last 7 days, and month to date, with the dates written out. Google and Meta
+use their direct performance tools. Other platforms use the performance tool `list_tools` returns.
+Microsoft has no performance report unless that list has grown one — budgets and status only,
+metrics "not available". If a read is `no_data` and the freshness window ends in the past, say the
+data is stale since that date. Don't turn staleness into a threshold breach.
+
+`explain_performance_anomaly` (and `diagnose_funnel`, which is direct and read-only) can suggest a
+cause. Treat what they say as a hypothesis, not a finding, until the account numbers agree.
+
+If nothing crossed a line and the user asked, one line is enough. If you are running unattended,
+stay quiet. If something fired: one line per alert with severity, platform, account, campaign,
+value versus limit, window, and source. Then the smallest fix. Several fixes go through the review
+table below. Anything that increases spend goes through `adspirer-launch`. Email or Slack goes
+through `adspirer-digest`, and only after a yes.
+
+## Several changes at once
+
+When you are proposing two or more changes, put them in one review table before anything is
+written. One row per atomic change: platform, account name and id, level, resource name and id,
+the change, before, after, currency, estimated impact (labeled as an estimate), reason, evidence
+(metric, date range, source), and whether it is reversible.
+
+- Names and ids come from a read. Never guess them.
+- Budgets and bids are plain decimals in the account currency unless the live schema says
+  otherwise.
+- If the evidence is older than the user asked for, state the window `freshness_state` actually
+  covers.
+- Search negatives: read existing negatives first and drop duplicates. A brand term in a non-brand
+  campaign is a routing negative, not waste. Load `adspirer-keywords`.
+- If `analyze_wasted_spend` supplied the figure, say where its target ROAS came from (account
+  goal, a 90-day average, or the tool default).
+- Any row that increases spend or enables a campaign is marked for `adspirer-launch`. Don't apply
+  it from this table.
+- Order: negatives and exclusions, then bids, copy, or creative, then pauses, then removals.
+  Removals say what cannot be undone.
+- If `list_tools` has no tool for that change, the row is for the user to apply in the platform UI.
+
+The table lives in the conversation. If a spreadsheet tool is already connected, or they asked for
+a sheet, write the same columns there: one tab per review, and don't start a second workbook if
+they already have one. A filled-in cell, a comment, or someone else's edit is not approval.
+Logging a report's history in that sheet is separate, and only if they asked for it.
+
+When they say the review is done, restate the approved rows (resource, before → after) and ask
+whether to apply those N changes. Apply only after they say yes in this conversation. Then one row
+at a time, through that platform's router. If the schema has a confirmation flag, set it only now.
+Read each write back and report applied, failed, and skipped. On a timeout, read current state
+before any retry. A blank, a no, or a row edited after the yes needs a new yes.
+
+Never take that yes from Slack, email, or a comment on the sheet.
 
 ## Then verify
 
