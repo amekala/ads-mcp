@@ -18,16 +18,23 @@ name: Sync from ads-mcp
 
 on:
   schedule:
-    # 08:17 UTC (1:17am Pacific), well ahead of xAI's 7am Pacific (14:00 UTC) pin bump.
-    # It was 13:00 UTC, but GitHub starts scheduled runs late under load, and in
-    # September 2026 they started between 16:51 and 19:57 UTC, after xAI's sweep, so
-    # every change reached users a day later than planned. An off-peak minute and a
-    # ~6h margin fix that.
+    # Every 2 hours, at :17. xAI's bump job (bump-plugin-shas.yml in
+    # xai-org/plugin-marketplace) is cron "0 15 * * *" and reads this HEAD when it opens
+    # the daily PR, ~15:13 UTC.
     #
-    # This repo carries no version field, so xAI's bump advances the pin whenever this
-    # HEAD moves. That is the intent: the sync only commits when plugins/grok/ actually
-    # changes, so the pin tracks plugin changes and nothing else. See playbook §2.
-    - cron: "17 8 * * *"
+    # One daily run cannot be placed reliably ahead of that: GitHub starts this repo's
+    # schedules hours late. The 08:17 cron started between 12:10 and 17:53 UTC from
+    # 2026-09-20 to 2026-10-19 and landed after the sweep about half the time; the
+    # 13:00 cron before it started between 16:51 and 19:57. Running every 2 hours means
+    # several runs (00:17, 02:17, ...) start before 15:00 even with that delay, so
+    # anything merged to ads-mcp by the early-morning UTC runs makes that day's bump.
+    # For a same-day guarantee after a late merge, run this workflow by hand.
+    #
+    # Extra runs are free of side effects: the sync only commits when plugins/grok/
+    # actually changes. This repo carries no version field, so xAI's bump advances the
+    # pin whenever this HEAD moves, and the pin tracks plugin changes and nothing else.
+    # See playbook §2.
+    - cron: "17 */2 * * *"
   workflow_dispatch:
 
 permissions:
