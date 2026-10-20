@@ -85,7 +85,8 @@ recommendation.
 | Cut wasted spend; negative keywords; reallocate; check pacing; approve several edits | `adspirer-optimize` |
 | Turn spend on, resume a campaign, or raise a budget or bid | `adspirer-launch` |
 | Keyword ideas, search terms, negatives | `adspirer-keywords` |
-| Check tags and conversion actions in the ads manager's own UI | `adspirer-ads-manager-browser` |
+| Sign the agent-controlled browser into an ads manager | `adspirer-ads-manager-sign-in` |
+| Check tags and conversion actions in the ads manager's own UI | `adspirer-ads-manager-browser` (sign in first) |
 | Write or refresh headlines, copy, creative; fix ad fatigue | `adspirer-creative` |
 | Anything specific to one platform's fields, objectives, or limits | `adspirer-google-ads`, `adspirer-meta-ads`, `adspirer-tiktok-ads`, `adspirer-linkedin-ads`, `adspirer-amazon-ads`, `adspirer-microsoft-ads`, `adspirer-chatgpt-ads` |
 | GA4, Search Console, or Tag Manager | `adspirer-google-analytics`, `adspirer-search-console`, `adspirer-tag-manager` |

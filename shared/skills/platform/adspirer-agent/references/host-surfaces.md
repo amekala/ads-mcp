@@ -196,48 +196,10 @@ the right default for a performance review; daily is for accounts spending enoug
 
 ---
 
-## Ads manager sign-in (this computer)
+## Example: handing over the browser
 
-The browser on this computer is not the user's own browser. Connecting Adspirer at
-`https://adspirer.ai/connections` does not sign this browser into Google Ads, Meta, Microsoft
-Advertising, LinkedIn, TikTok, or Amazon. The read-only checks in `adspirer-ads-manager-browser`
-need the user to sign in once per platform, here, themselves.
-
-You never type, ask for, or store a password, a 2FA code, or a recovery code. Don't put a typed
-login form in front of them. These logins almost always need a phone prompt, a passkey, or an
-account picker, so hand over the screen instead of trying to click through it.
-
-1. One platform at a time. In one or two sentences, name the account (`get_connections_status`:
-   name and id), tell them to have their phone ready, and tell them to pick that exact ad account
-   if a picker appears.
-2. Hand them the screen already open on that platform's login page, and wait. Don't run a separate
-   "am I already signed in?" pass first. If they are already signed in, they confirm the account
-   and hand the screen back. When this host has `request_box_help`, call it with the login page
-   as the url and reason auth, on that ads domain. If sign-in redirects, name the login host too
-   (for example `accounts.google.com`). If that tool isn't available, stop and ask them to sign
-   in on a browser they control.
-3. Don't click through login, consent, or 2FA yourself. You don't receive the credential.
-4. When they hand it back, read the account name and id from the screen (header or address bar).
-   A screenshot of that screen is enough. Don't dispatch a second browser task unless the id
-   isn't visible.
-   Compare it with the connected account. If it isn't visible, open the account switcher and only
-   look. If it's the wrong account, ask them to switch, or switch only to an account they named.
-   Never accept an invite, create an account, or change billing, users, or permissions.
-5. Tell them which platforms are ready. You may note platform, account, and date in the
-   conversation or in a notes file they already asked you to keep. No credentials and no cookies.
-
-| Platform | Page to open for them |
-|---|---|
-| Google Ads | `https://ads.google.com/aw/overview` |
-| Meta Ads Manager / Events Manager | `https://business.facebook.com` |
-| Microsoft Advertising | `https://ads.microsoft.com` |
-| LinkedIn Campaign Manager | `https://www.linkedin.com/campaignmanager` |
-| TikTok Ads Manager | `https://ads.tiktok.com` |
-| Amazon Ads | `https://advertising.amazon.com` |
-
-For ChatGPT Ads, open the ads manager URL the user or Adspirer gives you. Never guess one.
-
-If a later check lands on a login page, the session expired. Stop, name the platform, and repeat
-the handoff. If a platform blocks this browser, or needs a hardware key they can't use here, say
-so and mark those checks not available.
+The procedure is `adspirer-ads-manager-sign-in`. On this host the handoff tool is
+`request_box_help`. Pass the login page as the url, with reason auth, on that ads domain. If
+sign-in redirects, name the login host as well (for example `accounts.google.com`). When the user
+hands the screen back, confirm the account from a screenshot. Don't click login, consent, or 2FA.
 <!-- END:GROK -->

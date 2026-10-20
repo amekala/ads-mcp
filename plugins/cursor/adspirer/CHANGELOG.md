@@ -7,7 +7,7 @@
 - Measurement: don't call tracking broken from a tag chip or an empty Data manager; judge each conversion action by its own source. `audit_conversion_tracking` can ignore `customer_id` when several Google Ads accounts are connected ([amekala/ads-mcp#41](https://github.com/amekala/ads-mcp/issues/41)) — retry once, then switch the primary account with a yes or read the Google Ads UI.
 - Setup asks business type and flags test accounts. Launch is the only path that enables a campaign or raises spend. Optimize can watch thresholds without writing, and reviews several edits in one table before a yes.
 - Evidence rules: platform, account, date range, and currency on every number; never sum conversions across platforms or currencies; a missing value is "not available", not 0; honor cached-data freshness.
-- Grok-only: the user signs into each ads manager on the bot's computer themselves. The agent never takes a password or a 2FA code.
+- Ads-manager sign-in is its own skill on every host. The user takes control of the agent browser and signs in themselves. The agent never takes a password or a 2FA code. Hosts with no controllable browser fall back to the API. Grok's `request_box_help` is only an example of that handoff.
 
 ## 1.0.2 - 2026-09-29
 

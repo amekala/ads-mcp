@@ -63,6 +63,7 @@ Audit my conversion tracking before I launch anything.
 | `adspirer-performance-review` | Cross-channel scorecard. Read-only |
 | `adspirer-dashboard` | Charts from those same numbers. Read-only |
 | `adspirer-digest` | Email or Slack draft. Sends only after a fresh yes |
+| `adspirer-ads-manager-sign-in` | User signs into each ads manager in the agent browser. No passwords in chat |
 | `adspirer-ads-manager-browser` | Read-only conversion check in each ads manager's own UI |
 | `adspirer-keywords` | Keyword ideas, search terms, and negative candidates |
 | `adspirer-creative` | Headlines, descriptions, primary text, creative fatigue |
@@ -83,8 +84,9 @@ Audit my conversion tracking before I launch anything.
 
 The plugin includes the skills above, rules for the brand workspace, and a performance-marketing
 subagent that can use the same live tools with brand context. Grok Build installs the same skills
-from its own package. Signing into an ads manager on the agent's computer is documented only for
-hosts where the user can take over that computer. The agent never asks for a password or a 2FA code.
+from its own package. On any host that can hand over a browser, the user signs into each ads
+manager themselves. The agent never asks for a password or a 2FA code. A host with no controllable
+browser uses the Adspirer API instead.
 
 The hosted runtime is the source of truth for tool names and schemas. The plugin teaches the
 agent how to discover the current tool surface instead of hardcoding every operation.

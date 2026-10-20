@@ -39,7 +39,8 @@ Then run `/adspirer:setup` to bootstrap a brand workspace in the current folder.
 | `adspirer-performance-review` | Cross-channel reporting and KPI comparison. Read-only |
 | `adspirer-dashboard` | Charts from those numbers. Read-only |
 | `adspirer-digest` | Email or Slack draft. Sends only after a fresh yes |
-| `adspirer-ads-manager-browser` | Read-only conversion check in each ads manager. You sign in on this computer yourself |
+| `adspirer-ads-manager-sign-in` | You sign into each ads manager on this computer yourself. The agent never sees the password |
+| `adspirer-ads-manager-browser` | Read-only conversion check in each ads manager, after that sign-in |
 | `adspirer-keywords` | Keyword ideas, search terms, and negative candidates |
 | `adspirer-creative` | Writes and refreshes headlines, descriptions, and primary text |
 | `adspirer-google-ads` | Search, Performance Max, Demand Gen, YouTube, and Display |

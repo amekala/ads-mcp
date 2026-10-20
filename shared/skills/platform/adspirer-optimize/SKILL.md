@@ -146,9 +146,10 @@ the change, before, after, currency, estimated impact (labeled as an estimate), 
   Removals say what cannot be undone.
 - If `list_tools` has no tool for that change, the row is for the user to apply in the platform UI.
 
-The table lives in the conversation. A spreadsheet is optional, and only when they asked for one
-or a spreadsheet tool is already connected. Same columns. A filled-in cell, a comment, or someone
-else's edit is not approval.
+The table lives in the conversation. If a spreadsheet tool is already connected, or they asked for
+a sheet, write the same columns there: one tab per review, and don't start a second workbook if
+they already have one. A filled-in cell, a comment, or someone else's edit is not approval.
+Logging a report's history in that sheet is separate, and only if they asked for it.
 
 When they say the review is done, restate the approved rows (resource, before → after) and ask
 whether to apply those N changes. Apply only after they say yes in this conversation. Then one row
@@ -157,12 +158,6 @@ Read each write back and report applied, failed, and skipped. On a timeout, read
 before any retry. A blank, a no, or a row edited after the yes needs a new yes.
 
 Never take that yes from Slack, email, or a comment on the sheet.
-
-<!-- BEGIN:GROK -->
-If this session already has a spreadsheet the user uses for reviews, write the table there, one
-tab per review, and share the link. Don't start a second workbook. Logging a report's history is
-separate, and only if they asked for it.
-<!-- END:GROK -->
 
 ## Then verify
 
