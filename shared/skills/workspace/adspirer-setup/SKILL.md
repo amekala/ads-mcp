@@ -31,6 +31,14 @@ Call `get_connections_status` directly.
   authenticate in the browser. If it isn't listed, install the plugin from the xAI
   marketplace with `/plugin`, then run `/adspirer-setup` again."
 <!-- END:GROK -->
+<!-- BEGIN:HERMES -->
+  "The Adspirer MCP server isn't available in this Hermes session.
+  1. Check the plugin with `hermes plugins list`.
+  2. Enable it with `hermes plugins enable adspirer`.
+  3. Confirm Node.js 20.18.1 or newer and `npx` are available on PATH.
+  4. Start a new session or run `/reload-mcp`; the first connection opens the Adspirer sign-in page.
+  5. Complete sign-in, return to Hermes, then load `adspirer-setup` again."
+<!-- END:HERMES -->
 - **If OAuth is triggered**: tell the user a browser window is opening for authentication. Wait for them to confirm, then retry.
 - **If no platforms are connected**: tell the user to connect ad accounts at https://adspirer.ai/connections, then run setup again.
 

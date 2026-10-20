@@ -125,6 +125,11 @@ can see, pause, and edit, and the result arrives where they already are.
 
 Good candidates: a Monday performance review, a mid-month pacing check, an alert when CPA passes a
 ceiling, a watch on a competitor's landing page, a reminder before budgets reset.
+<!-- BEGIN:HERMES -->
+
+On Hermes that's the `cronjob` tool. Attach the relevant Adspirer skill and set the brand project's
+work directory so the run can read `{{CONTEXT_FILE}}` and `STRATEGY.md`.
+<!-- END:HERMES -->
 
 <!-- BEGIN:CHATGPT -->
 ChatGPT calls them **scheduled tasks**. They run whether or not the user is online and notify by push

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "adspirer",
+  "version": "1.1.0",
+  "description": "Create, analyze, and optimize advertising campaigns across Google Ads, Meta Ads, TikTok Ads, LinkedIn Ads, Amazon Ads, ChatGPT Ads, and Microsoft Advertising.",
+  "author": {
+    "name": "Adspirer",
+    "email": "support@adspirer.com",
+    "url": "https://www.adspirer.com"
+  },
+  "homepage": "https://www.adspirer.com",
+  "repository": "https://github.com/Adspirer/adspirer-hermes-plugin",
+  "license": "MIT",
+  "keywords": [
+    "advertising",
+    "performance-marketing",
+    "campaign-management",
+    "mcp"
+  ]
+}

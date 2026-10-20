@@ -1,0 +1,119 @@
+# DEPLOYED FILE — this is the canonical copy, but it does not run from this repo.
+#
+# It lives at .github/workflows/sync-from-ads-mcp.yml inside
+# Adspirer/adspirer-hermes-plugin, the repo the Hermes plugin catalog pins
+# (NousResearch/hermes-agent plugin-catalog/adspirer.yaml). Same pull pattern as the Cursor,
+# Grok, and Claude mirrors next to this file: the mirror clones the public ads-mcp tree with
+# its own GITHUB_TOKEN, so there is no cross-repo credential to create or rotate.
+#
+# Before this existed the Hermes repo was a hand-made copy and stayed on its 2026-09-20 skills
+# (still asking for the removed `intent` parameter) while every other host moved on.
+#
+# GITHUB_TOKEN cannot write under .github/workflows/, so the sync never touches .github;
+# this file is updated by hand. Edit it here, then copy it over. The mirror's own
+# validate-plugin.yml runs `hermes plugins validate` on every push, including this job's.
+#
+# The catalog entry pins a sha and carries a version, and moving it is a pull request to
+# NousResearch/hermes-agent. When you ship a user-visible change in plugins/hermes, bump the
+# version in plugin.json and add a CHANGELOG entry in ads-mcp; this job carries both over.
+name: Sync from ads-mcp
+
+on:
+  schedule:
+    # 08:17 UTC daily, an off-peak minute: GitHub starts top-of-hour schedules late
+    # under load.
+    - cron: "17 8 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-from-ads-mcp
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch the plugin tree from ads-mcp
+        run: |
+          set -euo pipefail
+          git clone --depth=1 https://github.com/amekala/ads-mcp.git /tmp/src
+          test -d /tmp/src/plugins/hermes || {
+            echo "::error::plugins/hermes is missing upstream — refusing to wipe the mirror"
+            exit 1
+          }
+          echo "UPSTREAM_SHA=$(git -C /tmp/src rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - name: Validate before adopting
+        run: |
+          # A mirror that publishes a broken package is worse than a stale one: the catalog
+          # installs whatever sha it pins here. Fail loudly instead of shipping it.
+          python3 - <<'PY'
+          import json, re, sys, pathlib
+          root = pathlib.Path("/tmp/src/plugins/hermes")
+          errors = []
+          manifest_path = root / "plugin.json"
+          if not manifest_path.is_file():
+              print("::error::plugin.json is missing", file=sys.stderr)
+              sys.exit(1)
+          manifest = json.loads(manifest_path.read_text())
+          if manifest.get("name") != "adspirer":
+              errors.append(f"name must be 'adspirer' to match the catalog entry, got {manifest.get('name')!r}")
+          if not re.fullmatch(r"\d+\.\d+\.\d+", str(manifest.get("version", ""))):
+              errors.append("missing or non-X.Y.Z 'version': the catalog entry carries it")
+          for field in ("description", "author", "homepage", "repository", "license"):
+              if not manifest.get(field):
+                  errors.append(f"missing required field {field!r}")
+          mcp = json.loads((root / "mcp.json").read_text()) if (root / "mcp.json").is_file() else {}
+          server = mcp.get("mcpServers", {}).get("adspirer", {})
+          args = server.get("args", [])
+          if server.get("type") != "stdio" or "https://mcp.adspirer.com/mcp" not in args \
+                  or not any(re.fullmatch(r"mcp-remote@\d+\.\d+\.\d+", a) for a in args):
+              errors.append("mcp.json must bridge to https://mcp.adspirer.com/mcp through an exactly pinned mcp-remote")
+          for required in ("README.md", "LICENSE", "SECURITY.md", "CHANGELOG.md", "assets/icon.png"):
+              if not (root / required).is_file():
+                  errors.append(f"{required} is missing")
+          skills = list((root / "skills").glob("*/SKILL.md"))
+          if not skills:
+              errors.append("no skills found — the tree looks empty")
+          for skill in skills:
+              if re.search(r"Cursor Settings|\.cursor/", skill.read_text()):
+                  errors.append(f"{skill.relative_to(root)} carries Cursor-specific setup")
+          if errors:
+              for e in errors:
+                  print(f"::error::{e}", file=sys.stderr)
+              sys.exit(1)
+          print("upstream tree OK — adspirer", manifest.get("version"), f"({len(skills)} skills)")
+          PY
+
+      - name: Replace the tree
+        run: |
+          set -euo pipefail
+          # Full replacement so deletions upstream propagate. .github is preserved: it
+          # holds this workflow, the validation workflow, and CODEOWNERS.
+          find . -mindepth 1 -maxdepth 1 -not -name '.git' -not -name '.github' -exec rm -rf {} +
+          cp -R /tmp/src/plugins/hermes/. .
+          if [ -n "$(find . -path ./.git -prune -o -path ./.github -prune -o \
+                \( -name 'hooks.json' -o -name '*.sh' -o -name '*.exe' \) -print)" ]; then
+            echo "::error::the package would ship a hook or executable — refusing"
+            exit 1
+          fi
+
+      - name: Commit and push
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "already in sync with ads-mcp@${UPSTREAM_SHA} — nothing to do"
+            exit 0
+          fi
+          git commit -m "sync: adspirer from ads-mcp@${UPSTREAM_SHA}"
+          git push
+          echo "published adspirer (from ads-mcp@${UPSTREAM_SHA})"
