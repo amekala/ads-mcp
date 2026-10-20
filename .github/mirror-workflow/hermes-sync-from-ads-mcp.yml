@@ -10,8 +10,11 @@
 # (still asking for the removed `intent` parameter) while every other host moved on.
 #
 # GITHUB_TOKEN cannot write under .github/workflows/, so the sync never touches .github;
-# this file is updated by hand. Edit it here, then copy it over. The mirror's own
-# validate-plugin.yml runs `hermes plugins validate` on every push, including this job's.
+# this file is updated by hand. Edit it here, then copy it over.
+#
+# The mirror's validate-plugin.yml does NOT run on this job's commits: GitHub doesn't start
+# workflows from pushes made with GITHUB_TOKEN. So this job runs `hermes plugins validate`
+# itself, at the same pinned hermes-agent commit, before it adopts anything.
 #
 # The catalog entry pins a sha and carries a version, and moving it is a pull request to
 # NousResearch/hermes-agent. When you ship a user-visible change in plugins/hermes, bump the
@@ -90,6 +93,22 @@ jobs:
               sys.exit(1)
           print("upstream tree OK — adspirer", manifest.get("version"), f"({len(skills)} skills)")
           PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate with Hermes (the catalog's admission command)
+        run: |
+          set -euo pipefail
+          # Cloned outside the workspace: everything in it except .git and .github is
+          # replaced by the plugin tree below.
+          git init -q /tmp/hermes-agent
+          git -C /tmp/hermes-agent fetch -q --depth=1 https://github.com/NousResearch/hermes-agent.git \
+            8a92051f20e6b371c4ff1a46a5bcec7138cc4e8c
+          git -C /tmp/hermes-agent checkout -q FETCH_HEAD
+          pip install -q -e /tmp/hermes-agent
+          hermes plugins validate /tmp/src/plugins/hermes
 
       - name: Replace the tree
         run: |
