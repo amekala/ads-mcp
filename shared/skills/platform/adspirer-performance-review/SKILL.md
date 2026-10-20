@@ -28,28 +28,77 @@ instead of firing six calls and reporting five failures.
 
 ## Before you trust a single number
 
-**Verify conversion tracking.** Run `audit_conversion_tracking`. It returns a health score and
-findings across Google, Meta, and LinkedIn — pixels, CAPI, dedup, conversion actions, enhanced
-conversions, attribution.
+**Verify conversion tracking before you trust a CPA.** Run `audit_conversion_tracking` for Google,
+Meta, and LinkedIn. It does not cover Microsoft. It looks back from today. Read `freshness_state`
+on the performance pull first. If that window had no delivery, a "no conversions" finding is not
+proof the tag is broken — say the window had no delivery.
 
-If tracking is broken, every conversion metric below is fiction, and the honest answer to "how are
-my ads doing" is "I can't tell you yet, and here's why." Say that before presenting a CPA. This is
-the single most valuable thing this skill does.
+Advertisers don't all use a website tag. A GA4 import, an offline or API upload, calls, or a
+platform lead form is judged by that source: last conversion, upload health, whether the action is
+primary. A tag chip that says Urgent, or a Data manager with no source listed, only matters for
+actions that use the tag. Two primaries for the same event (tag and GA4 both counting one purchase)
+double-count. On Google, compare Conversions with All conv. — a wide gap means bidding is ignoring
+most of the activity. Primary versus secondary is set in the ads UI, not via Adspirer.
+
+If the audit ignores `customer_id` ("You have N google_ads accounts connected. Please specify..."),
+retry once, then the error catalog in `adspirer-mcp`. The UI read, when you need the method the API
+can't show, is `adspirer-ads-manager-browser`.
+
+If tracking for the primary goal really is broken, say that before you present a CPA. "How are my
+ads doing" is then "I can't tell you yet, and here's why."
 
 Also check the window. Amazon's last 48 hours are incomplete. Today is always partial. A "drop" that
-is really an unfinished day is the most common false alarm in this job.
+is really an unfinished day is the most common false alarm in this job. If a platform returns
+`no_data`, look at the freshness window, look back only as far as that window (not past a year),
+and report the range that has data. Label it. Don't write 0.
 
 ## The scorecard
 
-Report per platform, then in total:
+Default period when they say "this week": the last full Monday–Sunday week against the week before.
+"This month": the closed month against the month before. Compare like with like, not against a
+partial week.
 
-- **Spend** — and pace against the monthly budget
-- **Conversions** and **cost per conversion**
+Report per platform and account. Follow the evidence rules in `adspirer-agent`.
+
+- **Spend** — and pace against the monthly budget, in that account's currency
+- **Conversions** and **cost per conversion**, using that platform's own conversion name and
+  attribution window
 - **ROAS**, where revenue is tracked
-- **CTR** and **CPC** — diagnostic, not goals
+- **CTR** and **CPC** — diagnostic, not goals. CPM when the goal is awareness
 - **Change vs the previous equivalent period**
 
-Compare like with like: last 7 days against the 7 before, not against a partial week.
+Derived CTR, CPC, CPA, and ROAS come from totals and are labeled derived. If a breakdown (keyword,
+ad group, ad set, ad) doesn't add up to the account total, mark it unverified and don't recommend
+from it alone.
+
+Google per-campaign clicks and impressions come from `analyze_wasted_spend` when
+`get_campaign_performance` doesn't include them. Say where that tool's target ROAS came from
+(account goal, a 90-day average, or its default). If no source has clicks, write "not available".
+Don't back into them.
+
+**Microsoft Advertising** has no performance tool unless `microsoft_ads` `list_tools` has grown
+one. Show campaigns, status, and budgets (`adspirer-microsoft-ads`) and put metrics under what you
+could not read.
+
+**GA4 and Search Console**, when those routers are connected, are context only
+(`adspirer-google-analytics`, `adspirer-search-console`). Never add their events or organic clicks
+to ad conversions.
+
+An inactive account that refuses a read goes under what you could not read. Ask before activating
+it.
+
+Totals only within one currency. Never sum conversions across platforms as if they were
+deduplicated. A missing input is "not available", never 0. On a quota or tool error, say which
+call failed. `get_usage_status` before and after a wide pull — don't assume every lookup is free.
+
+End with a "could not read" list: every platform, account, metric, or range that was unavailable,
+and why.
+
+Lead with the biggest mover. Two to four next steps, as questions. Several proposed edits go to
+the review table in `adspirer-optimize`. Anything that increases spend goes to `adspirer-launch`.
+Offer `adspirer-dashboard` when a chart will help. Email or Slack is `adspirer-digest`, after a
+yes. A scheduled run that finds no new data since the last report gets one line, not a full
+scorecard.
 
 ## Say what it means
 
@@ -73,8 +122,8 @@ disapproved ad, a landing page that started 404ing, a conversion tag someone rem
 
 ## Make it easier to look at
 
-A scorecard across six platforms is a table the user will squint at, and a trend is a shape, not a
-column of numbers.
+A scorecard across platforms is a table the user will squint at, and a trend is a shape, not a
+column of numbers. For an actual chart, load `adspirer-dashboard`.
 
 <!-- BEGIN:CLAUDE -->
 Offer an **artifact**: platform cards, a spend-vs-conversions chart, the anomalies called out. It's a

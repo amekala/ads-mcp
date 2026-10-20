@@ -24,7 +24,9 @@ mix.
   is genuinely bad until it has data.
 - **Do not run PMax without working conversion tracking.** It optimizes toward conversions, so with
   broken tracking it optimizes toward nothing and spends the whole budget doing it. Check with
-  `audit_conversion_tracking` first.
+  `audit_conversion_tracking`, then judge each action by its own source — a tag warning does not
+  condemn an offline import, and an empty audit window with no spend is not a broken tag. The UI
+  check is `adspirer-ads-manager-browser`.
 - Run `discover_existing_assets` before building — the account usually has usable images already.
 - Reporting is opaque by design. If the user wants to know exactly which keyword drove which sale,
   PMax will frustrate them.

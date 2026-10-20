@@ -23,7 +23,7 @@ plugins/grok/skills
 "
 
 # The only tools callable by name. Everything else lives behind a router.
-DIRECT_TOOLS="start_here echo_test search_tools get_tool_schema get_campaign_performance get_usage_status get_meta_campaign_performance audit_conversion_tracking get_connections_status switch_primary_account"
+DIRECT_TOOLS="start_here echo_test search_tools get_tool_schema get_campaign_performance get_usage_status get_meta_campaign_performance audit_conversion_tracking get_connections_status switch_primary_account diagnose_funnel competitor_ads_research"
 
 echo "=== Skill Validation ==="
 

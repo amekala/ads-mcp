@@ -69,6 +69,23 @@ Through the router (`action: "execute"`):
 
 If any tool errors (platform not connected), skip it and note the gap.
 
+Microsoft Advertising, when `microsoft_ads` is connected, has list tools for campaigns and budgets
+and no performance report unless `list_tools` shows one. Record status and budgets. Metrics are
+"not available", not 0. See `adspirer-microsoft-ads`.
+
+If a performance read returns no data, record `freshness_state` and the range that actually has
+data. Don't write 0 for a metric you didn't receive, and don't add a blended conversions or blended
+CPA row across platforms or currencies.
+
+### Business type, before you invent a goal
+
+If the docs and the account don't already say it, ask once what the business is: lead gen or B2B
+sign-up, ecommerce, app installs, calls or local, or awareness. That answer is the primary goal.
+Later tracking checks judge conversion actions against it.
+
+Flag accounts whose names look like test, sandbox, demo, or an end-to-end fixture, and ask which
+are real before you treat their spend as the brand.
+
 ## Step 4: Create {{CONTEXT_FILE}}
 
 **Existing-file guard — check before writing:**
@@ -108,9 +125,11 @@ Generate the brand workspace by combining local files + Adspirer data:
 - Min ROAS: [if specified]
 
 ## KPI Targets
-[From docs if available]
-- Primary goal: [leads/sales/awareness/traffic]
+[From docs if available, otherwise from the business type the user confirmed]
+- Business type: [lead gen or B2B sign-up / ecommerce / app installs / calls or local / awareness]
+- Primary goal: [the conversion that matches that type — a lead or sign-up, a purchase, an install, a call]
 - Target metrics: [CTR, CPA, ROAS targets]
+- Accounts left out of scope: [test or sandbox accounts the user excluded, or "none"]
 
 ## Current Performance Snapshot
 [From get_campaign_performance — most recent data]
@@ -222,9 +241,10 @@ End with:
 "Your brand workspace is set up! I've saved everything to {{CONTEXT_FILE}}.
 Here's what I can help with:
 - Review campaign performance across all platforms
+- Check conversion tracking in the ads manager (read-only) before trusting a CPA
 - Find and fix wasted ad spend
 - Write brand-voice ad copy
-- Create new campaigns
+- Create new campaigns (they stay paused until you say to enable them)
 - Research keywords
 - Set up monitoring and alerts
 
