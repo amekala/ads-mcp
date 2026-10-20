@@ -9,7 +9,7 @@ set -euo pipefail
 # Each SKILL.md may contain conditional blocks:
 #   <!-- BEGIN:CODEX --> ... <!-- END:CODEX -->
 # A block survives only if its family is in the target's keep-set. Families in use:
-#   CODEX  CURSOR_CLAUDE  CLAUDE  CHATGPT  GROK  HAS_MEMORY  NO_MEMORY  HAS_FS  NO_FS
+#   CODEX  CURSOR_CLAUDE  CLAUDE  CHATGPT  GROK  HERMES  HAS_MEMORY  NO_MEMORY  HAS_FS  NO_FS
 #
 # CLAUDE is narrower than CURSOR_CLAUDE: artifacts exist in Claude Code and the Claude
 # desktop app, not in Cursor. CHATGPT gates Sites. Cursor/Codex/Gemini/Grok get neither.
@@ -18,8 +18,12 @@ set -euo pipefail
 # MCP server from the plugin's own .mcp.json, so its connect instructions share nothing
 # with Cursor's settings-panel flow.
 #
+# HERMES is its own family for the same reason: Hermes Agent installs the MCP server from
+# the plugin's mcp.json through an mcp-remote bridge, and it has a scheduler (the
+# `cronjob` tool) that Grok lacks, so its connect and scheduling prose is its own.
+#
 # MULTIHOST wraps prose that compares the Claude/ChatGPT/Codex surfaces to each other.
-# Every target carries it except Grok, which has no artifact or scheduler surface of its
+# Every target carries it except Grok and Hermes, which has no artifact or scheduler surface of its
 # own — there, that comparison is noise the agent would be tempted to act on.
 #
 # references/*.md take the same template pass; non-markdown files under references/,
@@ -37,6 +41,7 @@ CLAUDE_SKILLS="$REPO_ROOT/skills"
 GEMINI_SKILLS="$REPO_ROOT/plugins/gemini/skills"
 CHATGPT_SKILLS="$REPO_ROOT/plugins/chatgpt/adspirer/skills"
 GROK_SKILLS="$REPO_ROOT/plugins/grok/skills"
+HERMES_SKILLS="$REPO_ROOT/plugins/hermes/skills"
 
 CURSOR_AGENT="$REPO_ROOT/plugins/cursor/adspirer/agents/performance-marketing-agent.md"
 CODEX_AGENT="$REPO_ROOT/plugins/codex/adspirer/agents/performance-marketing-agent.toml"
@@ -64,6 +69,7 @@ shared/assets/icon.svg|assets/icon.svg
 shared/assets/icon.svg|logo.svg
 shared/assets/icon.png|plugins/cursor/adspirer/assets/icon.png
 shared/assets/icon.png|plugins/grok/assets/icon.png
+shared/assets/icon.png|plugins/hermes/assets/icon.png
 shared/assets/icon.png|plugins/codex/adspirer/assets/adspirer.png
 shared/assets/icon.png|plugins/adspirer/assets/adspirer.png
 shared/assets/icon.svg|plugins/claude/assets/icon.svg
@@ -92,6 +98,10 @@ CLAUDE_PLUGIN_SKIP_SKILLS="adspirer-get-started"
 # documented cross-session memory — so NO_MEMORY, same as Codex and Gemini. WEBSEARCH
 # is "no" because `WebSearch`/`WebFetch` are Claude Code tool names; the stripped
 # phrasing reads correctly whatever Grok's own web tooling is called.
+#
+# Hermes Agent writes the workspace to BRAND.md, as the 1.0.0 package did, so setup never
+# collides with a project's own AGENTS.md. NO_MEMORY because the HAS_MEMORY
+# setup step writes under .cursor/, which the Hermes repo's CI rejects in portable skills.
 
 target_config() {
   case "$1" in
@@ -101,6 +111,7 @@ target_config() {
     gemini)  CONTEXT_FILE="GEMINI.md"; AUTH="Run the mcp auth command to re-authenticate";          KEEP="CURSOR_CLAUDE NO_MEMORY HAS_FS MULTIHOST"; WEBSEARCH="no";  WANT_WORKSPACE="yes"; WANT_COMMANDS="no" ;;
     chatgpt) CONTEXT_FILE="";          AUTH="Reconnect Adspirer in ChatGPT under Settings then Connectors"; KEEP="CHATGPT NO_MEMORY NO_FS MULTIHOST"; WEBSEARCH="no"; WANT_WORKSPACE="no"; WANT_COMMANDS="no" ;;
     grok)    CONTEXT_FILE="AGENTS.md"; AUTH='Open `/mcp`, select **adspirer**, and re-authenticate'; KEEP="GROK NO_MEMORY HAS_FS";        WEBSEARCH="no";  WANT_WORKSPACE="yes"; WANT_COMMANDS="yes" ;;
+    hermes)  CONTEXT_FILE="BRAND.md";  AUTH='Run `/reload-mcp`; the first connection opens the Adspirer sign-in page'; KEEP="HERMES NO_MEMORY HAS_FS"; WEBSEARCH="no"; WANT_WORKSPACE="yes"; WANT_COMMANDS="no" ;;
     *) echo "unknown target: $1" >&2; return 1 ;;
   esac
 }
@@ -113,6 +124,7 @@ target_dir() {
     gemini)  echo "$GEMINI_SKILLS" ;;
     chatgpt) echo "$CHATGPT_SKILLS" ;;
     grok)    echo "$GROK_SKILLS" ;;
+    hermes)  echo "$HERMES_SKILLS" ;;
   esac
 }
 
@@ -123,7 +135,7 @@ target_commands_dir() {
   esac
 }
 
-TARGETS="cursor codex claude gemini chatgpt grok"
+TARGETS="cursor codex claude gemini chatgpt grok hermes"
 COMMAND_TARGETS="claude grok"
 
 # ---------------------------------------------------------------------------

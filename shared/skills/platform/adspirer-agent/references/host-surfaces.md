@@ -4,6 +4,9 @@
 <!-- BEGIN:GROK -->
 # Host surfaces: what repeats after the session ends
 <!-- END:GROK -->
+<!-- BEGIN:HERMES -->
+# Hermes surfaces: scheduled work and delivery
+<!-- END:HERMES -->
 
 Your host may offer ways to show work and repeat work that the terminal or the chat transcript
 can't. Use them when they genuinely fit. Don't announce a capability the host doesn't have.
@@ -46,6 +49,30 @@ Grok Build has no scheduler of its own and no publish surface — nothing here r
 ends. Everything recurring goes to Adspirer's server side, described below. Don't offer the user a
 scheduled task, a routine, or a published page; they don't exist on this host.
 <!-- END:GROK -->
+<!-- BEGIN:HERMES -->
+### Hermes: the `cronjob` tool
+
+Hermes schedules work through its `cronjob` tool. It can create, list, pause, resume, edit, run, and
+remove one-time or recurring jobs. When creating a scheduled advertising task:
+
+1. Attach the relevant Adspirer skill.
+2. Set the brand project's absolute work directory so the run can read `{{CONTEXT_FILE}}` and
+   `STRATEGY.md`.
+3. Name the connected Adspirer MCP toolset when the Hermes surface exposes toolset selection.
+4. Create the job paused when the prompt could write to an ad account, and let the user review it
+   before enabling it.
+
+Schedule read-only reporting and monitoring by default. A scheduled run must not make unattended
+budget, bid, launch, archive, or deletion changes.
+
+Hermes cron results can go back to the originating conversation, to a local file, or to a configured
+messaging destination. Ad spend, performance, customer lists, and lead-form submissions are
+confidential: confirm the destination before sending client data outside the local session.
+
+If a scheduled run can't reach Adspirer, it reports the connection error and never invents metrics.
+If the job can't read the brand workspace, fix its work directory rather than rebuilding brand
+context from guesses.
+<!-- END:HERMES -->
 
 Adspirer also has its own server-side monitors and email briefs, under the
 `monitoring_and_reporting` router — threshold alerts on ROAS, CPA, spend and CTR, scheduled reports,

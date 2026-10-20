@@ -61,3 +61,22 @@ jobs:
         run: |
           npm install --no-save js-yaml
           node scripts/validate-frontmatter.mjs
+
+      # plugins/hermes is mirrored to Adspirer/adspirer-hermes-plugin, which the Hermes catalog
+      # pins by sha. This is the catalog's own admission command, at the same pinned Hermes
+      # commit the mirror's CI uses, so a package Hermes would reject fails here first.
+      - name: Check out the Hermes validator
+        uses: actions/checkout@v5
+        with:
+          repository: NousResearch/hermes-agent
+          ref: 8a92051f20e6b371c4ff1a46a5bcec7138cc4e8c
+          path: .hermes-agent
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate the Hermes plugin package
+        run: |
+          pip install -e .hermes-agent
+          hermes plugins validate plugins/hermes

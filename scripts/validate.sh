@@ -20,6 +20,7 @@ skills
 plugins/gemini/skills
 plugins/chatgpt/adspirer/skills
 plugins/grok/skills
+plugins/hermes/skills
 "
 
 # The only tools callable by name. Everything else lives behind a router.
@@ -381,6 +382,49 @@ check "Grok package ships no executable or hook surface"
 # skills + commands + an agent + one MCP url; keep it that way.
 found="$(find plugins/grok -name 'hooks.json' -o -name '.lsp.json' -o -name '*.sh' -o -name 'install*' 2>/dev/null)"
 [ -z "$found" ] && pass || fail "unexpected executable surface: $found"
+
+# ---------------------------------------------------------------------------
+# plugins/hermes/ is published verbatim to Adspirer/adspirer-hermes-plugin, which the Hermes
+# catalog (NousResearch/hermes-agent plugin-catalog/adspirer.yaml) pins by sha. CI also runs
+# `hermes plugins validate`, the catalog's own admission command; these are the offline checks.
+echo ""; echo "--- Hermes plugin package ---"
+
+HERMES_ROOT="plugins/hermes"
+HERMES_MANIFEST="$HERMES_ROOT/plugin.json"
+
+check "Hermes manifest is valid JSON, named 'adspirer', with a strict X.Y.Z version"
+if [ "$(jq -r '.name // empty' "$HERMES_MANIFEST" 2>/dev/null)" = "adspirer" ] \
+   && jq -e '.version | test("^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)$")' "$HERMES_MANIFEST" >/dev/null 2>&1; then
+  pass
+else fail "expected name adspirer and a strict X.Y.Z version (the catalog entry carries the same version)"; fi
+
+check "Hermes manifest has description, author, homepage, repository, license"
+missing=""
+for f in description author homepage repository license; do
+  [ -n "$(jq -r ".$f // empty" "$HERMES_MANIFEST" 2>/dev/null)" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Hermes package ships mcp.json, README.md, LICENSE, SECURITY.md, CHANGELOG.md, assets/icon.png"
+missing=""
+for f in mcp.json README.md LICENSE SECURITY.md CHANGELOG.md assets/icon.png; do
+  [ -f "$HERMES_ROOT/$f" ] || missing="$missing $f"
+done
+[ -z "$missing" ] && pass || fail "missing:$missing"
+
+check "Hermes mcp.json bridges to the production MCP endpoint through a pinned mcp-remote"
+# Agent Plugins v1 has no portable field for OAuth on a remote entry, so the package runs an
+# exactly pinned mcp-remote over stdio. An unpinned bridge would run whatever npm serves.
+args="$(jq -r '.mcpServers.adspirer.args // [] | join(" ")' "$HERMES_ROOT/mcp.json" 2>/dev/null)"
+if [ "$(jq -r '.mcpServers.adspirer.type // empty' "$HERMES_ROOT/mcp.json" 2>/dev/null)" = "stdio" ] \
+   && printf '%s' "$args" | grep -qE '(^| )mcp-remote@[0-9]+\.[0-9]+\.[0-9]+ https://mcp\.adspirer\.com/mcp( |$)'; then
+  pass
+else fail "expected stdio npx mcp-remote@X.Y.Z https://mcp.adspirer.com/mcp, got: $args"; fi
+
+check "Hermes package ships no hook, script, or client-specific setup"
+found="$(find "$HERMES_ROOT" -name 'hooks.json' -o -name '*.sh' -o -name 'install*' 2>/dev/null)"
+found="$found$(grep -RliE 'Cursor Settings|\.cursor/' "$HERMES_ROOT/skills" 2>/dev/null || true)"
+[ -z "$found" ] && pass || fail "unexpected: $found"
 
 # ---------------------------------------------------------------------------
 # Claude plugin package (plugins/claude → Adspirer/adspirer-claude-plugin, listing "adspirer-advertising-agent").
