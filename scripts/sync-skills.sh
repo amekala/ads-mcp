@@ -61,8 +61,12 @@ GROK_COMMANDS="$REPO_ROOT/plugins/grok/commands"
 #
 # Both are brand files used unchanged:
 #   icon.png  gs://adspirer-images-v1/brand/adspirer-logo-square.png (640x640, black square)
-#   icon.svg  the 512x512 square AD mark on white (muse-ai-adspirer.svg); the Claude plugin
-#             directory wants an SVG or a 512x512 PNG, and this is both square and vector.
+#   icon-512.png  the same brand file resized to 512x512 (sips -z 512 512). This is the Claude
+#             plugin icon: the directory rendered no icon from the SVG (the listing showed the
+#             "{}" placeholder), while PNG-icon plugins, including our old one, render fine.
+#             It also matches the verified Adspirer connector's directory icon.
+#   icon.svg  the 512x512 square AD mark on white (muse-ai-adspirer.svg), still used by the
+#             root Claude target.
 # The Codex SVG slots (adspirer-small.svg, round black) are a separate existing file.
 ICON_COPIES="
 shared/assets/icon.svg|assets/icon.svg
@@ -72,7 +76,7 @@ shared/assets/icon.png|plugins/grok/assets/icon.png
 shared/assets/icon.png|plugins/hermes/assets/icon.png
 shared/assets/icon.png|plugins/codex/adspirer/assets/adspirer.png
 shared/assets/icon.png|plugins/adspirer/assets/adspirer.png
-shared/assets/icon.svg|plugins/claude/assets/icon.svg
+shared/assets/icon-512.png|plugins/claude/assets/icon.png
 "
 
 # plugins/claude/ is the standalone Claude plugin package that Adspirer/adspirer-claude-plugin
@@ -262,8 +266,9 @@ name: performance-marketing-agent
 description: |
   Brand-specific performance marketing agent. Connects to Adspirer MCP for live
   ad platform data, bootstraps brand workspaces, and manages campaigns across
-  Google Ads, Meta Ads, Amazon Ads, ChatGPT Ads, LinkedIn Ads, and TikTok Ads
-  with brand awareness and persistent memory.
+  Google Ads, Meta Ads, Microsoft Advertising, Amazon Ads, Walmart Connect,
+  ChatGPT Ads, LinkedIn Ads, and TikTok Ads with brand awareness and persistent
+  memory.
 # tools deliberately not restricted — this agent needs the Adspirer MCP tools, and a
 # `tools:` allowlist would exclude every MCP tool (plugin install method changes the
 # prefix, so no allowlist entry can name them reliably). Omitted = inherit everything.

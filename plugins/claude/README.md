@@ -1,10 +1,10 @@
 # Adspirer Advertising Agent for Claude
 
 Run your ad campaigns from Claude Code and Cowork. Adspirer connects Claude to your live ad
-accounts on Google Ads, Meta Ads (Facebook and Instagram), TikTok Ads, LinkedIn Ads, Amazon Ads,
-Microsoft Advertising (Bing), and ChatGPT Ads through Adspirer's hosted MCP server, so you can
-research keywords, launch and optimize PPC and paid social campaigns, and report on ROAS, CPA, CTR,
-and cost per lead without leaving the conversation.
+accounts on Google Ads, Meta Ads (Facebook and Instagram), TikTok Ads, LinkedIn Ads, Microsoft
+Advertising (Bing), Amazon Ads, Walmart Connect, and ChatGPT Ads through Adspirer's hosted MCP
+server, so you can research keywords, launch and optimize PPC, paid social, and retail media
+campaigns, and report on ROAS, ACoS, CPA, CTR, and cost per lead without leaving the conversation.
 
 ## Use it for
 
@@ -12,8 +12,9 @@ and cost per lead without leaving the conversation.
   research with live CPC and search volume, negative keywords, and search term reports.
 - **Paid social:** Facebook and Instagram ads, TikTok Spark Ads and in-feed video, LinkedIn B2B lead
   generation, and YouTube and Demand Gen campaigns.
-- **Retail and marketplace ads:** Amazon Sponsored Products, Sponsored Brands, and Sponsored Display,
-  with ACoS and bid management.
+- **Retail media:** Amazon Sponsored Products, Sponsored Brands, and Sponsored Display, and Walmart
+  Connect Sponsored Products, keywords, placements, and Display reporting, with ACoS and bid
+  management.
 - **Reporting:** cross-platform performance for spend, conversions, ROAS, CPA, CTR, CPC, and cost per
   lead, with pacing against budget.
 - **Optimization:** find wasted spend, shift budget to what converts, catch creative fatigue, and
@@ -69,6 +70,7 @@ Slash commands: `/setup`, `/performance-review`, `/wasted-spend`, `/write-ad-cop
 | TikTok Ads | In-feed video, Spark Ads, carousel, app promotion, targeting, and analytics |
 | LinkedIn Ads | Sponsored content, lead-gen forms, campaign groups, B2B targeting, and reporting |
 | Amazon Ads | Sponsored Products, Sponsored Brands, Sponsored Display, search terms, bids, and ACoS |
+| Walmart Connect | Sponsored Products, auto and manual targeting, keywords, placements and bid multipliers, brand assets and video, search terms, Display reporting, and ACoS |
 | Microsoft Advertising | Bing search campaigns, ad groups, ads, keywords, extensions, audiences, budgets, and bids |
 | ChatGPT Ads | Campaigns, ad groups, creative assets, chat-card ads, and reporting |
 | Optimization | Wasted-spend analysis, budget pacing, creative fatigue, and actionable recommendations |
@@ -112,8 +114,17 @@ server-side with Adspirer and are scoped to the accounts you connect.
 
 ## Network and execution surface
 
-The plugin connects only to `https://mcp.adspirer.com/mcp`. It contains no hooks, scripts, local
-executables, or bundled server code. Skills, commands, and the subagent are Markdown guidance.
+The plugin's only MCP server is `https://mcp.adspirer.com/mcp`. It contains no hooks, scripts,
+telemetry, local executables, or bundled server code. Skills, commands, and the subagent are
+Markdown guidance. Beyond the Adspirer server, the skills may ask Claude to:
+
+- read Adspirer's public documentation at `adspirer.com/docs` to answer questions about plans and
+  setup;
+- use a browser you control to look at tag and conversion settings in an ads manager you sign in
+  to yourself. This is read-only, and the agent never asks for or types passwords or 2FA codes;
+- send a performance digest through an email or Slack connector you already have, and only after
+  you approve that exact draft and destination in the conversation;
+- write a `CLAUDE.md` brand profile in your project folder during setup, after asking.
 
 ## Privacy, support, and source
 

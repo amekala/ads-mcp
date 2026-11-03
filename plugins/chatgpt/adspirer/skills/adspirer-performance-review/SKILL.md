@@ -18,6 +18,7 @@ The two big platforms have **direct, top-level** performance tools. The rest go 
 | TikTok | `tiktok_ads` router → `execute` → `get_tiktok_campaign_performance` |
 | LinkedIn | `linkedin_ads` router → `execute` → `get_linkedin_campaign_performance` |
 | Amazon | `amazon_ads` router → `execute` → `get_amazon_campaign_performance` |
+| Walmart Connect | `walmart_ads` router → `execute` → `get_walmart_ad_group_performance` (Display: `get_walmart_display_campaign_performance`) |
 | ChatGPT Ads | `chatgpt_ads` router → `execute` → `get_chatgpt_performance` |
 
 Calling the routed ones directly by name will fail — they aren't in the tool list. Pass

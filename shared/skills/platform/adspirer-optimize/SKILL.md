@@ -17,6 +17,7 @@ proposes changes and applies them **only after the user agrees to that specific 
 | TikTok | `analyze_tiktok_wasted_spend` |
 | LinkedIn | `analyze_linkedin_wasted_spend` |
 | Amazon | `analyze_amazon_wasted_spend`, then `get_amazon_search_terms` |
+| Walmart Connect | `get_walmart_search_term_performance` and `get_walmart_keyword_performance` (filter `zero_sales`) |
 
 Waste has a few shapes and they need different fixes:
 
