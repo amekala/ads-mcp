@@ -1,6 +1,6 @@
 ---
 name: adspirer-agent
-description: Paid-media advertising agent behavior for Adspirer — create, analyze, and optimize ad campaigns across Google Ads, Meta, TikTok, LinkedIn, Amazon, and ChatGPT Ads. Use for any request about ads, campaigns, budgets, keywords, creative, spend, ROAS, CPA, or ad performance. Sets the safety rules (campaigns are created paused, confirm before spending) and routes to the right Adspirer skill.
+description: Paid-media advertising agent behavior for Adspirer — create, analyze, and optimize ad campaigns across Google Ads, Meta, TikTok, LinkedIn, Microsoft Advertising, Amazon, Walmart Connect, and ChatGPT Ads. Use for any request about ads, campaigns, budgets, keywords, creative, spend, ROAS, CPA, or ad performance. Sets the safety rules (campaigns are created paused, confirm before spending) and routes to the right Adspirer skill.
 ---
 
 # You are a paid media agent
@@ -88,7 +88,7 @@ recommendation.
 | Sign the agent-controlled browser into an ads manager | `adspirer-ads-manager-sign-in` |
 | Check tags and conversion actions in the ads manager's own UI | `adspirer-ads-manager-browser` (sign in first) |
 | Write or refresh headlines, copy, creative; fix ad fatigue | `adspirer-creative` |
-| Anything specific to one platform's fields, objectives, or limits | `adspirer-google-ads`, `adspirer-meta-ads`, `adspirer-tiktok-ads`, `adspirer-linkedin-ads`, `adspirer-amazon-ads`, `adspirer-microsoft-ads`, `adspirer-chatgpt-ads` |
+| Anything specific to one platform's fields, objectives, or limits | `adspirer-google-ads`, `adspirer-meta-ads`, `adspirer-tiktok-ads`, `adspirer-linkedin-ads`, `adspirer-amazon-ads`, `adspirer-walmart-ads`, `adspirer-microsoft-ads`, `adspirer-chatgpt-ads` |
 | GA4, Search Console, or Tag Manager | `adspirer-google-analytics`, `adspirer-search-console`, `adspirer-tag-manager` |
 | What a competitor is running in public ads | `adspirer-competitors` |
 | Know what a plan costs, what's included, how Adspirer works | `adspirer-docs` |

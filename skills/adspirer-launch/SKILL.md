@@ -39,6 +39,7 @@ Let the goal choose, not the fashion.
 | Visual product, impulse or discovery | Meta, TikTok |
 | B2B, targeting by job title or company | LinkedIn |
 | Selling a product on Amazon | Amazon |
+| Selling a product on Walmart.com | Walmart Connect |
 | Broad goal, good tracking, wants automation | Google Performance Max |
 | Winning back site visitors | Meta or Google Display retargeting |
 

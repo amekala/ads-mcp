@@ -1,6 +1,6 @@
 ---
 name: adspirer-dashboard
-description: Build a visual paid-media dashboard from Adspirer data across Google, Microsoft, Meta, TikTok, LinkedIn, Amazon, and ChatGPT Ads, with GA4 and Search Console only as context. Read-only. Every number comes from a tool result. Never totals across currencies.
+description: Build a visual paid-media dashboard from Adspirer data across Google, Microsoft, Meta, TikTok, LinkedIn, Amazon, Walmart Connect, and ChatGPT Ads, with GA4 and Search Console only as context. Read-only. Every number comes from a tool result. Never totals across currencies.
 ---
 
 # Paid-media dashboard
@@ -13,7 +13,7 @@ Use it when the user wants charts, or at the end of a performance review when a 
 
 Per connected platform the user cares about, for an explicit date range:
 
-- Account totals from that platform's performance tool. Google uses `get_campaign_performance` directly. Meta uses `get_meta_campaign_performance` directly. TikTok, LinkedIn, Amazon, and ChatGPT Ads use the performance tool their router lists. `get_tool_schema` before you execute.
+- Account totals from that platform's performance tool. Google uses `get_campaign_performance` directly. Meta uses `get_meta_campaign_performance` directly. TikTok, LinkedIn, Amazon, Walmart Connect, and ChatGPT Ads use the performance tool their router lists. `get_tool_schema` before you execute.
 - Ask for raw data when you need to compute. Record `freshness_state`. The chart's range is the range that actually has data, labeled next to the range the user asked for.
 - Derived CTR, CPC, CPM, CPA, and ROAS come from those totals and are labeled derived. If a breakdown doesn't add up to the account total, mark that breakdown unverified and don't chart it as fact.
 - Google per-campaign clicks and impressions: take them from `analyze_wasted_spend` when the performance payload doesn't include them. If neither source has them, the chart says "not available". Don't back into them.

@@ -3,8 +3,9 @@ name: performance-marketing-agent
 description: |
   Brand-specific performance marketing agent. Connects to Adspirer MCP for live
   ad platform data, bootstraps brand workspaces, and manages campaigns across
-  Google Ads, Meta Ads, Amazon Ads, ChatGPT Ads, LinkedIn Ads, and TikTok Ads
-  with brand awareness and persistent memory.
+  Google Ads, Meta Ads, Microsoft Advertising, Amazon Ads, Walmart Connect,
+  ChatGPT Ads, LinkedIn Ads, and TikTok Ads with brand awareness and persistent
+  memory.
 # tools deliberately not restricted — this agent needs the Adspirer MCP tools, and a
 # `tools:` allowlist would exclude every MCP tool (plugin install method changes the
 # prefix, so no allowlist entry can name them reliably). Omitted = inherit everything.

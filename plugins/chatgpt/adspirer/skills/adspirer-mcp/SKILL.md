@@ -31,8 +31,8 @@ Read this before your first tool call. The live list wins over the names below: 
 
 **These are routers.** Never call their inner tools by name:
 
-`google_ads` · `meta_ads` · `linkedin_ads` · `tiktok_ads` · `amazon_ads` · `microsoft_ads` ·
-`chatgpt_ads` · `monitoring_and_reporting` · `community_plugins`
+`google_ads` · `meta_ads` · `linkedin_ads` · `tiktok_ads` · `amazon_ads` · `walmart_ads` ·
+`microsoft_ads` · `chatgpt_ads` · `monitoring_and_reporting` · `community_plugins`
 
 These appear only when that product is connected:
 
@@ -95,6 +95,7 @@ This is the single most common error. **Read the row before you send a budget.**
 | TikTok Ads | account currency (decimal) | `50.0` |
 | LinkedIn Ads | account currency (decimal) | `50.0` |
 | Amazon Ads | account currency (decimal) | `50.0` |
+| Walmart Connect | USD (decimal) | `50.0` |
 | ChatGPT Ads | account currency (decimal) | `50.0` |
 
 **Every platform takes the budget in the account's own currency as a plain decimal — never
@@ -118,6 +119,7 @@ The parameter name differs per platform:
 | TikTok Ads | `advertiser_id` |
 | LinkedIn Ads | `account_id` |
 | Amazon Ads | `profile_id` |
+| Walmart Connect | `advertiser_id` |
 | Microsoft Advertising | `account_id` |
 | ChatGPT Ads | `account_id` |
 
