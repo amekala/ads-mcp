@@ -20,7 +20,7 @@ Per connected platform the user cares about, for an explicit date range:
 - Microsoft: campaigns, status, and budgets from `adspirer-microsoft-ads`. Performance is "not available" unless `list_tools` has grown a report. Don't draw a zero.
 - GA4 (`adspirer-google-analytics`) and Search Console (`adspirer-search-console`) only if connected, and only as context. Never add them to ad conversions.
 
-Check `get_usage_status` before a wide pull. Don't assume every lookup is free. If quota stops you, chart what you have and list what you didn't read.
+Check `get_usage_status` at most once per session or day, not before every chart. In lean mode, ask before an optional read. If calls run out, chart what you have and list what you didn't read.
 
 ## How to draw it
 

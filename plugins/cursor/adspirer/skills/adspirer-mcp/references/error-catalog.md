@@ -114,6 +114,9 @@ Every LinkedIn campaign belongs to a campaign group. Pass an existing `campaign_
 ## Quota
 
 **Quota exceeded**
-Show the user the full error message — it contains their upgrade link. Do not route around it, do
-not switch to another tool to get the same data, and never fabricate the numbers. `list_tools`,
-`get_usage_status`, `get_connections_status`, and `start_here` remain free.
+Show the user the full error message — it contains their upgrade link — plus the reset date, and
+suggest upgrading in their Adspirer account. Do not invent a billing URL. Do not route around it,
+do not switch to another tool to get the same data, and never fabricate the numbers. Keep helping
+with work that needs no call. `list_tools`, `get_usage_status`, `get_connections_status`, and
+`start_here` do not draw the monthly quota, but in lean mode you still don't call them again just
+because of that. Check `get_usage_status` at most once per session or day.

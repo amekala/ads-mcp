@@ -5,8 +5,10 @@ description: Create and manage Google Ads campaigns through Adspirer — Search,
 
 # Google Ads
 
-Everything on Google goes through the `google_ads` router. Follow `adspirer-mcp` for the
-two-step: `{"action": "list_tools"}` first, then `{"action": "execute", "tool_name": ..., "arguments": {...}}`.
+Everything on Google goes through the `google_ads` router, except `get_campaign_performance`,
+which is direct. Follow `adspirer-mcp` for the two-step: `{"action": "list_tools"}` first, then
+`{"action": "execute", "tool_name": ..., "arguments": {...}}`. In lean mode, skip `list_tools`
+and `get_tool_schema` when this skill or `adspirer-mcp` already names the tool and its parameters.
 
 Account parameter: `customer_id`, as a **string**. Hyphens are stripped for you.
 Budgets are in **dollars** — `$50/day` is `50.0`.

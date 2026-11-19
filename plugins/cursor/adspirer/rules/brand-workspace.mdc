@@ -11,11 +11,11 @@ When working on advertising, campaign, or marketing tasks in this project:
 
 2. **Check for memory** at `.cursor/memory/performance-marketing-agent/MEMORY.md`. If it exists, read it for past decisions, learnings, and user preferences.
 
-3. **If BRAND.md does not exist**, this is a new brand workspace. Use the `adspirer-setup` skill to bootstrap it — scan local docs, pull live data from Adspirer MCP, and generate BRAND.md.
+3. **If BRAND.md does not exist**, this is a new brand workspace. Follow **First run** in `adspirer-agent` before any wide pull. Use `adspirer-setup` to scan local docs, pull live data, and generate BRAND.md only when the user asks for the workspace. On a Free plan, or when fewer than 30 calls remain, stay in lean mode: one account, one platform, and a yes before each extra read.
 
 4. **Brand docs** in the project folder (`.md`, `.txt`, `.csv`, `.yaml`, `.json`, `.pdf`) contain brand guidelines, media plans, and strategy notes. Read relevant files when writing ad copy, creating campaigns, or making recommendations.
 
-5. **Always use live data** from the Adspirer MCP server alongside brand context. Never answer performance questions from memory alone — pull fresh data.
+5. **Use live data** from the Adspirer MCP server alongside brand context. Never answer a performance question from memory alone when a read is still available. Check `get_usage_status` at most once per session or day. In lean mode, reuse data already pulled and ask before an optional read.
 
 6. **Update BRAND.md** when significant changes happen (new platforms connected, new brand docs added, major strategy shifts). Update MEMORY.md after every campaign action with what was done and why.
 

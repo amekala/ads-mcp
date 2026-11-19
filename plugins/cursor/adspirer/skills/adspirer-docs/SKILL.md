@@ -26,8 +26,10 @@ do — are answered from the documentation, never from memory. Pricing and limit
 ## Live account state is not a docs question
 
 "What does Pro cost?" is documentation. "How much quota do *I* have left?" is `get_usage_status`.
-"Is my Meta account connected?" is `get_connections_status`. Both are free calls. Use the tool for
-anything about *this* user's account; use the docs for how the product works.
+"Is my Meta account connected?" is `get_connections_status`. Neither draws the monthly quota. Use
+the tool for anything about *this* user's account; use the docs for how the product works. Reuse
+a usage or connections result from this session or from earlier today. Don't call `get_usage_status`
+before and after other tasks. In lean mode, ask before an optional read (`adspirer-agent`).
 
 ## Never quote a price from memory
 
@@ -35,8 +37,9 @@ Tiers, prices, included tool calls, and overage rates change often. **No price i
 these skills, deliberately.** Read the live page or don't answer with a number.
 
 - What a plan costs → fetch `https://www.adspirer.com/docs/knowledge-base/pricing.md`, or link it.
-- How much quota *this user* has left → `get_usage_status`. Free, and authoritative for their
-  account. Never infer it from a plan's advertised allowance.
+- How much quota *this user* has left → `get_usage_status`, at most once per session or day.
+  It does not draw the monthly quota, and it is authoritative for their account. Never infer it
+  from a plan's advertised allowance. In lean mode, reuse the check you already made.
 
 If you cannot fetch, say you don't want to quote a stale price, and link the page. A confidently
 wrong price is worse than a link.

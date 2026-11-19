@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 - 2026-11-19
+
+- Removed the `adspirer-ads-manager-sign-in` skill. Ads-manager checks ask the user to sign in to the ad platform in the browser themselves. The agent never asks for or accepts a password or a code in chat, stops on a login, 2FA, or account picker, and falls back to the Adspirer API when the host has no controllable browser (those UI checks are marked not available).
+- Lean first run for Free plans (15 Adspirer calls a month) and any account with fewer than 30 calls left. The first call is `get_usage_status`. The first run stays within 5 calls, reads one account on one platform, skips discovery when the tool is already documented, and asks before any extra read. Usage is checked at most once per session or day. When calls run out, the agent says so with the reset date, suggests upgrading in the Adspirer account, and keeps helping with work that needs no call.
+
 ## 1.1.0 - 2026-10-20
 
 - Lessons from the Grok Bot advertising agent, adapted for every host.
