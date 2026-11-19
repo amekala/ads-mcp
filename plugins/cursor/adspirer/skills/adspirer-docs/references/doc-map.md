@@ -44,9 +44,10 @@ Only these facts are stable enough to state without checking:
 For anything else — what a plan costs, how many calls it includes, whether overage applies:
 
 - **The live page**: `https://www.adspirer.com/docs/knowledge-base/pricing` (append `.md` for markdown).
-- **This user's own quota and plan**: call `get_usage_status`. It's free and it's authoritative for
-  their account. Never read a plan's allowance out of the docs when the user is asking about
-  *their* remaining calls.
+- **This user's own quota and plan**: call `get_usage_status` at most once per session or day.
+  It does not draw the monthly quota, and it is authoritative for their account. Reuse today's
+  result. Never read a plan's allowance out of the docs when the user is asking about *their*
+  remaining calls. In lean mode, ask before an optional read.
 
 If you cannot reach the page, say so and link it. Do not reconstruct the table from memory.
 

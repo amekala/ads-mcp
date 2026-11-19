@@ -3,24 +3,25 @@ name: adspirer-setup
 description: Set up your brand workspace — connect to Adspirer, scan brand docs, pull campaign data, and create BRAND.md. Use on first time in a new brand folder, or when the user wants to refresh brand context.
 ---
 
-Run the full brand workspace setup. Follow these steps in order:
+Run the full brand workspace setup only when the user asks for it. A first conversation follows
+**First run** in `adspirer-agent` and does not write `BRAND.md` or pull every platform on its own.
+
+In lean mode (Free, or fewer than 30 calls left), the live pull is the one-account snapshot in
+that section. Ask before each extra Adspirer read. Check `get_usage_status` at most once per
+session or day, not before and after each step.
 
 ## Step 1: Connect to Adspirer
 
-Call `get_connections_status` directly.
+Call `get_connections_status` directly. Reuse it if First run already called it this session. Do not
+call `get_usage_status` again if this session already has it.
 
 - **If it works**: continue to step 2.
-- **If the MCP server is not found**: tell the user:
-  "The Adspirer MCP server isn't connected. Add it to your Cursor MCP config:
-  1. Open Cursor Settings > MCP
-  2. Add server with URL: `https://mcp.adspirer.com/mcp`
-  3. Or add to `~/.cursor/mcp.json`:
-     ```json
-     {"mcpServers": {"adspirer": {"url": "https://mcp.adspirer.com/mcp"}}}
-     ```
-  4. Restart Cursor and run `/adspirer-setup` again."
-- **If OAuth is triggered**: tell the user a browser window is opening for authentication. Wait for them to confirm, then retry.
-- **If no platforms are connected**: tell the user to connect ad accounts at https://adspirer.ai/connections, then run setup again.
+- **If the MCP server is not found**: the connector is not on this host yet. On Cursor, add
+  `https://mcp.adspirer.com/mcp` under Settings → MCP, or in `~/.cursor/mcp.json` as
+  `mcpServers.adspirer.url`. On any other host, use that host's own MCP settings for the same URL.
+  Don't invent an install command or a host-specific tool. Wait until they say it is connected.
+- **If OAuth is triggered**: tell the user a browser window is opening for authentication. Wait for them to confirm, then retry `get_connections_status` once.
+- **If no platforms are connected**: tell the user to connect the account they spend the most on at https://adspirer.ai/connections. When they say they are done, call `get_connections_status` once. Do not poll.
 
 ## Step 2: Scan local folder
 
@@ -39,6 +40,9 @@ Read all discovered files. Extract:
 If the folder is empty, that's fine — we'll build context from Adspirer data alone.
 
 ## Step 3: Pull live campaign data
+
+In lean mode, do not run this list. Use the one-account snapshot from `adspirer-agent`, then ask
+before each extra read. The calls below are for a workspace the user asked for when calls remain.
 
 Follow `adspirer-mcp` for the call contract. Only these are callable by name; everything else goes
 through its platform router with `{"action": "list_tools"}` then `{"action": "execute", ...}`.

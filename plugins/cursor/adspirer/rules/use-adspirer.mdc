@@ -6,10 +6,15 @@ alwaysApply: true
 When a request involves advertising, campaign performance, keywords, creative, targeting, bids,
 or budgets, use the Adspirer skills and MCP server.
 
-1. Call `get_connections_status` before other Adspirer tools. Work only with platforms and
-   accounts the user has connected.
+1. The first Adspirer call in a session is `get_usage_status`, at most once per session or day.
+   If the plan is Free or fewer than 30 calls remain, follow lean mode in `adspirer-agent`
+   (at most 5 calls on the first run, and ask before an optional read). Then call
+   `get_connections_status` before other account reads. Reuse a result you already have. Work
+   only with platforms and accounts the user has connected.
 2. Load `adspirer-mcp` before tool use. Most platform-specific operations are exposed through
-   router tools; discover the current operation and schema instead of guessing parameters.
+   router tools. Discover the current operation and schema instead of guessing parameters. In
+   lean mode, skip `list_tools`, `search_tools`, and `get_tool_schema` when the name and
+   parameters are already documented.
 3. Read current account state and performance before proposing or applying a change.
 4. Ask for explicit approval before campaign creation, budget or bid changes, unpausing, or any
    other action that can spend money.

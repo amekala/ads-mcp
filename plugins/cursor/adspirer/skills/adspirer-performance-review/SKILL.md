@@ -90,7 +90,9 @@ it.
 
 Totals only within one currency. Never sum conversions across platforms as if they were
 deduplicated. A missing input is "not available", never 0. On a quota or tool error, say which
-call failed. `get_usage_status` before and after a wide pull — don't assume every lookup is free.
+call failed. Check `get_usage_status` at most once per session or day — count calls instead of
+reading it before and after the pull. In lean mode (Free, or fewer than 30 calls left; see
+`adspirer-agent`), ask before an optional read and don't pull a second platform unless they asked.
 
 End with a "could not read" list: every platform, account, metric, or range that was unavailable,
 and why.

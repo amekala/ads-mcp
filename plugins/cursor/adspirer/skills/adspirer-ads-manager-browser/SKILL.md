@@ -20,11 +20,10 @@ Follow `adspirer-mcp`.
 
 ## Sign in first
 
-Load `adspirer-ads-manager-sign-in` before the first check on a platform. That skill hands the
-browser to the user, on any host that can do it, and confirms the account afterward. If a check
-lands on a login, a 2FA prompt, or an account picker, stop and run it again. If this host has no
-controllable browser, that skill says to fall back to the API. Don't start clicking, and never
-ask for a password or a code.
+The user signs in to the ad platform in the browser themselves. Never ask for or accept a password
+or a code in chat. If a check lands on a login, 2FA, or account picker page, stop and ask the user
+to sign in. If no controllable browser is available, fall back to the Adspirer API and mark UI
+checks not available.
 
 ## Read-only, on every host
 

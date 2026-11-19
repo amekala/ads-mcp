@@ -166,7 +166,7 @@ times what a monthly one does.
 
 Pick a cadence the plan can carry, and say what it will cost in calls before setting it up. Weekly is
 the right default for a performance review; daily is for accounts spending enough to justify it.
-`get_usage_status` is free and shows what's left.
+Check `get_usage_status` at most once per session or day. It shows the plan and what's left. In lean mode, ask before an optional read (`adspirer-agent`).
 
 ---
 

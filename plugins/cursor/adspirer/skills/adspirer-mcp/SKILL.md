@@ -16,7 +16,7 @@ Read this before your first tool call. The live list wins over the names below: 
 
 | Tool | Use it for |
 |---|---|
-| `start_here` | New or unsure user. Free. |
+| `start_here` | New or unsure user, outside lean mode. Does not draw the monthly quota. In lean mode, follow First run in `adspirer-agent` instead of calling this. |
 | `search_tools` | "Which tool does X?" Semantic search over every tool. |
 | `get_tool_schema` | Exact parameters for a tool, before you call it. |
 | `get_connections_status` | Which ad accounts are connected, and their health. Free. |
@@ -45,7 +45,10 @@ and point the user at `https://adspirer.ai/connections`. Don't insist the tool e
 
 Every router takes the same three fields: `action`, `tool_name`, `arguments`.
 
-**Step 1 — discover.** Always first. Never costs quota.
+**Step 1 — discover.** Outside lean mode, do this first. It does not draw the monthly quota. In
+lean mode (`adspirer-agent`), skip `list_tools`, `search_tools`, and `get_tool_schema` when the
+tool name and parameters are already documented in these skills. Ask before a discovery call that
+is only a nice-to-have.
 
 ```json
 { "action": "list_tools" }
@@ -73,6 +76,7 @@ Returns every tool on that platform with its full parameter schema.
   router: `google_ads` with `action: "execute"`, `tool_name: "get_tool_schema"`,
   `arguments: {"tool_names": [...]}`. It returns the same schema. Never stop because it is missing.
 - Never guess a tool name or a parameter. If you are unsure, call `list_tools` or `get_tool_schema`.
+  In lean mode, ask before that call when a skill already names the tool.
 
 ## Finding the right tool
 
@@ -148,14 +152,24 @@ as active. That needs its own yes. It is not something you do silently to make a
 Every tool call against a platform costs one call from the user's monthly quota
 (Free 15 · Plus 150 · Pro 600 · Max 3,000).
 
-**Free — call these as much as you need:** `action: "list_tools"` on any router, `start_here`,
+**Free — these do not draw the monthly quota:** `action: "list_tools"` on any router, `start_here`,
 `get_connections_status`, `get_usage_status`, `echo_test`, and everything under `community_plugins`.
 
-Because discovery is free, there is never a reason to guess a tool name to save quota.
+Outside lean mode, discovery is free, so don't guess a tool name to save quota. In lean mode a
+documented name is enough, and every Adspirer call on the first run counts toward the cap of 5,
+including this usage check.
 
-When a user runs out: Plus/Pro/Max monthly plans keep working and bill per extra call; annual plans
-stop at the cap. Show the error message you receive — it carries the upgrade link. Do not work
-around a quota error or invent the data.
+**How often to check.** The first Adspirer call in a session is `get_usage_status`, unless you
+already checked today. After that, count calls yourself. Don't read it before and after each
+step. On Free (15 calls a month), or when fewer than 30 calls remain, follow lean mode in
+`adspirer-agent`: at most 5 calls on the first run, skip discovery when the tool is already
+documented, ask before an optional read, and re-check usage once at the end only if that call
+still fits in the 5.
+
+When a user runs out: say so with the reset date, and suggest upgrading in their Adspirer account.
+Plus/Pro/Max monthly plans keep working and bill per extra call; annual plans stop at the cap.
+Show the error message you receive — it carries the upgrade link. Do not invent a billing URL,
+work around a quota error, or invent the data. Keep helping with work that needs no call.
 
 ## Tools that may not be there
 
